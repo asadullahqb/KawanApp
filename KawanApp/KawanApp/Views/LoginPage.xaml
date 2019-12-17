@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="KawanApp.Views.LoginPage">
+  
+  <ContentPage.Resources>
+        <Style x:Key="EntryStyle" TargetType="Entry">
+            <Setter Property="ReturnType" Value="Next" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="FontSize" Value="Small"/>
+            <Setter Property="HeightRequest" Value="45"/>
+        </Style>
+  </ContentPage.Resources>
+    
+  <ContentPage.Content>
+        <StackLayout>
+            <Image 
+                Source="logokawan.png" 
+                HeightRequest="200" 
+                HorizontalOptions="Center" 
+                Margin="0,130,0,0"/>
+            
+            <!--#region Login Form-->
+
+            <!--#region Email form-->
+            <StackLayout Orientation="Horizontal" Margin="70,0">
+                <!-- Include icon here instead of a frame -->
+                <Frame 
+                    CornerRadius="90"
+                    HeightRequest="5"
+                    WidthRequest="5"
+                    BackgroundColor="Aqua"/>
+                <Entry 
+                    VerticalOptions="Center"
+                    Placeholder="Email"
+                    Text="{Binding Email}"
+                    Style="{StaticResource EntryStyle}"
+                    ReturnCommand="{Binding OnEmailReturnCommand}"/>
+            </StackLayout>
+            <!--#endregion-->
+
+            <!--#region Password form-->
+            <StackLayout Orientation="Horizontal" Margin="70,0">
+                <!-- Include icon here instead of a frame -->
+                <Frame 
+                    CornerRadius="90"
+                    HeightRequest="5"
+                    WidthRequest="5"
+                    BackgroundColor="Aqua"/>
+                <Entry 
+                    VerticalOptions="Center"
+                    Placeholder="Password"
+                    Text="{Binding Password}"
+                    Style="{StaticResource EntryStyle}"/>
+            </StackLayout>
+            <!--#endregion-->
+            
+            <!--#endregion-->
+
+            <!--#region Button-->
+            <Button 
+                Text="LOGIN"
+                Margin="80,10"
+                CornerRadius="8"
+                HeightRequest="45"
+                Command="{Binding OnLoginCommand}"
+                IsEnabled="{Binding IsValid}" />
+            <!--#endregion-->
+
+            <!--#region StayLoggedIn-->
+            <StackLayout 
+                Orientation="Horizontal"
+                VerticalOptions="Center"
+                Margin="80,-5,80,0">
+
+                <!--#region Checkbox-->
+                <CheckBox 
+                    d:IsChecked="True"
+                    IsChecked="{Binding StayLoggedIn}"
+                    VerticalOptions="Center"
+                    HeightRequest="25"
+                    WidthRequest="30" />
+
+                <Label 
+                    Text="Stay logged in"      
+                    VerticalOptions="Center"
+                    FontSize="12"
+                    HorizontalOptions="FillAndExpand" />
+                <!--#endregion-->
+
+
+                <!--#region Loading-->
+                <ActivityIndicator 
+                    d:IsVisible="True"
+                    IsVisible="{Binding IsLoadingVisisble}"
+                    IsRunning="True"
+                    HeightRequest="10" />
+                <!--#endregion-->
+
+            </StackLayout>
+            <!--#endregion-->
+
+        </StackLayout>
+  </ContentPage.Content>
+</ContentPage>
