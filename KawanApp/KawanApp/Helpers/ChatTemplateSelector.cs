@@ -22,7 +22,7 @@ namespace KawanApp.Helpers
                 return null;
 
 
-            return (messageVm.User == App.User) ? incomingDataTemplate : outgoingDataTemplate;
+            return (messageVm.User == App.CurrentUser) ? incomingDataTemplate : outgoingDataTemplate;
         }
 
     }

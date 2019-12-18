@@ -9,7 +9,6 @@ namespace KawanApp
     public partial class App : Application
     {
         private static bool _isUserLoggedIn;
-        public static string User = "Asad";
 
         public static bool IsUserLoggedIn
         {
