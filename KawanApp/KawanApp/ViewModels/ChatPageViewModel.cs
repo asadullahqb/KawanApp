@@ -5,27 +5,44 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.Views;
 using Microsoft.AspNetCore.SignalR.Client;
+using Refit;
 using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
     public class ChatPageViewModel : INotifyPropertyChanged
     {
+        private string _sendingUser = App.CurrentUser;
         private string _receivingUser = "sam@sham.com";
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;
         private bool _pendingMessageCountVisible;
-        private Queue<Message> _delayedMessages = new Queue<Message>();
-        private ObservableCollection<Message> _messages = new ObservableCollection<Message>();
+        private Queue<ChatMessage> _delayedMessages = new Queue<ChatMessage>();
+        private ObservableCollection<ChatMessage> _messages = new ObservableCollection<ChatMessage>();
         private string _textToSend = string.Empty;
-        private bool _isConnected = false;
+        private bool _isConnected = true;
         private HubConnection hubConnection;
 
+        private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
+
         public event PropertyChangedEventHandler PropertyChanged;
+        public string SendingUser
+        {
+            get 
+            {
+                return _sendingUser;
+            }
+            set
+            {
+                _sendingUser = value;
+                OnPropertyChanged();
+            }
+        }
         public string ReceivingUser
         {
             get 
@@ -87,7 +104,7 @@ namespace KawanApp.ViewModels
             }
         }
 
-        public Queue<Message> DelayedMessages
+        public Queue<ChatMessage> DelayedMessages
         {
             get
             {
@@ -99,7 +116,7 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Message> Messages 
+        public ObservableCollection<ChatMessage> Messages 
         {
             get
             {
@@ -144,14 +161,16 @@ namespace KawanApp.ViewModels
 
         public ChatPageViewModel()
         {
-            Messages.Insert(0, new Message() { Text = "Hi. \na\nb\nc\nd\ne\nf\ng\nh\ni\nj\nk\nl\nm\nn\no\np\nq\nr\ns\nt\nu\nv\nw\nMy name is Asadullah Qamar Bin Qamar Siddique Bhatti. I want to test how long of a message can this UI handle. \nIf it's long enough, then I will use this UI. So let's see now. Hehehe \n\nRegards,\nAsadullah Qamar" });
+            //Fetch messages from database and parse into Observable Collection
+            FetchMessages();
+
             OnSendCommand = new Command(async () => { await SendPersonalMessage(ReceivingUser, TextToSend); });
 
             MessagingCenter.Subscribe<ChatPage>(this, "connectOnAppearing", (sender) => { Connect(App.CurrentUser); });
             MessagingCenter.Subscribe<ChatPage>(this, "disconnectOnDisappearing", (sender) => { Disconnect(App.CurrentUser); });
 
-            MessageAppearingCommand = new Command<Message>(OnMessageAppearing);
-            MessageDisappearingCommand = new Command<Message>(OnMessageDisappearing);
+            MessageAppearingCommand = new Command<ChatMessage>(OnMessageAppearing);
+            MessageDisappearingCommand = new Command<ChatMessage>(OnMessageDisappearing);
 
             try
             {
@@ -170,7 +189,7 @@ namespace KawanApp.ViewModels
             {
                 if (receivingUser == App.CurrentUser)
                 {
-                    Messages.Insert(0, new Message() { User = receivingUser, Text = message});
+                    Messages.Insert(0, new ChatMessage() { SendingUser = receivingUser, Text = message});
                 }
             });
 
@@ -188,6 +207,36 @@ namespace KawanApp.ViewModels
 
             });
             */
+        }
+
+        private async void FetchMessages()
+        {
+            List<ChatMessage> MessagesFromDb = new List<ChatMessage>();
+            SendingAndReceivingUsers saru = new SendingAndReceivingUsers() { SendingUser= SendingUser, ReceivingUser = ReceivingUser };
+
+            try
+            {
+                MessagesFromDb = await ServerApi.FetchMessages(saru);
+            }
+            catch (Refit.ApiException ex)
+            {
+                if (ex.Message.Contains("404"))
+                    await App.Current.MainPage.DisplayAlert("Error", "Failed to connect to server.", "OK");
+                else
+                    await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            }
+            catch (Newtonsoft.Json.JsonReaderException ex)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
+            }
+            catch (Exception ex)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            }
+
+            ObservableCollection<ChatMessage> temp = new ObservableCollection<ChatMessage>(MessagesFromDb as List<ChatMessage>);
+            Messages = temp;
+
         }
 
         async Task Connect(string user)
@@ -209,7 +258,8 @@ namespace KawanApp.ViewModels
             if (!string.IsNullOrEmpty(TextToSend))
             {
                 //Log message, clear the entry and scroll to bottom.
-                Messages.Insert(0, new Message() { Text = TextToSend, User = App.CurrentUser });
+                ChatMessage cm = new ChatMessage() { Text = TextToSend, SendingUser = SendingUser, ReceivingUser = receivingUser, TimeStamp = DateTime.Now};
+                Messages.Insert(0, cm);
                 TextToSend = string.Empty;
                 MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom");
 
@@ -225,7 +275,33 @@ namespace KawanApp.ViewModels
                         await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
                     }
                     //Store message in SQLite database.
+                    //Not implemented yet.
+
                     //Store message in MySQL database.
+                    ReplyMessage rm = new ReplyMessage();
+                    try
+                    {
+                        rm = await ServerApi.StoreMessage(cm);
+                    }
+                    catch (Refit.ApiException ex)
+                    {
+                        if (ex.Message.Contains("404"))
+                            await App.Current.MainPage.DisplayAlert("Error", "Failed to connect to server.", "OK");
+                        else
+                            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                    }
+                    catch (Newtonsoft.Json.JsonReaderException ex)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex);
+                    }
+
+                    //Just for debugging:
+                    if (!rm.Status)
+                        await App.Current.MainPage.DisplayAlert("Failure!", rm.Message, "OK");
                 }
                 else
                 {
@@ -248,7 +324,7 @@ namespace KawanApp.ViewModels
             }
         }
 
-        void OnMessageAppearing(Message message)
+        void OnMessageAppearing(ChatMessage message)
         {
             var idx = Messages.IndexOf(message);
             if (idx <= 6)
@@ -266,7 +342,7 @@ namespace KawanApp.ViewModels
             }
         }
 
-        void OnMessageDisappearing(Message message)
+        void OnMessageDisappearing(ChatMessage message)
         {
             var idx = Messages.IndexOf(message);
             if (idx >= 6)

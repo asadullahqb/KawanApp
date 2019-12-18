@@ -10,6 +10,8 @@ namespace KawanApp
     {
         private static bool _isUserLoggedIn;
 
+        public static string Server => "http://192.168.0.157/";
+
         public static bool IsUserLoggedIn
         {
             get => _isUserLoggedIn;

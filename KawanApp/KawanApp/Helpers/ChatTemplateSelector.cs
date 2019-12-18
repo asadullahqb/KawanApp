@@ -17,12 +17,12 @@ namespace KawanApp.Helpers
 
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
-            var messageVm = item as Message;
+            var messageVm = item as ChatMessage;
             if (messageVm == null)
                 return null;
 
 
-            return (messageVm.User == App.CurrentUser) ? incomingDataTemplate : outgoingDataTemplate;
+            return (messageVm.SendingUser == App.CurrentUser) ? incomingDataTemplate : outgoingDataTemplate;
         }
 
     }
