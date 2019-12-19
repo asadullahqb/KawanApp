@@ -11,6 +11,9 @@ namespace KawanApp.Interfaces
     public interface IServerApi
     {
 
+        [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
+        Task<List<KawanUser>> FetchAllKawanUsers();
+        
         [Post("/kawanapis/functions/fetchMessages.php")]
         Task<List<ChatMessage>> FetchMessages([Body] SendingAndReceivingUsers sendingandreceivingusers);
         
