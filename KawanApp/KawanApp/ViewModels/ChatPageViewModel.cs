@@ -17,7 +17,7 @@ namespace KawanApp.ViewModels
     public class ChatPageViewModel : INotifyPropertyChanged
     {
         private string _sendingUser = App.CurrentUser;
-        private string _receivingUser = "sam@sham.com"; //sam@sham.com , asadqb16@gmail.com
+        private string _receivingUser = "asadqb16@gmail.com"; //sam@sham.com , asadqb16@gmail.com
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;
@@ -267,7 +267,7 @@ namespace KawanApp.ViewModels
             {
                 //Log message, clear the entry and scroll to bottom.
                 ChatMessage cm = new ChatMessage() { Text = TextToSend, SendingUser = SendingUser, ReceivingUser = receivingUser, TimeStamp = DateTime.Now};
-                if (!message.Equals("!users"))
+                if (!(message=="!users"))
                     Messages.Insert(0, cm); //Log the message only if it's not "!users"
                 TextToSend = string.Empty;
                 MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom"); //Send to view.
@@ -278,7 +278,7 @@ namespace KawanApp.ViewModels
                     try
                     {
                         await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
-                        if (message.Equals("!users"))
+                        if (message=="!users")
                             return; //Don't store the message in any databases
                     }
                     catch (Exception ex)
