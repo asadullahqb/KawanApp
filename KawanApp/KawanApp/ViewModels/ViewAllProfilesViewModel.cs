@@ -3,6 +3,7 @@ using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
 using Refit;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -21,6 +23,7 @@ namespace KawanApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private ObservableCollection<KawanUser> _allKawanUsers;
+        private bool _isRefreshing = false;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public ObservableCollection<KawanUser> AllKawanUsers
         {
@@ -31,9 +34,36 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool IsRefreshing
+        {
+            get { return _isRefreshing; }
+            set
+            {
+                _isRefreshing = value;
+                OnPropertyChanged(nameof(IsRefreshing));
+            }
+        }
+        public ICommand RefreshCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    IsRefreshing = true;
+
+                    await Task.Run(() => FetchAllKawanUsers());
+
+                    IsRefreshing = false;
+                });
+            }
+        }
+
+        public ICommand ItemTappedCommand { get; set; }
 
         public ViewAllProfilesViewModel()
         {
+            //ItemTappedCommand = new Command(async () => { await PopupNavigation.Instance.PushAsync(ViewAProfilePage()); });
+
             FetchAllKawanUsers();
 
         }

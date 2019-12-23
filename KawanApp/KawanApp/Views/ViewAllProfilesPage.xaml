@@ -60,7 +60,11 @@
             <!--#region List of Profiles-->
             <ListView 
                 ItemsSource="{Binding AllKawanUsers}" 
-                RowHeight="110">
+                RowHeight="110"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding RefreshCommand}"
+                IsRefreshing="{Binding IsRefreshing}"
+                ItemTapped="KawanList_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

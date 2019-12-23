@@ -10,7 +10,9 @@ namespace KawanApp
     {
         private static bool _isUserLoggedIn;
 
-        public static string Server => "http://10.212.41.232/";
+        public static string Server => "http://192.168.0.197/"; //at Sunny Ville home: http://192.168.0.167/
+                                                                //at USM: http://10.212.41.232/
+                                                                //at KL home: http://192.168.0.197/
 
         public static bool IsUserLoggedIn
         {
@@ -31,8 +33,7 @@ namespace KawanApp
             InitializeComponent();
             GetPreferences();
 
-            //MainPage = new SalesTrackingPage();
-            MainPage = new ViewAllProfilesPage();
+            MainPage = new ChatPage();
 
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());

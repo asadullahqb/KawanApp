@@ -25,6 +25,7 @@
                  HorizontalOptions="FillAndExpand" 
                  PlaceholderColor="LightGray"
                  Placeholder="Type your message here"
+                 IsEnabled="{Binding IsConnected}"
                  Grid.Row="0" 
                  Grid.Column="0" />
             <Label Text="Send"

@@ -17,7 +17,7 @@ namespace KawanApp.ViewModels
     public class ChatPageViewModel : INotifyPropertyChanged
     {
         private string _sendingUser = App.CurrentUser;
-        private string _receivingUser = "sam@sham.com";
+        private string _receivingUser = "sam@sham.com"; //sam@sham.com , asadqb16@gmail.com
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;
@@ -156,12 +156,9 @@ namespace KawanApp.ViewModels
         public ICommand OnSendCommand { get; set; }
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
-        public Command ConnectCommand { get; }
-        public Command DisconnectCommand { get; }
 
         public ChatPageViewModel()
         {
-            //Fetch messages from database and parse into Observable Collection
             FetchMessages();
 
             OnSendCommand = new Command(async () => { await SendPersonalMessage(ReceivingUser, TextToSend); });
@@ -185,11 +182,21 @@ namespace KawanApp.ViewModels
 
             #region Hub functions
 
-            hubConnection.On<string, string>("ReceivePersonalMessage", (receivingUser, message) =>
+            hubConnection.On<string, string, string>("ReceivePersonalMessage", (sendingUser, receivingUser, message) =>
             {
                 if (receivingUser == App.CurrentUser)
                 {
-                    Messages.Insert(0, new ChatMessage() { SendingUser = receivingUser, Text = message});
+                    Messages.Insert(0, new ChatMessage() { SendingUser = sendingUser, Text = message});
+                }
+            });
+
+            hubConnection.On<string>("ReceiveSystemMessage", (string systemmessage) =>
+            {
+                Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + systemmessage });
+                //App.Current.MainPage.DisplayAlert("Chathub Message", systemmessage, "OK");
+                if (systemmessage.Contains("#101"))
+                {
+                    Disconnect(App.CurrentUser);
                 }
             });
 
@@ -211,6 +218,7 @@ namespace KawanApp.ViewModels
 
         private async void FetchMessages()
         {
+            //Fetch messages from database and parse into Observable Collection
             List<ChatMessage> MessagesFromDb = new List<ChatMessage>();
             SendingAndReceivingUsers saru = new SendingAndReceivingUsers() { SendingUser= SendingUser, ReceivingUser = ReceivingUser };
 
@@ -259,9 +267,10 @@ namespace KawanApp.ViewModels
             {
                 //Log message, clear the entry and scroll to bottom.
                 ChatMessage cm = new ChatMessage() { Text = TextToSend, SendingUser = SendingUser, ReceivingUser = receivingUser, TimeStamp = DateTime.Now};
-                Messages.Insert(0, cm);
+                if (!message.Equals("!users"))
+                    Messages.Insert(0, cm); //Log the message only if it's not "!users"
                 TextToSend = string.Empty;
-                MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom");
+                MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom"); //Send to view.
 
                 //Send message to hub or store in local database for sending later.
                 if(IsConnected)
@@ -269,6 +278,8 @@ namespace KawanApp.ViewModels
                     try
                     {
                         await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
+                        if (message.Equals("!users"))
+                            return; //Don't store the message in any databases
                     }
                     catch (Exception ex)
                     {
@@ -317,6 +328,7 @@ namespace KawanApp.ViewModels
                 await hubConnection.InvokeAsync("OnDisconnected", user);
                 await hubConnection.StopAsync();
                 IsConnected = false;
+                Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + "You have been disconnected from the chat." });
             }
             catch
             {
