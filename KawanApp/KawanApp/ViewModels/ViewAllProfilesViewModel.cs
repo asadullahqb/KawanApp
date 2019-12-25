@@ -86,6 +86,7 @@ namespace KawanApp.ViewModels
             catch (Newtonsoft.Json.JsonReaderException ex)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
+                string whatever = ex.Message;
             }
             catch (Exception ex)
             {

@@ -33,7 +33,7 @@ namespace KawanApp
             InitializeComponent();
             GetPreferences();
 
-            MainPage = new ChatPage();
+            MainPage = new AppShell();
 
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());

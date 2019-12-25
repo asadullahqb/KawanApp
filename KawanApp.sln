@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KawanApp.Android", "KawanAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KawanApp.iOS", "KawanApp\KawanApp.iOS\KawanApp.iOS.csproj", "{D55FC5C8-1374-4398-A346-E24E2AA4933C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KawanApp", "KawanApp\KawanApp\KawanApp.csproj", "{4295A3A4-7FB0-4BF4-B80C-66BA2CCF2E87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KawanApp", "KawanApp\KawanApp\KawanApp.csproj", "{4295A3A4-7FB0-4BF4-B80C-66BA2CCF2E87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

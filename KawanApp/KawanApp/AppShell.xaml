@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       mc:Ignorable="d"
+       xmlns:local="clr-namespace:KawanApp.Views"
+       Title="Kawan"
+       x:Class="KawanApp.AppShell"
+       Shell.BackgroundColor="#F68712"
+       Shell.TabBarBackgroundColor="White"
+       Shell.TabBarDisabledColor="Green"
+       Shell.TitleColor="White"
+       Shell.TabBarForegroundColor="Violet"
+       Shell.TabBarUnselectedColor="Gray"
+       Shell.TabBarTitleColor="#F68712"
+       Shell.FlyoutBehavior="Disabled"
+       Shell.NavBarIsVisible="False">
+
+    <TabBar Route="bottomtab">
+
+        <Tab Route="home"
+             Title="Home"
+             Icon="logokawan.png">
+            <ShellContent ContentTemplate="{DataTemplate local:ViewAllProfilesPage}" />
+        </Tab>
+
+        <Tab Route="chat"
+             Title="Chat"
+             Icon="logokawan.png">
+            <ShellContent ContentTemplate="{DataTemplate local:ChatPage}" />
+        </Tab>
+
+        <Tab Route="others"
+             Title="Others"
+             Icon="logokawan.png">
+        </Tab>
+
+    </TabBar>
+
+</Shell>
