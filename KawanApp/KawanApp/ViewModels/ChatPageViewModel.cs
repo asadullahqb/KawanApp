@@ -14,7 +14,7 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class ChatPageViewModel : INotifyPropertyChanged
+    public class ChatPageViewModel : BaseViewModel
     {
         private string _sendingUser = App.CurrentUser;
         private string _receivingUser = "asadqb16@gmail.com"; //sam@sham.com , asadqb16@gmail.com
@@ -29,8 +29,6 @@ namespace KawanApp.ViewModels
         private HubConnection hubConnection;
 
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
-
-        public event PropertyChangedEventHandler PropertyChanged;
         public string SendingUser
         {
             get 
@@ -365,12 +363,6 @@ namespace KawanApp.ViewModels
                     LastMessageVisible = false;
                 });
             }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

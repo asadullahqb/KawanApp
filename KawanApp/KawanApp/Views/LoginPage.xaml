@@ -54,7 +54,8 @@
                     VerticalOptions="Center"
                     Placeholder="Password"
                     Text="{Binding Password}"
-                    Style="{StaticResource EntryStyle}"/>
+                    Style="{StaticResource EntryStyle}"
+                    IsPassword="True"/>
             </StackLayout>
             <!--#endregion-->
             

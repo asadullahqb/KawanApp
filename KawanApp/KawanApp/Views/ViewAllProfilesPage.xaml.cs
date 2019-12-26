@@ -28,10 +28,17 @@ namespace KawanApp.Views
 
         private void KawanList_ItemTapped(object sender, ItemTappedEventArgs e)
         {
+            // don't do anything if we just de-selected the row.
+            if (e.Item == null) return;
+
+            // Deselect the item.
+            if (sender is ListView lv) lv.SelectedItem = null;
+
             KawanUser KawanUser;
             KawanUser = (KawanUser)e.Item;
             System.Diagnostics.Debug.WriteLine("View All Profiles Name: " + KawanUser.FullName);
             PopupNavigation.Instance.PushAsync(new ViewAProfilePage(KawanUser));
+
         }
     }
 }

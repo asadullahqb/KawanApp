@@ -13,10 +13,8 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class LoginPageViewModel : INotifyPropertyChanged
+    public class LoginPageViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _email;
         private string _password;
         private bool _stayLoggedIn;
@@ -127,11 +125,6 @@ namespace KawanApp.ViewModels
             var UserToLogin = new UserAuthentication(Email, Password);
             ValidationResult = Validator?.Validate(UserToLogin);
             IsValid = ValidationResult.IsValid;
-        }
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -2,25 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using Xamarin.Forms;
 
 namespace KawanApp.Converters
 {
-    public class NameFormatConverter : IValueConverter
+    public class ProfileImageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string FormattedName = "";
-            if(value is string)
+            //string Server = App.Server + kawan/;
+            string Server = "http://www.imcc.usm.my/kawan/";
+            string Pic = "";
+            if (value is string)
             {
-                FormattedName = (string)value;
+                Pic = (string)value;
             }
-
-            if (FormattedName.Length > 14)
-                return FormattedName.Substring(0, 14) + "..."; //Cut off the name at 14 characters
+            if (!Pic.Equals("n/a"))
+                return Server + Pic;
             else
-                return FormattedName;
+                return Pic;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

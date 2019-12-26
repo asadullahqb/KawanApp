@@ -4,12 +4,14 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:KawanApp.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.ViewAllProfilesPage">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:NameFormatConverter x:Key="NameFormat" />
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -74,14 +76,18 @@
                                 HorizontalOptions="FillAndExpand" 
                                 Margin="20,0">
                                 <Frame 
-                                    CornerRadius="10" 
+                                    CornerRadius="90" 
                                     Padding="0"
                                     IsClippedToBounds="True"
-                                    HasShadow="False">
-                                    <Image 
-                                        Source="logokawan.png"
-                                        WidthRequest="110"
-                                        HeightRequest="82.5"/>
+                                    HasShadow="True"
+                                    BackgroundColor="#F68712"
+                                    WidthRequest="80"
+                                    HeightRequest="80">
+                                    <ffimageloading:CachedImage 
+                                        Source="{Binding Pic, Converter={StaticResource ImageFormat}}"
+                                        ErrorPlaceholder="profileplaceholder.png"
+                                        Transformations="{Binding Transformations}"
+                                        CacheType="Disk"/>
                                 </Frame>
                                 <StackLayout 
                                     Orientation="Vertical"

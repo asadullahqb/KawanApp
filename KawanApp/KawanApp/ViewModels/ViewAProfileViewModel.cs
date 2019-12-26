@@ -15,10 +15,8 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class ViewAProfileViewModel : INotifyPropertyChanged
+    public class ViewAProfileViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private KawanUser _kawanUser;
         public KawanUser KawanUser
         {
@@ -33,12 +31,6 @@ namespace KawanApp.ViewModels
         public ViewAProfileViewModel(KawanUser KawanData)
         {
             KawanUser = KawanData;
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

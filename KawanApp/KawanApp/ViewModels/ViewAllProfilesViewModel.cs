@@ -1,4 +1,6 @@
-﻿using FluentValidation.Results;
+﻿using FFImageLoading.Transformations;
+using FFImageLoading.Work;
+using FluentValidation.Results;
 using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
@@ -18,13 +20,12 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class ViewAllProfilesViewModel : INotifyPropertyChanged
+    public class ViewAllProfilesViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private ObservableCollection<KawanUser> _allKawanUsers;
         private bool _isRefreshing = false;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
+        public List<ITransformation> Transformations { get; set; }
         public ObservableCollection<KawanUser> AllKawanUsers
         {
             get => _allKawanUsers;
@@ -62,7 +63,9 @@ namespace KawanApp.ViewModels
 
         public ViewAllProfilesViewModel()
         {
-            //ItemTappedCommand = new Command(async () => { await PopupNavigation.Instance.PushAsync(ViewAProfilePage()); });
+            Transformations = new List<ITransformation>() {
+                new CropTransformation(4, 0, 0, 11, 8)
+            };
 
             FetchAllKawanUsers();
 
@@ -71,7 +74,7 @@ namespace KawanApp.ViewModels
         private async void FetchAllKawanUsers()
         {
             List<KawanUser> AllKawanUsersFromDb = new List<KawanUser>();
-            
+
             try
             {
                 AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers();
@@ -96,12 +99,6 @@ namespace KawanApp.ViewModels
             ObservableCollection<KawanUser> temp = new ObservableCollection<KawanUser>(AllKawanUsersFromDb as List<KawanUser>);
             AllKawanUsers = temp;
 
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "")
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
