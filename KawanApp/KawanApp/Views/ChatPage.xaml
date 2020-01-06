@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.ChatPage"
-             xmlns:local="clr-namespace:KawanApp.Helpers" 
+             xmlns:local="clr-namespace:KawanApp.Helpers"
              xmlns:controls="clr-namespace:KawanApp.Controls"
              xmlns:partials="clr-namespace:KawanApp.Views.Partials">
     <ContentPage.Resources>
@@ -13,8 +13,9 @@
             <local:ChatTemplateSelector x:Key="MessageTemplateSelector"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid RowSpacing="0" 
-           ColumnSpacing="0">
+    <Grid
+        RowSpacing="0" 
+        ColumnSpacing="0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="1" />

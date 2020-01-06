@@ -12,7 +12,6 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ViewAProfilePage : PopupPage
     {
         public ViewAProfilePage(KawanUser KawanData)

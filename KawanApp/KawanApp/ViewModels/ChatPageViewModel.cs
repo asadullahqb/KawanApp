@@ -17,7 +17,7 @@ namespace KawanApp.ViewModels
     public class ChatPageViewModel : BaseViewModel
     {
         private string _sendingUser = App.CurrentUser;
-        private string _receivingUser = "asadqb16@gmail.com"; //sam@sham.com , asadqb16@gmail.com
+        private string _receivingUser = "sam@sham.com"; //sam@sham.com , asadqb16@gmail.com
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;

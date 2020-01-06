@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using KawanApp.ViewModels;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views
 {

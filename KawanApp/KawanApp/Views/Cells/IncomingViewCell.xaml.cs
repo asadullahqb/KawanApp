@@ -9,7 +9,6 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Cells
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class IncomingViewCell : ViewCell
     {
         public IncomingViewCell()
