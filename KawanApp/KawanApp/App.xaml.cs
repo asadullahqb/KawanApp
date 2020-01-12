@@ -10,7 +10,7 @@ namespace KawanApp
     {
         private static bool _isUserLoggedIn;
 
-        public static string Server => "http://192.168.0.197/"; //at Sunny Ville home: http://192.168.0.167/
+        public static string Server => "http://192.168.0.157/"; //at Sunny Ville home: http://192.168.0.157/
                                                                 //at USM: http://10.212.41.232/
                                                                 //at KL home: http://192.168.0.197/
 
