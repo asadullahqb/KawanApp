@@ -8,7 +8,7 @@ namespace KawanApp
 {
     public partial class App : Application
     {
-        private static bool _isUserLoggedIn; //Test
+        private static bool _isUserLoggedIn; //Test 2
 
         public static string Server => "http://192.168.0.157/"; //at Sunny Ville home: http://192.168.0.157/
                                                                 //at USM: http://10.212.41.232/
