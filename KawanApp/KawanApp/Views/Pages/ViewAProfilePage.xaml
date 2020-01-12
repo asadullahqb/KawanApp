@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+             xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="KawanApp.Views.Pages.ViewAProfilePage"
+             NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal">
+            <!--Insert back icon here-->
+            <Label 
+                Text="Profile" 
+                TextColor="White"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout 
+            Orientation="Horizontal" 
+            BackgroundColor="White"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand">
+            <Label 
+                Text="Name: "/>
+            <Label
+                Text="{Binding KawanUser.FullName}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

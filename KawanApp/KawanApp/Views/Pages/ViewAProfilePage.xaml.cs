@@ -10,14 +10,20 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace KawanApp.Views
+namespace KawanApp.Views.Pages
 {
-    public partial class ViewAProfilePage : PopupPage
+    public partial class ViewAProfilePage : ContentPage
     {
         public ViewAProfilePage(KawanUser KawanData)
         {
             InitializeComponent();
             this.BindingContext = new ViewAProfileViewModel(KawanData);
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            MessagingCenter.Send<ViewAProfilePage>(this, "navigateBack"); //Send to App.xaml.cs
+            return true;
         }
     }
 }

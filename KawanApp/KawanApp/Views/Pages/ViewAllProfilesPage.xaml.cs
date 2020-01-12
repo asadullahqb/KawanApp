@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace KawanApp.Views
+namespace KawanApp.Views.Pages
 {
     public partial class ViewAllProfilesPage : ContentPage
     {
@@ -30,8 +30,9 @@ namespace KawanApp.Views
 
             KawanUser KawanUser;
             KawanUser = (KawanUser)e.Item;
-            System.Diagnostics.Debug.WriteLine("View All Profiles Name: " + KawanUser.FullName);
-            PopupNavigation.Instance.PushAsync(new ViewAProfilePage(KawanUser));
+
+            MessagingCenter.Send<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", KawanUser); //Send to App.xaml.cs
+            //PopupNavigation.Instance.PushAsync(new ViewAProfilePage(KawanUser));
 
         }
     }

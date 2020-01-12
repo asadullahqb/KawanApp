@@ -7,7 +7,7 @@ using KawanApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace KawanApp.Views
+namespace KawanApp.Views.Pages
 {
     public partial class ChatPage : ContentPage
     {

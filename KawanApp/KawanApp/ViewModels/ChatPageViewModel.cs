@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using KawanApp.Interfaces;
 using KawanApp.Models;
-using KawanApp.Views;
+using KawanApp.Views.Pages;
 using Microsoft.AspNetCore.SignalR.Client;
 using Refit;
 using Xamarin.Forms;

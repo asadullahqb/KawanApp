@@ -1,14 +1,16 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using KawanApp.Views;
 using Xamarin.Essentials;
+using System.Collections.ObjectModel;
+using KawanApp.Models;
+using KawanApp.Views.Pages;
 
 namespace KawanApp
 {
     public partial class App : Application
     {
-        private static bool _isUserLoggedIn; //Test 2
+        private static bool _isUserLoggedIn;
 
         public static string Server => "http://192.168.0.157/"; //at Sunny Ville home: http://192.168.0.157/
                                                                 //at USM: http://10.212.41.232/
@@ -28,15 +30,21 @@ namespace KawanApp
 
         public static bool StayLoggedIn { get; set; }
 
+        public static ObservableCollection<KawanUser> AllKawanUsers { get; set; } 
+
         public App()
         {
             InitializeComponent();
             GetPreferences();
+            var appshell = new AppShell(); //Reuse the same app shell once it's reloaded
 
-            MainPage = new AppShell();
+            MainPage = appshell;
 
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
+
+            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage(); MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
+            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
         }
 
         protected override void OnStart()
