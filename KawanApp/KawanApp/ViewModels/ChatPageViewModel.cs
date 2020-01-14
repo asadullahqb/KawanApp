@@ -15,7 +15,7 @@ using Xamarin.Forms;
 namespace KawanApp.ViewModels
 {
     public class ChatPageViewModel : BaseViewModel
-    {
+    {   
         private string _sendingUser = App.CurrentUser;
         private string _receivingUser = "sam@sham.com"; //sam@sham.com , asadqb16@gmail.com
         private bool _showScrollTap = false;

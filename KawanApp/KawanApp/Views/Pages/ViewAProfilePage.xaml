@@ -8,8 +8,21 @@
              x:Class="KawanApp.Views.Pages.ViewAProfilePage"
              NavigationPage.HasNavigationBar="True">
     <NavigationPage.TitleView>
-        <StackLayout Orientation="Horizontal">
-            <!--Insert back icon here-->
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <Image
+                WidthRequest="20"
+                HeightRequest="20"
+                Source="back.png"
+                Margin="0,0,5,0">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Tapped="BackIcon_Tapped"
+                        NumberOfTapsRequired="1"/>
+                </Image.GestureRecognizers>
+            </Image>
             <Label 
                 Text="Profile" 
                 TextColor="White"/>
@@ -17,14 +30,18 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <StackLayout 
-            Orientation="Horizontal" 
+            Padding="20"
             BackgroundColor="White"
             VerticalOptions="FillAndExpand"
             HorizontalOptions="FillAndExpand">
-            <Label 
-                Text="Name: "/>
-            <Label
-                Text="{Binding KawanUser.FullName}"/>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Name: "/>
+                        <Span Text="{Binding KawanUser.FullName}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

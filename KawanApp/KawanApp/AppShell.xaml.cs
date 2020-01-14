@@ -12,8 +12,5 @@ namespace KawanApp
         {
             InitializeComponent();
         }
-
-
-
     }
 }

@@ -30,26 +30,21 @@
             <!--#region Top Menu -->
             <StackLayout 
                 Orientation="Horizontal" 
-                Margin="30,5">
-                <!--Replace this frame with location icon-->
-                <Frame
-                    BackgroundColor="Aqua"
-                    CornerRadius="90"
-                    WidthRequest="10"
-                    HeightRequest="10"
-                    Padding="0"/>
+                Margin="20,5"
+                VerticalOptions="Center">
+                <Image
+                    Source="location.png"
+                    WidthRequest="20"
+                    HeightRequest="20"/>
                 <Label
                     Text="Location"/>
+                <!--Empty label included to have an unclickable fill between the location and refine constructs-->
                 <Label
-                    Text=""
                     HorizontalOptions="FillAndExpand"/>
-                <!--Replace this frame with refine icon-->
-                <Frame
-                    BackgroundColor="Aqua"
-                    WidthRequest="10"
-                    HeightRequest="10"
-                    CornerRadius="2.5"
-                    Padding="0"/>
+                <Image
+                    Source="refine.png"
+                    WidthRequest="20"
+                    HeightRequest="20"/>
                 <Label
                     Text="Refine"/>
             </StackLayout>
@@ -80,7 +75,7 @@
                                     Padding="0"
                                     IsClippedToBounds="True"
                                     HasShadow="True"
-                                    BackgroundColor="#F68712"
+                                    BackgroundColor="#581059"
                                     WidthRequest="80"
                                     HeightRequest="80">
                                     <ffimageloading:CachedImage 
@@ -100,30 +95,40 @@
                                             FontSize="Medium"
                                             FontAttributes="Bold"
                                             HorizontalOptions="FillAndExpand"/>
-                                        <!--Replace this frame with friend request icon-->
-                                        <Frame
-                                            BackgroundColor="Aqua"
-                                            CornerRadius="90"
-                                            HeightRequest="5" 
-                                            WidthRequest="5"
-                                            Padding="0"/>
+                                        <!--Insert converter to determine if the icon to display is send message or add friend-->
+                                        <Image
+                                            Source="addFriend.png"
+                                            HeightRequest="28" 
+                                            WidthRequest="28">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer
+                                                    Tapped="Icon_Tapped"
+                                                    NumberOfTapsRequired="1"/>
+                                            </Image.GestureRecognizers>
+                                        </Image>
                                     </StackLayout>
                                     <Label 
                                         Text="/{Insert Rating Here}"/>
+                                    <!--Implement converter and behaviour to determine how many stars need to be filled based on rating-->
                                     <StackLayout 
                                         Orientation="Horizontal">
                                         <Label 
                                             Text="{Binding Country}" 
                                             HorizontalOptions="FillAndExpand"/>
-                                        <!--Replace this frame with message icon-->
-                                        <Frame
-                                            BackgroundColor="Aqua"
-                                            CornerRadius="90"
-                                            HeightRequest="5" 
-                                            WidthRequest="5"
-                                            Padding="0"/>
-                                        <Label 
-                                            Text="... mins"/>
+                                        <Image
+                                            Source="messageTime.png"
+                                            HeightRequest="20" 
+                                            WidthRequest="20"/>
+                                        <Label>
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding AverageResponseTime}"/>
+                                                    <!--Implement converter to convert time span to mins or hours-->
+                                                    <Span Text=" mins"/>
+                                                    <!--Implement converter to determine min, mins, hr, hrs-->
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
                                     </StackLayout>
                                 </StackLayout>
                             </StackLayout>

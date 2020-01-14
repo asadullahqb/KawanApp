@@ -5,17 +5,21 @@ using Xamarin.Essentials;
 using System.Collections.ObjectModel;
 using KawanApp.Models;
 using KawanApp.Views.Pages;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace KawanApp
 {
     public partial class App : Application
     {
         private static bool _isUserLoggedIn;
+        private static Color _tabBackgroundColour = Color.FromHex("#8d198f"); //Change this value according to the current tab
 
-        public static string Server => "http://192.168.0.157/"; //at Sunny Ville home: http://192.168.0.157/
-                                                                //at USM: http://10.212.41.232/
-                                                                //at KL home: http://192.168.0.197/
-
+        public static string Server => "http://www.imcc.usm.my/kawan/";
+        //at Sunny Ville home: http://192.168.0.157/
+        //at USM: http://10.212.41.232/
+        //at KL home: http://192.168.0.197/
+        //live: http://www.imcc.usm.my/kawan/
         public static bool IsUserLoggedIn
         {
             get => _isUserLoggedIn;
@@ -23,6 +27,15 @@ namespace KawanApp
             {
                 _isUserLoggedIn = value;
                 ShowLoginPage(_isUserLoggedIn);
+            }
+        }
+        public Color TabBackgroundColour
+        {
+            get => _tabBackgroundColour;
+            set
+            {
+                _tabBackgroundColour = value;
+                OnPropertyChanged();
             }
         }
 
@@ -43,7 +56,7 @@ namespace KawanApp
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
-            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage(); MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
+            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White  }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
         }
 
@@ -61,7 +74,6 @@ namespace KawanApp
         {
             // Handle when your app resumes
         }
-
         static void GetPreferences()
         {
             StayLoggedIn = Preferences.Get("StayLoggedIn", false);

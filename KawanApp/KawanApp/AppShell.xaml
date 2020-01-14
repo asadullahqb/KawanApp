@@ -9,9 +9,7 @@
        x:Class="KawanApp.AppShell"
        Shell.BackgroundColor="#F68712"
        Shell.TabBarBackgroundColor="White"
-       Shell.TabBarDisabledColor="Green"
        Shell.TitleColor="White"
-       Shell.TabBarForegroundColor="Violet"
        Shell.TabBarUnselectedColor="Gray"
        Shell.TabBarTitleColor="#F68712"
        Shell.FlyoutBehavior="Disabled"
@@ -21,19 +19,26 @@
 
         <Tab Route="home"
              Title="Home"
-             Icon="logokawan.png">
+             Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate local:ViewAllProfilesPage}" />
         </Tab>
 
+        <Tab Route="profile"
+             Title="Profile"
+             Icon="profile.png">
+            <ShellContent ContentTemplate="{DataTemplate local:ViewOwnProfilePage}" />
+        </Tab>
+
         <Tab Route="chat"
-             Title="Chat"
-             Icon="logokawan.png">
+             Title="Messages"
+             Icon="allMessages.png">
             <ShellContent ContentTemplate="{DataTemplate local:ChatPage}" />
         </Tab>
 
-        <Tab Route="others"
-             Title="Others"
-             Icon="logokawan.png">
+        <Tab Route="settings"
+             Title="Settings"
+             Icon="settings.png">
+            <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
 
     </TabBar>

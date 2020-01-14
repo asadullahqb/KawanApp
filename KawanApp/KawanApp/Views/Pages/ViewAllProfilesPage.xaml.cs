@@ -33,7 +33,11 @@ namespace KawanApp.Views.Pages
 
             MessagingCenter.Send<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", KawanUser); //Send to App.xaml.cs
             //PopupNavigation.Instance.PushAsync(new ViewAProfilePage(KawanUser));
+        }
 
+        private void Icon_Tapped(object sender, EventArgs e) //Icon here refers to the dual purpose icon for add friend/send message
+        {
+            //Add friend or open chat box (depending on if friend or not)
         }
     }
 }

@@ -27,12 +27,10 @@
 
             <!--#region Email form-->
             <StackLayout Orientation="Horizontal" Margin="70,0">
-                <!-- Include icon here instead of a frame -->
-                <Frame 
-                    CornerRadius="90"
-                    HeightRequest="5"
-                    WidthRequest="5"
-                    BackgroundColor="Aqua"/>
+                <Image 
+                    Source="email.png"
+                    HeightRequest="45"
+                    WidthRequest="45"/>
                 <Entry  
                     x:Name="EmailEntry"
                     VerticalOptions="Center"
@@ -45,12 +43,10 @@
 
             <!--#region Password form-->
             <StackLayout Orientation="Horizontal" Margin="70,0">
-                <!-- Include icon here instead of a frame -->
-                <Frame 
-                    CornerRadius="90"
-                    HeightRequest="5"
-                    WidthRequest="5"
-                    BackgroundColor="Aqua"/>
+                <Image 
+                    Source="password.png"
+                    HeightRequest="45"
+                    WidthRequest="45"/>
                 <Entry 
                     x:Name="PasswordEntry"
                     VerticalOptions="Center"

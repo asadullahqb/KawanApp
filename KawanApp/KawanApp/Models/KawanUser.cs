@@ -16,8 +16,10 @@ namespace KawanApp.Models
         public DateTime DateOfBirth { get; set; }
         public string Campus { get; set; }
         public string School { get; set; }
+        public double Rating { get; set; }
         public string Country { get; set; }
         public string AboutMe { get; set; }
         public string Pic { get; set; }
+        public TimeSpan AverageResponseTime { get; set; }
     }
 }
