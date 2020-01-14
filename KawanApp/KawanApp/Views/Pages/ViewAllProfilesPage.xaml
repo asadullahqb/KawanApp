@@ -12,6 +12,7 @@
         <ResourceDictionary>
             <converters:NameFormatConverter x:Key="NameFormat" />
             <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:IconConverter x:Key="IconFormat" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -38,9 +39,11 @@
                     HeightRequest="20"/>
                 <Label
                     Text="Location"/>
+                
                 <!--Empty label included to have an unclickable fill between the location and refine constructs-->
                 <Label
                     HorizontalOptions="FillAndExpand"/>
+                
                 <Image
                     Source="refine.png"
                     WidthRequest="20"
@@ -56,6 +59,7 @@
             
             <!--#region List of Profiles-->
             <ListView 
+                x:Name="lv"
                 ItemsSource="{Binding AllKawanUsers}" 
                 RowHeight="110"
                 IsPullToRefreshEnabled="True"
@@ -95,9 +99,11 @@
                                             FontSize="Medium"
                                             FontAttributes="Bold"
                                             HorizontalOptions="FillAndExpand"/>
-                                        <!--Insert converter to determine if the icon to display is send message or add friend-->
+                                        <!--Insert converter to determine if the icon to display is send message, add friend or friend request sent-->
                                         <Image
-                                            Source="addFriend.png"
+                                            x:Name="IconImageElement"
+                                            ClassId="{Binding Index}"
+                                            Source="{Binding FriendStatus, Converter={StaticResource IconFormat}}"
                                             HeightRequest="28" 
                                             WidthRequest="28">
                                             <Image.GestureRecognizers>

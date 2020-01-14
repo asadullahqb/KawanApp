@@ -207,5 +207,8 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\messageTime.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\friendRequestSent.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

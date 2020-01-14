@@ -6,10 +6,12 @@ namespace KawanApp.Models
 {
     public class KawanUser
     {
+        public int Index { get; set; }
         public string StudentId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
+        public int FriendStatus { get; set; }
         public string Email { get; set; }
         public string PhoneNum { get; set; }
         public string Gender { get; set; }

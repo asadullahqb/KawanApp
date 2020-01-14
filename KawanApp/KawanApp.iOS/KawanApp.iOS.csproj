@@ -213,4 +213,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\messageTime.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\friendRequestSent.png" />
+  </ItemGroup>
 </Project>

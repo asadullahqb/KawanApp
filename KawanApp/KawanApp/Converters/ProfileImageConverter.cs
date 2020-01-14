@@ -12,15 +12,14 @@ namespace KawanApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            //string Server = App.Server + kawan/;
-            string Server = "http://www.imcc.usm.my/kawan/";
             string Pic = "";
             if (value is string)
             {
                 Pic = (string)value;
             }
             if (!Pic.Equals("n/a"))
-                return Server + Pic;
+                //return App.Server + Pic;
+                return "http://www.imcc.usm.my/kawan/" + Pic;
             else
                 return Pic;
         }

@@ -25,7 +25,7 @@
             </Image>
             <Label 
                 Text="Profile" 
-                TextColor="White"/>
+                TextColor="#393536"/>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>

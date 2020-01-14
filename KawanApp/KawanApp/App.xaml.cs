@@ -15,7 +15,7 @@ namespace KawanApp
         private static bool _isUserLoggedIn;
         private static Color _tabBackgroundColour = Color.FromHex("#8d198f"); //Change this value according to the current tab
 
-        public static string Server => "http://www.imcc.usm.my/kawan/";
+        public static string Server => "http://192.168.0.157/";
         //at Sunny Ville home: http://192.168.0.157/
         //at USM: http://10.212.41.232/
         //at KL home: http://192.168.0.197/
@@ -57,7 +57,9 @@ namespace KawanApp
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
             MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White  }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
+            MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserEmail) => { MainPage = new NavigationPage(); MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserEmail)); });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
         }
 
         protected override void OnStart()

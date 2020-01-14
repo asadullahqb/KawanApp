@@ -17,7 +17,7 @@ namespace KawanApp.ViewModels
     public class ChatPageViewModel : BaseViewModel
     {   
         private string _sendingUser = App.CurrentUser;
-        private string _receivingUser = "sam@sham.com"; //sam@sham.com , asadqb16@gmail.com
+        private string _receivingUser;
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;
@@ -155,8 +155,10 @@ namespace KawanApp.ViewModels
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
 
-        public ChatPageViewModel()
+        public ChatPageViewModel(string receivingUserEmail)
         {
+            ReceivingUser = receivingUserEmail;
+
             FetchMessages();
 
             OnSendCommand = new Command(async () => { await SendPersonalMessage(ReceivingUser, TextToSend); });

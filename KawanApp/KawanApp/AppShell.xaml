@@ -32,7 +32,7 @@
         <Tab Route="chat"
              Title="Messages"
              Icon="allMessages.png">
-            <ShellContent ContentTemplate="{DataTemplate local:ChatPage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:AllMessagesPage}" />
         </Tab>
 
         <Tab Route="settings"

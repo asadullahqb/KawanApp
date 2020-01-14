@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
+using KawanApp.Views.Pages;
 using Refit;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -32,6 +33,7 @@ namespace KawanApp.ViewModels
             set
             {
                 _allKawanUsers = value;
+                MessagingCenter.Send<ViewAllProfilesViewModel>(this, "updateIcon"); //Send to viewmodel
                 OnPropertyChanged();
             }
         }
@@ -63,12 +65,19 @@ namespace KawanApp.ViewModels
 
         public ViewAllProfilesViewModel()
         {
+            MessagingCenter.Subscribe<ViewAllProfilesPage, int[]>(this, "updateFriendStatus", (sender, indexandfs) => { UpdateFriendStatus(indexandfs); });
+
             Transformations = new List<ITransformation>() {
                 new CropTransformation(4, 0, 0, 11, 8)
             };
 
             FetchAllKawanUsers();
 
+        }
+
+        private void UpdateFriendStatus(int[] indexandfs)
+        {
+            AllKawanUsers[indexandfs[0]].FriendStatus = indexandfs[1];
         }
 
         private async void FetchAllKawanUsers()
