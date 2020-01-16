@@ -28,16 +28,16 @@
             <!--#region Email form-->
             <StackLayout Orientation="Horizontal" Margin="70,0">
                 <Image 
-                    Source="email.png"
-                    HeightRequest="45"
-                    WidthRequest="45"/>
+                    Source="profile.png"
+                    HeightRequest="40"
+                    WidthRequest="40"/>
                 <Entry  
-                    x:Name="EmailEntry"
+                    x:Name="StudentIdEntry"
                     VerticalOptions="Center"
-                    Placeholder="Email"
-                    Text="{Binding Email}"
+                    Placeholder="Student ID"
+                    Text="{Binding StudentId}"
                     Style="{StaticResource EntryStyle}"
-                    ReturnCommand="{Binding OnEmailReturnCommand}"/>
+                    ReturnCommand="{Binding OnStudentIdReturnCommand}"/>
             </StackLayout>
             <!--#endregion-->
 
@@ -45,8 +45,8 @@
             <StackLayout Orientation="Horizontal" Margin="70,0">
                 <Image 
                     Source="password.png"
-                    HeightRequest="45"
-                    WidthRequest="45"/>
+                    HeightRequest="40"
+                    WidthRequest="40"/>
                 <Entry 
                     x:Name="PasswordEntry"
                     VerticalOptions="Center"

@@ -23,17 +23,18 @@ namespace KawanApp.ViewModels
 {
     public class ViewAllProfilesViewModel : BaseViewModel
     {
-        private ObservableCollection<KawanUser> _allKawanUsers;
+        private ObservableCollection<KawanUser> _allUsers;
         private bool _isRefreshing = false;
+        private string _currentUserType;
+        private bool _isKawanTitleVisible;
+        private bool _isInternationalStudentsTitleVisible;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
-        public List<ITransformation> Transformations { get; set; }
-        public ObservableCollection<KawanUser> AllKawanUsers
+        public ObservableCollection<KawanUser> AllUsers
         {
-            get => _allKawanUsers;
+            get => _allUsers;
             set
             {
-                _allKawanUsers = value;
-                MessagingCenter.Send<ViewAllProfilesViewModel>(this, "updateIcon"); //Send to viewmodel
+                _allUsers = value;
                 OnPropertyChanged();
             }
         }
@@ -46,6 +47,33 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged(nameof(IsRefreshing));
             }
         }
+        public string CurrentUserType
+        {
+            get { return _currentUserType; }
+            set
+            {
+                _currentUserType = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsKawanTitleVisible
+        {
+            get { return _isKawanTitleVisible; }
+            set
+            {
+                _isKawanTitleVisible = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool IsInternationalStudentsTitleVisible
+        {
+            get { return _isInternationalStudentsTitleVisible; }
+            set
+            {
+                _isInternationalStudentsTitleVisible = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand RefreshCommand
         {
             get
@@ -54,7 +82,7 @@ namespace KawanApp.ViewModels
                 {
                     IsRefreshing = true;
 
-                    await Task.Run(() => FetchAllKawanUsers());
+                    await Task.Run(() => FetchAllUsers());
 
                     IsRefreshing = false;
                 });
@@ -65,49 +93,60 @@ namespace KawanApp.ViewModels
 
         public ViewAllProfilesViewModel()
         {
-            MessagingCenter.Subscribe<ViewAllProfilesPage, int[]>(this, "updateFriendStatus", (sender, indexandfs) => { UpdateFriendStatus(indexandfs); });
-
-            Transformations = new List<ITransformation>() {
-                new CropTransformation(4, 0, 0, 11, 8)
-            };
-
-            FetchAllKawanUsers();
-
+            MessagingCenter.Subscribe<LoginPage>(this, "loadUserData", (sender) => { FetchAllUsers(); });
+            FetchAllUsers();
         }
 
-        private void UpdateFriendStatus(int[] indexandfs)
+        private async void FetchAllUsers()
         {
-            AllKawanUsers[indexandfs[0]].FriendStatus = indexandfs[1];
-        }
-
-        private async void FetchAllKawanUsers()
-        {
-            List<KawanUser> AllKawanUsersFromDb = new List<KawanUser>();
-
-            try
+            CurrentUserType = App.CurrentUserType;
+            if (CurrentUserType == "International Student")
             {
-                AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers();
-            }
-            catch (Refit.ApiException ex)
-            {
-                if (ex.Message.Contains("404"))
-                    await App.Current.MainPage.DisplayAlert("Error", "Failed to connect to server.", "OK");
-                else
-                    await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            }
-            catch (Newtonsoft.Json.JsonReaderException ex)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
-                string whatever = ex.Message;
-            }
-            catch (Exception ex)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            }
+                IsInternationalStudentsTitleVisible = false;
+                IsKawanTitleVisible = true;
+                List<KawanUser> AllKawanUsersFromDb = new List<KawanUser>();
+                User u = new User() { StudentId = App.CurrentUser };
+                AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers(u);
 
-            ObservableCollection<KawanUser> temp = new ObservableCollection<KawanUser>(AllKawanUsersFromDb as List<KawanUser>);
-            AllKawanUsers = temp;
+                ObservableCollection<KawanUser> temp = new ObservableCollection<KawanUser>(AllKawanUsersFromDb as List<KawanUser>);
+                AllUsers = temp;
+            }
+            else if(CurrentUserType == "Kawan")
+            {
+                IsInternationalStudentsTitleVisible = true;
+                IsKawanTitleVisible = false;
+                List<User> AllInternationalStudentUsersFromDb = new List<User>();
+                User u = new KawanUser() { StudentId = App.CurrentUser };
+                AllInternationalStudentUsersFromDb = await ServerApi.FetchAllInternationalStudentUsers(u);
 
+                ObservableCollection<User> temp = new ObservableCollection<User>(AllInternationalStudentUsersFromDb as List<User>);
+                ObservableCollection<KawanUser> tempku = new ObservableCollection<KawanUser>();
+                foreach(User user in temp) //parse user into kawan user to be used with the XAML.
+                {
+                    KawanUser ku = new KawanUser()
+                    {
+                        AboutMe = user.AboutMe,
+                        AverageResponseTime = "",
+                        Campus = user.Campus,
+                        Country = user.Country,
+                        DateOfBirth = user.DateOfBirth,
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        FriendStatus = user.FriendStatus,
+                        Gender = user.Gender,
+                        Index = user.Index,
+                        LastName = user.LastName,
+                        PhoneNum = user.PhoneNum,
+                        Pic = user.Pic,
+                        Rating = 0.00,
+                        School = user.School,
+                        StudentId = user.StudentId,
+                        Type = user.Type
+                    };
+                    tempku.Add(ku);
+                }
+                AllUsers = tempku;
+            }
         }
     }
 }

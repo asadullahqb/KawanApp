@@ -155,9 +155,9 @@ namespace KawanApp.ViewModels
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
 
-        public ChatPageViewModel(string receivingUserEmail)
+        public ChatPageViewModel(string receivingUserStudentId)
         {
-            ReceivingUser = receivingUserEmail;
+            ReceivingUser = receivingUserStudentId;
 
             FetchMessages();
 
@@ -201,19 +201,6 @@ namespace KawanApp.ViewModels
             });
 
             #endregion
-
-            /*
-            OnSendCommand = new Command(() =>
-            {
-                if (!string.IsNullOrEmpty(TextToSend))
-                {
-                    Messages.Insert(0, new Message() { Text = TextToSend, User = App.User });
-                    TextToSend = string.Empty;
-                    MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom");
-                }
-
-            });
-            */
         }
 
         private async void FetchMessages()

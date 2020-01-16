@@ -16,7 +16,12 @@ namespace KawanApp.Views.Pages
         {
             InitializeComponent();
             this.BindingContext = new LoginPageViewModel();
-            MessagingCenter.Subscribe<LoginPageViewModel>(this, "OnEmailReturnCommand", (sender) => { OnEmailReturnCommand(); });
+        }
+
+        protected override void OnDisappearing()
+        {
+            MessagingCenter.Send<LoginPage>(this, "loadUserData"); //Send to ViewAllProfilesViewModel.cs
+            base.OnDisappearing();
         }
         protected override bool OnBackButtonPressed()
         {
@@ -24,9 +29,9 @@ namespace KawanApp.Views.Pages
             return false;
         }
 
-        private void OnEmailReturnCommand()
+        private void OnStudentIdReturnCommand()
         {
-            if (EmailEntry.IsFocused)
+            if (StudentIdEntry.IsFocused)
                 PasswordEntry.Focus();
             return;
         }

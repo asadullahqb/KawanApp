@@ -17,8 +17,8 @@ namespace KawanApp.Converters
                 FormattedName = (string)value;
             }
 
-            if (FormattedName.Length > 14)
-                return FormattedName.Substring(0, 14) + "..."; //Cut off the name at 14 characters
+            if (FormattedName.Length > 11)
+                return FormattedName.Substring(0, 11) + "..."; //Cut off the name at 11 characters
             else
                 return FormattedName;
         }

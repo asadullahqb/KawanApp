@@ -6,12 +6,12 @@ namespace KawanApp.Models
 {
     public class UserAuthentication
     {
-        public string Email { get; set; }
+        public string StudentId { get; set; }
         public string Password { get; set; }
 
-        public UserAuthentication(string email = "", string password = "")
+        public UserAuthentication(string studentid, string password = "")
         {
-            this.Email = email;
+            this.StudentId = studentid;
             this.Password = password;
         }
     }

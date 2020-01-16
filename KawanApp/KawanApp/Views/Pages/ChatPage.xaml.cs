@@ -22,10 +22,10 @@ namespace KawanApp.Views.Pages
             MessagingCenter.Send<ChatPage>(this, "disconnectOnDisappearing"); //Send to viewmodel
         }
 
-        public ChatPage(string receivingUserEmail)
+        public ChatPage(string receivingUserStudentId)
         {
             InitializeComponent();
-            this.BindingContext = new ChatPageViewModel(receivingUserEmail);
+            this.BindingContext = new ChatPageViewModel(receivingUserStudentId);
             //Subscribing from viewmodel:
             MessagingCenter.Subscribe<ChatPageViewModel>(this, "scrolltobottom", (sender) => {
                 ChatList?.ScrollToFirst();

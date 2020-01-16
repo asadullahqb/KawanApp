@@ -1,6 +1,8 @@
 ﻿using FluentValidation.Results;
 using KawanApp.Helpers;
+using KawanApp.Interfaces;
 using KawanApp.Models;
+using Refit;
 using System;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -10,19 +12,31 @@ namespace KawanApp.ViewModels
 {
     public class LoginPageViewModel : BaseViewModel
     {
-        private string _email;
+        private string _studentId;
+        private string _currentUserType;
         private string _password;
         private bool _stayLoggedIn;
         private bool _isLoadingVisible;
         private bool _isValid;
-        public string Email
+        private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
+        public string StudentId
         {
-            get => _email;
+            get => _studentId;
             set 
-            { 
-                _email = value; 
+            {
+                _studentId = value; 
                 OnPropertyChanged(); 
                 ValidateEntries(); 
+            }
+        }
+
+        public string CurrentUserType
+        {
+            get => _currentUserType;
+            set
+            {
+                _currentUserType = value;
+                OnPropertyChanged();
             }
         }
 
@@ -71,34 +85,31 @@ namespace KawanApp.ViewModels
         ValidationResult ValidationResult { get; set; } = new ValidationResult();
 
         public ICommand OnLoginCommand { get; set; }
-        public ICommand OnEmailReturnCommand { get; set; }
 
         public LoginPageViewModel()
         {
+            Preferences.Clear();
             OnLoginCommand = new Command(() => { Login(); });
-            OnEmailReturnCommand = new Command(() => { MessagingCenter.Send<LoginPageViewModel>(this, "OnEmailReturnCommand"); }); //send to view.
         }
 
-        private void Login()
+        private async void Login()
         {
             try
             {
                 IsLoadingVisible = true;
                 IsValid = false;
 
-                var UserToLogin = new UserAuthentication(Email, Password);
+                var UserToLogin = new UserAuthentication(StudentId, Password);
 
-                UpdateStateData();
+                var message = await ServerApi.Login(UserToLogin);
 
-                //Insert restful call to authenticate on the server here
-                /*
-                var message = await ServerApi.UserLogin(UserToLogin);
-
-                if (message.status)
+                if (message.Status)
+                {
+                    CurrentUserType = message.UserType;
                     UpdateStateData();
+                }
                 else
-                    App.Current.MainPage.DisplayAlert("Error", "Wrong username or password.", "Ok");
-                */
+                    await App.Current.MainPage.DisplayAlert("Error", "Wrong username or password.", "Ok");
             }
             catch (Exception ex)
             {
@@ -113,16 +124,18 @@ namespace KawanApp.ViewModels
 
         private void UpdateStateData()
         {
-            App.CurrentUser = Email;
+            App.CurrentUser = StudentId;
+            App.CurrentUserType = CurrentUserType;
             App.IsUserLoggedIn = true;
-            Preferences.Set("CurrentUser", Email);
+            Preferences.Set("CurrentUser", StudentId);
+            Preferences.Set("CurrentUserType", CurrentUserType);
             Preferences.Set("IsUserLoggedIn", true);
             Preferences.Set("StayLoggedIn", StayLoggedIn);
         }
 
         private void ValidateEntries()
         {
-            var UserToLogin = new UserAuthentication(Email, Password);
+            var UserToLogin = new UserAuthentication(StudentId, Password);
             ValidationResult = Validator?.Validate(UserToLogin);
             IsValid = ValidationResult.IsValid;
         }

@@ -10,15 +10,25 @@ namespace KawanApp.Interfaces
 {
     public interface IServerApi
     {
+        [Post("/kawanapis/functions/login.php")]
+        Task<LoginReply> Login([Body] UserAuthentication ua);
 
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
-        Task<List<KawanUser>> FetchAllKawanUsers();
+        Task<List<KawanUser>> FetchAllKawanUsers([Body] User u);
+
+        [Get("/kawanapis/functions/fetchAllInternationalStudentUsers.php")]
+        Task<List<User>> FetchAllInternationalStudentUsers([Body] User u);
         
-        [Post("/kawanapis/functions/fetchMessages.php")]
-        Task<List<ChatMessage>> FetchMessages([Body] SendingAndReceivingUsers sendingandreceivingusers);
+        [Get("/kawanapis/functions/fetchMessages.php")]
+        Task<List<ChatMessage>> FetchMessages([Body] SendingAndReceivingUsers saru);
         
         [Post("/kawanapis/functions/storeMessage.php")]
-        Task<ReplyMessage> StoreMessage([Body] ChatMessage message);
+        Task<ReplyMessage> StoreMessage([Body] ChatMessage cm);
 
+        [Post("/kawanapis/functions/sendFriendRequest.php")]
+        Task<ReplyMessage> SendFriendRequest([Body] FriendRequest fr);
+
+        [Post("/kawanapis/functions/unsendFriendRequest.php")]
+        Task<ReplyMessage> UnsendFriendRequest([Body] FriendRequest fr);
     }
 }

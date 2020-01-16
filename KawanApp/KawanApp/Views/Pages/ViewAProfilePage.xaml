@@ -37,8 +37,120 @@
             <Label>
                 <Label.FormattedText>
                     <FormattedString>
+                        <Span Text="Index: "/>
+                        <Span Text="{Binding KawanUser.Index}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Rating: "/>
+                        <Span Text="{Binding KawanUser.StudentId}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
                         <Span Text="Name: "/>
                         <Span Text="{Binding KawanUser.FullName}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Friend Status: "/>
+                        <Span Text="{Binding KawanUser.FriendStatus}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Email: "/>
+                        <Span Text="{Binding KawanUser.Email}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Phone Number: "/>
+                        <Span Text="{Binding KawanUser.PhoneNum}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Gender: "/>
+                        <Span Text="{Binding KawanUser.Gender}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Date of Birth: "/>
+                        <Span Text="{Binding KawanUser.DateOfBirth}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Campus: "/>
+                        <Span Text="{Binding KawanUser.Campus}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="School: "/>
+                        <Span Text="{Binding KawanUser.School}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Rating: "/>
+                        <Span Text="{Binding KawanUser.Rating}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Country: "/>
+                        <Span Text="{Binding KawanUser.Country}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="About Me: "/>
+                        <Span Text="{Binding KawanUser.AboutMe}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Pic: "/>
+                        <Span Text="{Binding KawanUser.Pic}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label>
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Average Response Time: "/>
+                        <Span Text="{Binding KawanUser.AverageResponseTime}" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
