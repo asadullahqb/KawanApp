@@ -9,10 +9,12 @@
         <StackLayout>
             <Button 
                 Text="Logout"
-                CornerRadius="10"
+                CornerRadius="20"
                 VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand"
+                Margin="110,0"
                 BorderColor="LightGray"
+                BorderWidth="1"
+                BackgroundColor="White"
                 Clicked="Logout_Clicked"/>
         </StackLayout>
     </ContentPage.Content>

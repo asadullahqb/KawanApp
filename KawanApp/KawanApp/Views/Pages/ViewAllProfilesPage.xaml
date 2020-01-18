@@ -15,6 +15,7 @@
             <converters:ProfileImageConverter x:Key="ImageFormat" />
             <converters:IconConverter x:Key="IconFormat" />
             <converters:BoolUserConverter x:Key="UserFormat" />
+            <converters:RatingStarConverter x:Key="RatingStarFormat" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
@@ -100,8 +101,8 @@
                                 <Frame 
                                     CornerRadius="90" 
                                     Padding="0"
+                                    Margin="0,3,3,3"
                                     IsClippedToBounds="True"
-                                    HasShadow="True"
                                     BackgroundColor="#581059"
                                     WidthRequest="80"
                                     HeightRequest="80">
@@ -138,10 +139,53 @@
                                             </Image.GestureRecognizers>
                                         </Image>
                                     </StackLayout>
-                                    <Label 
-                                        Text="/{Insert Rating Here}"
-                                        IsVisible="{Binding Type, Converter={StaticResource UserFormat}}"/>
-                                    <!--Implement converter and behaviour to determine how many stars need to be filled based on rating-->
+                                    <!--#region Rating-->
+                                    <StackLayout
+                                        HorizontalOptions="Start"
+                                        Orientation="Horizontal"
+                                        IsVisible="{Binding Type, Converter={StaticResource UserFormat}}">
+                                        <ffimageloading:CachedImage 
+                                            x:Name="starOne"
+                                            Source="{Binding Stars[0], Converter={StaticResource RatingStarFormat}}"
+                                            Margin="-3,0,0,0">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:TintTransformation HexColor="8d198f" EnableSolidColor="True"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+                                        <ffimageloading:CachedImage 
+                                            x:Name="starTwo"
+                                            Source="{Binding Stars[1], Converter={StaticResource RatingStarFormat}}"
+                                            Margin="-14,0,0,0">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:TintTransformation HexColor="8d198f" EnableSolidColor="True"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+                                        <ffimageloading:CachedImage 
+                                            x:Name="starThree"
+                                            Source="{Binding Stars[2], Converter={StaticResource RatingStarFormat}}"
+                                            Margin="-14,0,0,0">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:TintTransformation HexColor="8d198f" EnableSolidColor="True"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+                                        <ffimageloading:CachedImage 
+                                            x:Name="starFour"
+                                            Source="{Binding Stars[3], Converter={StaticResource RatingStarFormat}}"
+                                            Margin="-14,0,0,0">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:TintTransformation HexColor="8d198f" EnableSolidColor="True"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+                                        <ffimageloading:CachedImage 
+                                            x:Name="starFive"
+                                            Source="{Binding Stars[4], Converter={StaticResource RatingStarFormat}}"
+                                            Margin="-14,0,0,0">
+                                            <ffimageloading:CachedImage.Transformations>
+                                                <fftransformations:TintTransformation HexColor="8d198f" EnableSolidColor="True"/>
+                                            </ffimageloading:CachedImage.Transformations>
+                                        </ffimageloading:CachedImage>
+                                    </StackLayout>
+                                    <!--#endregion-->
                                     <StackLayout 
                                         Orientation="Horizontal">
                                         <Label 

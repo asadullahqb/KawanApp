@@ -216,4 +216,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\friendRequestSent.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\starEmpty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\starFilled.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\starHalf.png" />
+  </ItemGroup>
 </Project>
