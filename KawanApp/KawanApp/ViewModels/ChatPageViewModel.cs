@@ -207,28 +207,16 @@ namespace KawanApp.ViewModels
         {
             //Fetch messages from database and parse into Observable Collection
             List<ChatMessage> MessagesFromDb = new List<ChatMessage>();
-            SendingAndReceivingUsers saru = new SendingAndReceivingUsers() { SendingUser= SendingUser, ReceivingUser = ReceivingUser };
+            ChatMessage cm = new ChatMessage() { SendingUser= SendingUser, ReceivingUser = ReceivingUser };
 
-            try
+            if (App.NetworkStatus)
+                MessagesFromDb = await ServerApi.FetchMessages(cm);
+            else
             {
-                MessagesFromDb = await ServerApi.FetchMessages(saru);
+                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
             }
-            catch (Refit.ApiException ex)
-            {
-                if (ex.Message.Contains("404"))
-                    await App.Current.MainPage.DisplayAlert("Error", "Failed to connect to server.", "OK");
-                else
-                    await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            }
-            catch (Newtonsoft.Json.JsonReaderException ex)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
-            }
-            catch (Exception ex)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-            }
-
+            
             ObservableCollection<ChatMessage> temp = new ObservableCollection<ChatMessage>(MessagesFromDb as List<ChatMessage>);
             Messages = temp;
 
@@ -276,27 +264,15 @@ namespace KawanApp.ViewModels
                     //Not implemented yet.
 
                     //Store message in MySQL database.
-                    ReplyMessage rm = new ReplyMessage();
-                    try
-                    {
-                        rm = await ServerApi.StoreMessage(cm);
-                    }
-                    catch (Refit.ApiException ex)
-                    {
-                        if (ex.Message.Contains("404"))
-                            await App.Current.MainPage.DisplayAlert("Error", "Failed to connect to server.", "OK");
-                        else
-                            await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
-                    }
-                    catch (Newtonsoft.Json.JsonReaderException ex)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Error", "JSON parsing error.", "OK");
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex);
-                    }
+                    ReplyMessage rm;
 
+                    if (App.NetworkStatus)
+                        rm = await ServerApi.StoreMessage(cm);
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        return;
+                    }
                     //Just for debugging:
                     if (!rm.Status)
                         await App.Current.MainPage.DisplayAlert("Failure!", rm.Message, "OK");

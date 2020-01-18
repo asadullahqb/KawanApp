@@ -4,7 +4,10 @@ using FluentValidation.Results;
 using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
+using KawanApp.Services;
+using KawanApp.ViewModels.Popups;
 using KawanApp.Views.Pages;
+using KawanApp.Views.Popups;
 using Refit;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -25,9 +28,11 @@ namespace KawanApp.ViewModels
     {
         private ObservableCollection<KawanUser> _allUsers;
         private bool _isRefreshing = false;
-        private string _currentUserType;
         private bool _isKawanTitleVisible;
         private bool _isInternationalStudentsTitleVisible;
+        private ObservableCollection<Country> _listOfCountryData;
+        private string _isSearchedCountry = null;
+        private string _searchedCountry = null;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public ObservableCollection<KawanUser> AllUsers
         {
@@ -45,15 +50,6 @@ namespace KawanApp.ViewModels
             {
                 _isRefreshing = value;
                 OnPropertyChanged(nameof(IsRefreshing));
-            }
-        }
-        public string CurrentUserType
-        {
-            get { return _currentUserType; }
-            set
-            {
-                _currentUserType = value;
-                OnPropertyChanged();
             }
         }
         public bool IsKawanTitleVisible
@@ -74,6 +70,35 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ObservableCollection<Country> ListOfCountryData
+        {
+            get => _listOfCountryData;
+            set
+            {
+                _listOfCountryData = value;
+                OnPropertyChanged();
+            }
+        }
+        public string IsSearchedCountry
+        {
+            get => _isSearchedCountry;
+            set
+            {
+                _isSearchedCountry = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SearchedCountry
+        {
+            get => _searchedCountry;
+            set
+            {
+                _searchedCountry = value;
+                OnPropertyChanged();
+            }
+        }
         public ICommand RefreshCommand
         {
             get
@@ -82,43 +107,121 @@ namespace KawanApp.ViewModels
                 {
                     IsRefreshing = true;
 
-                    await Task.Run(() => FetchAllUsers());
+                    if(App.NetworkStatus)
+                    {
+                        await Task.Run(() => FetchAllUsers());
+                        await Task.Run(() => FetchCountriesList());
+                        DataService.Country = null;
+                        SetCountryViewParameters();
+                    }
 
                     IsRefreshing = false;
                 });
             }
         }
 
-        public ICommand ItemTappedCommand { get; set; }
+        public ICommand OnCountryTappedCommand { get; set; }
 
         public ViewAllProfilesViewModel()
         {
-            MessagingCenter.Subscribe<LoginPage>(this, "loadUserData", (sender) => { FetchAllUsers(); });
+            OnCountryTappedCommand = new Command(()=> { CountryTapped(); });
+            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchAllUsers(); });
+            MessagingCenter.Subscribe<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", (sender, SearchResults) => { AllUsers = SearchResults; SetCountryViewParameters(); });
+            MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { AllUsers = DataService.AllUsers; SetCountryViewParameters(); });
             FetchAllUsers();
+            FetchCountriesList();
+            SetCountryViewParameters();
+        }
+
+        private void SetCountryViewParameters()
+        {
+            if (!string.IsNullOrEmpty(DataService.Country))
+            {
+                IsSearchedCountry = ": ";
+                SearchedCountry = DataService.Country;
+            }
+            else
+            {
+                IsSearchedCountry = null;
+                SearchedCountry = null;
+            }
+        }
+
+        private async void FetchCountriesList()
+        {
+            List<Country> ListOfCountriesFromDb;
+            User u;
+
+            if (App.CurrentUserType == "International Student")
+                u = new User() { Type = "Kawan" };
+            else if (App.CurrentUserType == "Kawan")
+                u = new User() { Type = "International Student" };
+            else
+                return;
+
+            if (App.NetworkStatus)
+            {
+                ListOfCountriesFromDb = await ServerApi.FetchListOfCountries(u);
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
+
+            ObservableCollection<Country> temp = new ObservableCollection<Country>(ListOfCountriesFromDb.OrderBy(c => c.CountryName));
+            for(int i=0; i<temp.Count; i++)
+            {
+                if(temp[i].CountryName == "")
+                {
+                    temp.RemoveAt(i);
+                    i--;
+                }
+            }
+            ListOfCountryData = temp;
+        }
+
+        private void CountryTapped()
+        {
+            PopupNavigation.Instance.PushAsync(new CountryPopup(ListOfCountryData));
         }
 
         private async void FetchAllUsers()
         {
-            CurrentUserType = App.CurrentUserType;
-            if (CurrentUserType == "International Student")
+            if (App.CurrentUserType == "International Student")
             {
                 IsInternationalStudentsTitleVisible = false;
                 IsKawanTitleVisible = true;
-                List<KawanUser> AllKawanUsersFromDb = new List<KawanUser>();
+                List<KawanUser> AllKawanUsersFromDb;
                 User u = new User() { StudentId = App.CurrentUser };
-                AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers(u);
+
+                if (App.NetworkStatus)
+                    AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers(u);
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                    AllKawanUsersFromDb = new List<KawanUser>();
+                }
 
                 ObservableCollection<KawanUser> temp = new ObservableCollection<KawanUser>(AllKawanUsersFromDb as List<KawanUser>);
                 AllUsers = temp;
+                DataService.AllUsers = AllUsers;
             }
-            else if(CurrentUserType == "Kawan")
+            else if(App.CurrentUserType == "Kawan")
             {
                 IsInternationalStudentsTitleVisible = true;
                 IsKawanTitleVisible = false;
-                List<User> AllInternationalStudentUsersFromDb = new List<User>();
+                List<User> AllInternationalStudentUsersFromDb;
                 User u = new KawanUser() { StudentId = App.CurrentUser };
-                AllInternationalStudentUsersFromDb = await ServerApi.FetchAllInternationalStudentUsers(u);
 
+                if (App.NetworkStatus)
+                    AllInternationalStudentUsersFromDb = await ServerApi.FetchAllInternationalStudentUsers(u);
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                    AllInternationalStudentUsersFromDb = new List<User>(); ;
+                }
+                
                 ObservableCollection<User> temp = new ObservableCollection<User>(AllInternationalStudentUsersFromDb as List<User>);
                 ObservableCollection<KawanUser> tempku = new ObservableCollection<KawanUser>();
                 foreach(User user in temp) //parse user into kawan user to be used with the XAML.
@@ -146,6 +249,7 @@ namespace KawanApp.ViewModels
                     tempku.Add(ku);
                 }
                 AllUsers = tempku;
+                DataService.AllUsers = AllUsers;
             }
         }
     }

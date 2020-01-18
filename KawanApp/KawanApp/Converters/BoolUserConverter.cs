@@ -12,19 +12,19 @@ namespace KawanApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string CurrentUserType;
-            bool IsVisible = false;
+            string Type;
+            bool IsVisible = true;
             if (value is string)
             {
-                CurrentUserType = (string)value;
+                Type = (string)value;
 
-                switch (CurrentUserType)
+                switch (Type)
                 {
                     case "Kawan":
-                        IsVisible = false;
+                        IsVisible = true;
                         break;
                     case "International Student":
-                        IsVisible = true;
+                        IsVisible = false;
                         break;
                 }
 

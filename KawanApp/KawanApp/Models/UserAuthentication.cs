@@ -6,6 +6,7 @@ namespace KawanApp.Models
 {
     public class UserAuthentication
     {
+        public string ServerKey { get { return App.ServerKey; } }
         public string StudentId { get; set; }
         public string Password { get; set; }
 

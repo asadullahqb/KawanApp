@@ -100,13 +100,21 @@ namespace KawanApp.ViewModels
                 IsValid = false;
 
                 var UserToLogin = new UserAuthentication(StudentId, Password);
+                LoginReply message = new LoginReply();
 
-                var message = await ServerApi.Login(UserToLogin);
+                if(App.NetworkStatus)
+                    message = await ServerApi.Login(UserToLogin);
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                    return;
+                }
 
                 if (message.Status)
                 {
                     CurrentUserType = message.UserType;
                     UpdateStateData();
+                    MessagingCenter.Send<LoginPageViewModel>(this, "loadUserData"); //Send to ViewAllProfilesViewModel.cs
                 }
                 else
                     await App.Current.MainPage.DisplayAlert("Error", "Wrong username or password.", "Ok");

@@ -10,7 +10,7 @@ namespace KawanApp.Interfaces
 {
     public interface IServerApi
     {
-        [Post("/kawanapis/functions/login.php")]
+        [Get("/kawanapis/functions/login.php")]
         Task<LoginReply> Login([Body] UserAuthentication ua);
 
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
@@ -18,9 +18,12 @@ namespace KawanApp.Interfaces
 
         [Get("/kawanapis/functions/fetchAllInternationalStudentUsers.php")]
         Task<List<User>> FetchAllInternationalStudentUsers([Body] User u);
+
+        [Get("/kawanapis/functions/fetchListOfCountries.php")]
+        Task<List<Country>> FetchListOfCountries([Body] User u);
         
         [Get("/kawanapis/functions/fetchMessages.php")]
-        Task<List<ChatMessage>> FetchMessages([Body] SendingAndReceivingUsers saru);
+        Task<List<ChatMessage>> FetchMessages([Body] ChatMessage cm);
         
         [Post("/kawanapis/functions/storeMessage.php")]
         Task<ReplyMessage> StoreMessage([Body] ChatMessage cm);

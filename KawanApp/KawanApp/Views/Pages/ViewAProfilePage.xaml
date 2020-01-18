@@ -45,7 +45,7 @@
             <Label>
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="Rating: "/>
+                        <Span Text="Student Id: "/>
                         <Span Text="{Binding KawanUser.StudentId}" />
                     </FormattedString>
                 </Label.FormattedText>

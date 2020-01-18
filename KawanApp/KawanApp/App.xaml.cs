@@ -13,6 +13,7 @@ namespace KawanApp
     public partial class App : Application
     {
         private static bool _isUserLoggedIn;
+        public static string ServerKey => "4&6R=KLL2gf%7^+E";
         public static string Server => "http://www.imcc.usm.my/kawan/";
         //at Sunny Ville home: http://192.168.0.157/
         //at KL home: http://192.168.0.197/
@@ -29,16 +30,23 @@ namespace KawanApp
         }
         public static string CurrentUser { get; set; }
         public static string CurrentUserType { get; set; }
+        public static bool NetworkStatus { get; set; } = false;
 
         public static bool StayLoggedIn { get; set; }
 
-        public static ObservableCollection<KawanUser> AllKawanUsers { get; set; } 
 
         public App()
         {
             InitializeComponent();
             GetPreferences();
-            var appshell = new AppShell(); //Reuse the same app shell once it's reloaded
+
+            Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+
+            var current = Connectivity.NetworkAccess;
+            var appshell = new AppShell(); //Reuse the same app shell once it's loaded
+
+            if (current == NetworkAccess.Internet)
+                NetworkStatus = true;
 
             MainPage = appshell;
 
@@ -49,6 +57,16 @@ namespace KawanApp
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { MainPage = new NavigationPage(); MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell();  MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); });
+        }
+
+        private void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            var current = Connectivity.NetworkAccess;
+            if (current == NetworkAccess.Internet)
+                NetworkStatus = true;
+            else
+                NetworkStatus = false;
         }
 
         protected override void OnStart()

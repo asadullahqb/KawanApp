@@ -46,10 +46,24 @@
                 <Image
                     Source="location.png"
                     WidthRequest="20"
-                    HeightRequest="20"/>
-                <Label
-                    Text="Location"/>
-                
+                    HeightRequest="20">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding OnCountryTappedCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding OnCountryTappedCommand}" />
+                    </Label.GestureRecognizers>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Country"/>
+                            <Span Text="{Binding IsSearchedCountry}"/>
+                            <Span Text="{Binding SearchedCountry}" TextColor="#B0B0B0"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
                 <!--Empty label included to have an unclickable fill between the location and refine constructs-->
                 <Label
                     HorizontalOptions="FillAndExpand"/>
@@ -126,7 +140,7 @@
                                     </StackLayout>
                                     <Label 
                                         Text="/{Insert Rating Here}"
-                                        IsVisible="{Binding CurrentUserType, Converter={StaticResource UserFormat}}"/>
+                                        IsVisible="{Binding Type, Converter={StaticResource UserFormat}}"/>
                                     <!--Implement converter and behaviour to determine how many stars need to be filled based on rating-->
                                     <StackLayout 
                                         Orientation="Horizontal">
@@ -137,9 +151,9 @@
                                             Source="messageTime.png"
                                             HeightRequest="20" 
                                             WidthRequest="20"
-                                            IsVisible="{Binding CurrentUserType, Converter={StaticResource UserFormat}}"/>
+                                            IsVisible="{Binding Type, Converter={StaticResource UserFormat}}"/>
                                         <Label
-                                            IsVisible="{Binding CurrentUserType, Converter={StaticResource UserFormat}}">
+                                            IsVisible="{Binding Type, Converter={StaticResource UserFormat}}">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="{Binding AverageResponseTime}"/>

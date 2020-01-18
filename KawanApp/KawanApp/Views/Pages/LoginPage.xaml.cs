@@ -17,12 +17,6 @@ namespace KawanApp.Views.Pages
             InitializeComponent();
             this.BindingContext = new LoginPageViewModel();
         }
-
-        protected override void OnDisappearing()
-        {
-            MessagingCenter.Send<LoginPage>(this, "loadUserData"); //Send to ViewAllProfilesViewModel.cs
-            base.OnDisappearing();
-        }
         protected override bool OnBackButtonPressed()
         {
             // Back button on android doesn't close login page

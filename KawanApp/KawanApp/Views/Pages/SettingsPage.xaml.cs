@@ -16,5 +16,10 @@ namespace KawanApp.Views.Pages
         {
             InitializeComponent();
         }
+
+        private void Logout_Clicked(object sender, EventArgs e)
+        {
+            MessagingCenter.Send<SettingsPage>(this, "navigateToLoginPage"); //Send to App.xaml.cs
+        }
     }
 }

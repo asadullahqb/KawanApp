@@ -53,12 +53,24 @@ namespace KawanApp.Views.Pages
             switch (imgsrc)
             {
                 case "File: addFriend.png":
-                    ServerApi.SendFriendRequest(fr);
+                    if (App.NetworkStatus)
+                        ServerApi.SendFriendRequest(fr);
+                    else
+                    {
+                        App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        return;
+                    }
                     vm.AllUsers[index].FriendStatus = 1;
                     img.Source = (ImageSource)converter.ConvertFromInvariantString("friendRequestSent.png");
                     break;
                 case "File: friendRequestSent.png":
-                    ServerApi.UnsendFriendRequest(fr);
+                    if (App.NetworkStatus)
+                        ServerApi.UnsendFriendRequest(fr);
+                    else
+                    {
+                        App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        return;
+                    }
                     vm.AllUsers[index].FriendStatus = 0;
                     img.Source = (ImageSource)converter.ConvertFromInvariantString("addFriend.png");
                     break;

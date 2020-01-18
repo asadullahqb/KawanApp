@@ -7,9 +7,13 @@
              x:Class="KawanApp.Views.Pages.SettingsPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
+            <Button 
+                Text="Logout"
+                CornerRadius="10"
                 VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                HorizontalOptions="CenterAndExpand"
+                BorderColor="LightGray"
+                Clicked="Logout_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
