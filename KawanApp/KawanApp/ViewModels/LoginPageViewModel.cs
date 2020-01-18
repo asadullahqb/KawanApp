@@ -121,7 +121,7 @@ namespace KawanApp.ViewModels
             }
             catch (Exception ex)
             {
-                App.Current.MainPage.DisplayAlert("Error", "no internet connection", "Ok");
+                App.Current.MainPage.DisplayAlert("Error", "No internet connection", "Ok");
             }
             finally
             {

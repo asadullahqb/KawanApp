@@ -18,7 +18,7 @@ namespace KawanApp.Views.Pages
         public ViewAProfilePage(KawanUser KawanData)
         {
             InitializeComponent();
-            this.BindingContext = new ViewAProfileViewModel(KawanData);
+            this.BindingContext = new ViewAProfilePageViewModel(KawanData);
         }
         protected override bool OnBackButtonPressed()
         {

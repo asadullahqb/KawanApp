@@ -24,7 +24,7 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class ViewAllProfilesViewModel : BaseViewModel
+    public class ViewAllProfilesPageViewModel : BaseViewModel
     {
         private ObservableCollection<KawanUser> _allUsers;
         private bool _isRefreshing = false;
@@ -122,7 +122,7 @@ namespace KawanApp.ViewModels
 
         public ICommand OnCountryTappedCommand { get; set; }
 
-        public ViewAllProfilesViewModel()
+        public ViewAllProfilesPageViewModel()
         {
             OnCountryTappedCommand = new Command(()=> { CountryTapped(); });
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchAllUsers(); });

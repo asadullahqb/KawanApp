@@ -15,7 +15,7 @@ using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
 {
-    public class ViewAProfileViewModel : BaseViewModel
+    public class ViewAProfilePageViewModel : BaseViewModel
     {
         private KawanUser _kawanUser;
         public KawanUser KawanUser
@@ -28,7 +28,7 @@ namespace KawanApp.ViewModels
             }
         }
 
-        public ViewAProfileViewModel(KawanUser KawanData)
+        public ViewAProfilePageViewModel(KawanUser KawanData)
         {
             KawanUser = KawanData;
         }

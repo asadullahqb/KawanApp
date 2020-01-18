@@ -17,7 +17,7 @@ namespace KawanApp.Views.Pages
 {
     public partial class ViewAllProfilesPage : ContentPage
     {
-        private ViewAllProfilesViewModel vm = new ViewAllProfilesViewModel();
+        private ViewAllProfilesPageViewModel vm = new ViewAllProfilesPageViewModel();
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public ViewAllProfilesPage()
         {
