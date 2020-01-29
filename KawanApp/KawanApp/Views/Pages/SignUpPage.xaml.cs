@@ -9,10 +9,9 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ViewOwnProfilePage : ContentPage
+    public partial class SignUpPage : ContentPage
     {
-        public ViewOwnProfilePage()
+        public SignUpPage()
         {
             InitializeComponent();
         }

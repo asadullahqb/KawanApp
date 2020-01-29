@@ -9,7 +9,7 @@
        x:Class="KawanApp.AppShell"
        Shell.TabBarBackgroundColor="White"
        Shell.TitleColor="White"
-       Shell.TabBarUnselectedColor="Gray"
+       Shell.TabBarUnselectedColor="#393536"
        Shell.TabBarTitleColor="#f68712"
        Shell.FlyoutBehavior="Disabled"
        Shell.NavBarIsVisible="False">
@@ -25,7 +25,7 @@
         <Tab Route="profile"
              Title="Profile"
              Icon="profile.png">
-            <ShellContent ContentTemplate="{DataTemplate local:ViewOwnProfilePage}" />
+            <ShellContent ContentTemplate="{DataTemplate local:ViewAProfilePage}" />
         </Tab>
 
         <Tab Route="chat"

@@ -9,7 +9,7 @@ namespace KawanApp.Models
         public double Rating { get; set; }
         public int[] Stars 
         { 
-            //0 is for empty star, 1 is for half star, 2 is for filled star. s[n] refers to star position n+1
+            //0 is for empty star, 1 is for half star, 2 is for filled star. s[n-1] refers to star position N, where N = {1,2,...5} and (N = n-1)
             get 
             {
                 int[] s = new int[5]; //This array stores the code for each star.

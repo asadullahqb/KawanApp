@@ -19,6 +19,9 @@ namespace KawanApp.Interfaces
         [Get("/kawanapis/functions/fetchAllInternationalStudentUsers.php")]
         Task<List<User>> FetchAllInternationalStudentUsers([Body] User u);
 
+        [Get("/kawanapis/functions/fetchCurrentKawanUser.php")]
+        Task<KawanUser> FetchCurrentKawanUser([Body] User u);
+
         [Get("/kawanapis/functions/fetchListOfCountries.php")]
         Task<List<Country>> FetchListOfCountries([Body] User u);
         

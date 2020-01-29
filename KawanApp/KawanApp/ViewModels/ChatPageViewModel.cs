@@ -245,7 +245,7 @@ namespace KawanApp.ViewModels
                 if (!(message=="!users"))
                     Messages.Insert(0, cm); //Log the message only if it's not "!users"
                 TextToSend = string.Empty;
-                MessagingCenter.Send<ChatPageViewModel>(this, "scrolltobottom"); //Send to view.
+                MessagingCenter.Send(this, "scrolltobottom"); //Send to view.
 
                 //Send message to hub or store in local database for sending later.
                 if(IsConnected)

@@ -14,12 +14,12 @@ namespace KawanApp.Views.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<ChatPage>(this, "connectOnAppearing"); //Send to viewmodel
+            MessagingCenter.Send(this, "connectOnAppearing"); //Send to viewmodel
         } 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            MessagingCenter.Send<ChatPage>(this, "disconnectOnDisappearing"); //Send to viewmodel
+            MessagingCenter.Send(this, "disconnectOnDisappearing"); //Send to viewmodel
         }
 
         public ChatPage(string receivingUserStudentId)
@@ -33,7 +33,7 @@ namespace KawanApp.Views.Pages
         }
         protected override bool OnBackButtonPressed()
         {
-            MessagingCenter.Send<ChatPage>(this, "navigateBack"); //Send to App.xaml.cs
+            MessagingCenter.Send(this, "navigateBack"); //Send to App.xaml.cs
             return true;
         }
 

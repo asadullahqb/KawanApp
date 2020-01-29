@@ -9,7 +9,6 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : ContentPage
     {
         public SettingsPage()
@@ -19,7 +18,7 @@ namespace KawanApp.Views.Pages
 
         private void Logout_Clicked(object sender, EventArgs e)
         {
-            MessagingCenter.Send<SettingsPage>(this, "navigateToLoginPage"); //Send to App.xaml.cs
+            MessagingCenter.Send(this, "navigateToLoginPage"); //Send to App.xaml.cs
         }
     }
 }

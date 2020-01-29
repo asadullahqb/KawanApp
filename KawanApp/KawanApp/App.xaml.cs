@@ -5,7 +5,6 @@ using Xamarin.Essentials;
 using System.Collections.ObjectModel;
 using KawanApp.Models;
 using KawanApp.Views.Pages;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace KawanApp
@@ -33,6 +32,7 @@ namespace KawanApp
         public static bool NetworkStatus { get; set; } = false;
 
         public static bool StayLoggedIn { get; set; }
+        private static string OriginPage { get; set; } = null;
 
 
         public App()
@@ -53,10 +53,14 @@ namespace KawanApp
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
+            MessagingCenter.Subscribe<LoginPage>(this, "navigateToSignUp", (sender) => { MainPage.Navigation.PushModalAsync(new SignUpPage()); });
             MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White  }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { MainPage = new NavigationPage(); MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserStudentId)); });
-            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
+            MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
+            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopModalAsync(); else MainPage = appshell; });
+            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateToAnalyticsPage", (sender) => { MainPage.Navigation.PushModalAsync(new AnalyticsPage()); });
+            MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopModalAsync(); });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell();  MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); });
         }
 

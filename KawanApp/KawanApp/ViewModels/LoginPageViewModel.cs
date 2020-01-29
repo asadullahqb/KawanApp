@@ -114,14 +114,14 @@ namespace KawanApp.ViewModels
                 {
                     CurrentUserType = message.UserType;
                     UpdateStateData();
-                    MessagingCenter.Send<LoginPageViewModel>(this, "loadUserData"); //Send to ViewAllProfilesViewModel.cs
+                    MessagingCenter.Send(this, "loadUserData"); //Send to ViewAllProfilesPageViewModel.cs
                 }
                 else
                     await App.Current.MainPage.DisplayAlert("Error", "Wrong username or password.", "Ok");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                App.Current.MainPage.DisplayAlert("Error", "No internet connection", "Ok");
+                await App.Current.MainPage.DisplayAlert("Error", "No internet connection", "Ok");
             }
             finally
             {

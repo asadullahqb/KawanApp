@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Cells.OutgoingViewCell">
     <Frame 
-        BackgroundColor="Gray"
+        BackgroundColor="#777E88"
         Padding="10"
         Rotation="180"
         FlowDirection="LeftToRight"

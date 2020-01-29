@@ -29,5 +29,12 @@ namespace KawanApp.Views.Pages
                 PasswordEntry.Focus();
             return;
         }
+
+        private void SignUp_Tapped(object sender, EventArgs e)
+        {
+            Label lbl = sender as Label;
+            lbl.TextColor = Color.FromHex("#551A8B");
+            MessagingCenter.Send(this, "navigateToSignUp");
+        }
     }
 }

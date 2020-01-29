@@ -15,9 +15,11 @@
             HasBackgroundAnimation="False"/>
     </pages:PopupPage.Animation>
     <Frame
-        x:Name="MainFrame"
         Padding="20,35"
-        Margin="40,80,40,320"
+        TranslationY="80"
+        HeightRequest="125"
+        VerticalOptions="Start"
+        Margin="40,0"
         BackgroundColor="White"
         CornerRadius="10"
         BorderColor="LightGray"
@@ -38,6 +40,7 @@
                     FontAttributes="Bold"
                     Text="Country"/>
                 <Picker
+                    x:Name="FlagPicker"
                     Margin="0,-13"
                     VerticalOptions="Start"
                     BackgroundColor="White"
@@ -49,14 +52,12 @@
             </StackLayout>
             <Frame
                 Padding="0"
-                Margin="5,40"
+                Margin="5,40,5,0"
                 BorderColor="#F7F7F7">
                 <SearchBar
                     FontSize="Small"
                     Placeholder="Enter Country Here"
-                    Text="{Binding SelectedCountry.CountryName}"
-                    Focused="CountryEntry_Focused"
-                    Unfocused="CountryEntry_Unfocused"
+                    Text="{Binding SelectedCountry.CountryName, Mode=OneWay}"
                     TextChanged="SearchBar_TextChanged"/>
             </Frame>
         </StackLayout>

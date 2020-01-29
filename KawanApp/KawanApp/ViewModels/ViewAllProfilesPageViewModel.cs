@@ -125,7 +125,7 @@ namespace KawanApp.ViewModels
         public ViewAllProfilesPageViewModel()
         {
             OnCountryTappedCommand = new Command(()=> { CountryTapped(); });
-            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchAllUsers(); });
+            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchAllUsers(); FetchCountriesList(); });
             MessagingCenter.Subscribe<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", (sender, SearchResults) => { AllUsers = SearchResults; SetCountryViewParameters(); });
             MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { AllUsers = DataService.AllUsers; SetCountryViewParameters(); });
             FetchAllUsers();
@@ -142,8 +142,8 @@ namespace KawanApp.ViewModels
             }
             else
             {
-                IsSearchedCountry = null;
-                SearchedCountry = null;
+                IsSearchedCountry = string.Empty;
+                SearchedCountry = string.Empty;
             }
         }
 

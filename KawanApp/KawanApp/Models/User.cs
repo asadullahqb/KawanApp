@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace KawanApp.Models
 {
@@ -18,7 +19,9 @@ namespace KawanApp.Models
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Campus { get; set; }
+        public string CampusShort { get { if (!string.IsNullOrEmpty(Campus)) return Regex.Replace(Campus, "(.*) Campus", "$1"); else return null; } }
         public string School { get; set; }
+        public string SchoolShort { get { if (!string.IsNullOrEmpty(School)) return Regex.Replace(School, "School of (.*)", "$1"); else return null; } }
         public string Country { get; set; }
         public string AboutMe { get; set; }
         public string Pic { get; set; }

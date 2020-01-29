@@ -225,4 +225,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\starHalf.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\starFilledGreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\messageTimeGreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\analytics.png" />
+  </ItemGroup>
 </Project>

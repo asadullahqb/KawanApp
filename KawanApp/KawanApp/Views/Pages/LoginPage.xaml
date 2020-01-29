@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.LoginPage">
   
@@ -21,16 +23,22 @@
                 Source="logokawan.png" 
                 HeightRequest="200" 
                 HorizontalOptions="Center" 
-                Margin="0,130,0,0"/>
-            
+                Margin="0,100,0,0"/>
+           
             <!--#region Login Form-->
 
             <!--#region Email form-->
-            <StackLayout Orientation="Horizontal" Margin="70,0">
-                <Image 
+            <StackLayout 
+                Orientation="Horizontal" 
+                Margin="70,0">
+                <ffimageloading:CachedImage 
                     Source="profile.png"
                     HeightRequest="40"
-                    WidthRequest="40"/>
+                    WidthRequest="40">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:TintTransformation HexColor="#393536" EnableSolidColor="True" />
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloading:CachedImage>
                 <Entry  
                     x:Name="StudentIdEntry"
                     VerticalOptions="Center"
@@ -42,11 +50,17 @@
             <!--#endregion-->
 
             <!--#region Password form-->
-            <StackLayout Orientation="Horizontal" Margin="70,0">
-                <Image 
+            <StackLayout 
+                Orientation="Horizontal" 
+                Margin="70,0">
+                <ffimageloading:CachedImage 
                     Source="password.png"
                     HeightRequest="40"
-                    WidthRequest="40"/>
+                    WidthRequest="40">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:TintTransformation HexColor="#393536" EnableSolidColor="True" />
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloading:CachedImage>
                 <Entry 
                     x:Name="PasswordEntry"
                     VerticalOptions="Center"
@@ -61,10 +75,15 @@
 
             <!--#region Button-->
             <Button 
-                Text="LOGIN"
                 Margin="80,10"
+                Text="Login"
+                FontSize="15"
+                BackgroundColor="White"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                TextColor="#393536"
                 CornerRadius="8"
-                HeightRequest="45"
+                HeightRequest="40"
                 Command="{Binding OnLoginCommand}"
                 IsEnabled="{Binding IsValid}" />
             <!--#endregion-->
@@ -73,12 +92,13 @@
             <StackLayout 
                 Orientation="Horizontal"
                 VerticalOptions="Center"
-                Margin="80,-5,80,0">
+                Margin="80,0">
 
                 <!--#region Checkbox-->
                 <CheckBox 
                     d:IsChecked="True"
                     IsChecked="{Binding StayLoggedIn}"
+                    Color="#393536"
                     VerticalOptions="Center"
                     HeightRequest="25"
                     WidthRequest="30" />
@@ -96,9 +116,33 @@
                     d:IsVisible="True"
                     IsVisible="{Binding IsLoadingVisible}"
                     IsRunning="True"
-                    HeightRequest="10" />
+                    HeightRequest="10"
+                    Color="#393536"/>
                 <!--#endregion-->
 
+            </StackLayout>
+            <!--#endregion-->
+
+            <!--#region Sign Up-->
+            <StackLayout 
+                Orientation="Horizontal"
+                HorizontalOptions="Center"
+                VerticalOptions="FillAndExpand"
+                Margin="0,0,0,35">
+                <Label 
+                    VerticalOptions="End"
+                    FontSize="14"
+                    Text="Don't have an account?"/>
+                <Label 
+                    VerticalOptions="End"
+                    Text="Sign Up"
+                    TextColor="#0000EE"
+                    FontSize="14"
+                    TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="SignUp_Tapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
             </StackLayout>
             <!--#endregion-->
 

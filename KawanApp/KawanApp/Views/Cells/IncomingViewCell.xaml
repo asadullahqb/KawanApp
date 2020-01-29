@@ -6,12 +6,14 @@
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Cells.IncomingViewCell">
     <Frame 
-        BackgroundColor="LightBlue"
+        BackgroundColor="#83A6D8"
         Rotation="180"
         FlowDirection="LeftToRight"
         Padding="10"
         HasShadow="false"
         Margin="10,10,80,10">
-        <Label Text="{Binding Text}"/>
+        <Label 
+            Text="{Binding Text}"
+            TextColor="White"/>
     </Frame>
 </ViewCell>

@@ -4,6 +4,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:KawanApp.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.ViewAProfilePage"
              NavigationPage.HasNavigationBar="True">
@@ -12,148 +15,359 @@
             Orientation="Horizontal"
             VerticalOptions="Center"
             HorizontalOptions="FillAndExpand">
-            <Image
+            <ImageButton
+                CornerRadius="90"
                 WidthRequest="20"
                 HeightRequest="20"
                 Source="back.png"
-                Margin="0,0,5,0">
-                <Image.GestureRecognizers>
-                    <TapGestureRecognizer
-                        Tapped="BackIcon_Tapped"
-                        NumberOfTapsRequired="1"/>
-                </Image.GestureRecognizers>
-            </Image>
+                Margin="0,0,15,0"
+                BackgroundColor="White"
+                Clicked="BackIcon_Tapped"/>
             <Label 
                 Text="Profile" 
+                FontSize="Medium"
                 TextColor="#393536"/>
         </StackLayout>
     </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:BoolUserConverter x:Key="UserFormat" />
+            <converters:InverseBoolUserConverter x:Key="InverseUserFormat" />
+            <converters:IconConverter x:Key="IconFormat" />
+            <converters:FriendStatusToBoolConverter x:Key="FriendStatusToBool" />
+            <converters:ProfileTypeToMessageTimeConverter x:Key="ProfileMessageTimeFormat" />
+            <converters:ProfileTypeToStarConverter x:Key="ProfileStarFormat" />
+            <converters:ProfileTypeToDarkStyleConverter x:Key="StyleFormatDark" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout 
-            Padding="20"
-            BackgroundColor="White"
-            VerticalOptions="FillAndExpand"
-            HorizontalOptions="FillAndExpand">
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Index: "/>
-                        <Span Text="{Binding KawanUser.Index}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Student Id: "/>
-                        <Span Text="{Binding KawanUser.StudentId}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Name: "/>
-                        <Span Text="{Binding KawanUser.FullName}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Friend Status: "/>
-                        <Span Text="{Binding KawanUser.FriendStatus}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Email: "/>
-                        <Span Text="{Binding KawanUser.Email}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Phone Number: "/>
-                        <Span Text="{Binding KawanUser.PhoneNum}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Gender: "/>
-                        <Span Text="{Binding KawanUser.Gender}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Date of Birth: "/>
-                        <Span Text="{Binding KawanUser.DateOfBirth}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Campus: "/>
-                        <Span Text="{Binding KawanUser.Campus}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="School: "/>
-                        <Span Text="{Binding KawanUser.School}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Rating: "/>
-                        <Span Text="{Binding KawanUser.Rating}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Country: "/>
-                        <Span Text="{Binding KawanUser.Country}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="About Me: "/>
-                        <Span Text="{Binding KawanUser.AboutMe}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Pic: "/>
-                        <Span Text="{Binding KawanUser.Pic}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-            <Label>
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Average Response Time: "/>
-                        <Span Text="{Binding KawanUser.AverageResponseTime}" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
-        </StackLayout>
+        <ScrollView
+            VerticalOptions="Start"
+            Padding="0"
+            IsClippedToBounds="True">
+            <StackLayout
+                VerticalOptions="Start"
+                BackgroundColor="White">
+                <Frame
+                    Padding="0"
+                    TranslationY="-18"
+                    WidthRequest="300"
+                    HeightRequest="300"
+                    IsClippedToBounds="True"
+                    HasShadow="False"
+                    BackgroundColor="{Binding IsOwnProfile, Converter={StaticResource StyleFormatDark}}">
+                    <ffimageloading:CachedImage
+                        TranslationY="14"
+                        Source="{Binding KawanUser.Pic, Converter={StaticResource ImageFormat}}"
+                        ErrorPlaceholder="profileplaceholder.png"
+                        IsEnabled="True"
+                        CacheType="Disk">
+                        <ffimageloading:CachedImage.Transformations>
+                            <fftransformations:CropTransformation CropWidthRatio="4.5" CropHeightRatio="3.75" />
+                        </ffimageloading:CachedImage.Transformations>
+                        <ffimageloading:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ProfileImage_Tapped"/>
+                        </ffimageloading:CachedImage.GestureRecognizers>
+                    </ffimageloading:CachedImage>
+                </Frame>
+                <Frame
+                    Padding="0"
+                    TranslationY="-31"
+                    HeightRequest="100"
+                    BackgroundColor="#f3f3f3"
+                    HasShadow="False"/>
+                <Frame
+                    Padding="0"
+                    VerticalOptions="Start"
+                    TranslationY="-200"
+                    Margin="30,0"
+                    BackgroundColor="White"
+                    CornerRadius="15"
+                    HeightRequest="140">
+                    <StackLayout
+                        HorizontalOptions="FillAndExpand">
+                        <Label
+                            Margin="5,15,5,10"
+                            Text="{Binding KawanUser.FullName}"
+                            TextColor="#393536"
+                            HorizontalTextAlignment="Center"
+                            FontAttributes="Bold"
+                            FontSize="16.5"
+                            HorizontalOptions="Center"/>
+                        <StackLayout
+                            Margin="30,-6,30,0"
+                            HorizontalOptions="Center"
+                            Orientation="Horizontal">
+                            <Label 
+                                VerticalOptions="Center"
+                                FontSize="13"
+                                TextColor="#393536"
+                                Margin="0,4,0,4"
+                                Text="{Binding KawanUser.Country}"/>
+                            <Image
+                                HeightRequest="26"
+                                WidthRequest="26"
+                                VerticalOptions="Center"
+                                Source="{Binding IsOwnProfile, Converter={StaticResource ProfileMessageTimeFormat}}"
+                                IsVisible="{Binding KawanUser.Type, Converter={StaticResource UserFormat}}"/>
+                            <Label 
+                                FontSize="13"
+                                TextColor="#393536"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding KawanUser.Type, Converter={StaticResource UserFormat}}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding KawanUser.AverageResponseTime}"/>
+                                        <Span Text=" Response Time" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                        <BoxView
+                            Margin="10,5,10,-5"
+                            HorizontalOptions="FillAndExpand"
+                            HeightRequest="1"
+                            Color="LightGray"/>
+                        
+                        <!--#region For View a Kawan-->
+                        <Grid
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Center"
+                            Margin="8,5"
+                            IsVisible="{Binding KawanUser.Type, Converter={StaticResource UserFormat}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Grid.Column="0"
+                                Margin="5,0"
+                                Text="{Binding KawanUser.CampusShort}"
+                                FontSize="11"
+                                TextColor="#393536"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"/>
+                            <BoxView 
+                                Grid.Column="0"
+                                WidthRequest="1"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="End"
+                                Color="LightGray"/>
+                            <StackLayout
+                                Grid.Column="1"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"
+                                Margin="5,0,10,0">
+                                <Label
+                                    Margin="0,0,0,-7"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="School:"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                                <Label 
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding KawanUser.SchoolShort}"
+                                    HorizontalTextAlignment="Center"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                            </StackLayout>
+                            <BoxView 
+                                Grid.Column="1"
+                                WidthRequest="1"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="End"
+                                Color="LightGray"/>
+                            <StackLayout
+                                Orientation="Horizontal"
+                                Grid.Column="2"
+                                HorizontalOptions="Center">
+                                <Label 
+                                    Margin="0,0,-5,0"
+                                    TranslationY="1.5"
+                                    Text="{Binding KawanUser.Rating}"
+                                    FontSize="11"
+                                    TextColor="#393536"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"/>
+                                <Image
+                                    HeightRequest="22"
+                                    WidthRequest="22"
+                                    Source="{Binding IsOwnProfile, Converter={StaticResource ProfileStarFormat}}"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"/>
+                            </StackLayout>
+                        </Grid>
+                        <!--#endregion-->
+                        
+                        <!--#region For View An International Student-->
+                        <Grid
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="Center"
+                            Margin="8,5"
+                            IsVisible="{Binding KawanUser.Type, Converter={StaticResource InverseUserFormat}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="175"/>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Grid.Column="0"
+                                Margin="5,0"
+                                Text="{Binding KawanUser.CampusShort}"
+                                FontSize="11"
+                                TextColor="#393536"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"/>
+                            <BoxView 
+                                Grid.Column="0"
+                                WidthRequest="1"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="End"
+                                Color="LightGray"/>
+                            <StackLayout
+                                Grid.Column="1"
+                                VerticalOptions="Center"
+                                HorizontalOptions="Center"
+                                Margin="5,0,10,0">
+                                <Label
+                                    Margin="0,0,0,-7"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="School:"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                                <Label 
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding KawanUser.SchoolShort}"
+                                    HorizontalTextAlignment="Center"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                            </StackLayout>
+                        </Grid>
+                        <!--#endregion-->
+                        
+                    </StackLayout>
+                </Frame>
+
+                <!--#region Icon for other people's profiles-->
+                <Frame
+                    Padding="0"
+                    Margin="0,0,0,-45"
+                    BackgroundColor="#f3f3f3"
+                    CornerRadius="90"
+                    HeightRequest="42" 
+                    WidthRequest="42"
+                    IsClippedToBounds="True"
+                    TranslationY="-368"
+                    TranslationX="-36"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsOwnProfile, Converter={StaticResource InverseBool}}">
+                    <ImageButton
+                        CornerRadius="90"
+                        Source="{Binding KawanUser.FriendStatus, Converter={StaticResource IconFormat}}"
+                        Clicked="Icon_Tapped"
+                        Margin="6"
+                        Aspect="Fill"
+                        BackgroundColor="#f3f3f3"/>
+                </Frame>
+                <!--#endregion-->
+                
+                <!--#region Icon for Kawan's own profile (analytics)-->
+                <Frame
+                    Padding="0"
+                    Margin="0,0,0,-45"
+                    CornerRadius="90"
+                    IsClippedToBounds="True"
+                    BackgroundColor="#f3f3f3"
+                    HeightRequest="42" 
+                    WidthRequest="42"
+                    TranslationY="-368"
+                    TranslationX="-36"
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsOwnProfile}">
+                    <ImageButton
+                        CornerRadius="90"
+                        Source="analytics.png"
+                        Clicked="Analytics_Tapped"
+                        Margin="5"
+                        Aspect="Fill"
+                        BackgroundColor="#f3f3f3"/>
+                </Frame>
+                <!--#endregion-->
+                
+                <Label
+                    TranslationY="-170"
+                    TextColor="#393536"
+                    FontSize="15.5"
+                    HorizontalOptions="Center"
+                    Margin="0,5">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="About " />
+                            <Span Text="{Binding KawanUser.FirstName}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <BoxView 
+                    TranslationY="-170"
+                    HorizontalOptions="FillAndExpand"
+                    Margin="10,5"
+                    HeightRequest="1"
+                    Color="LightGray"/>
+                <!-- The WebView is used to incorporate HTML formatted
+                justified text into the layout-->
+                <WebView
+                    HeightRequest="48"
+                    TranslationY="-170"
+                    Margin="10,5"
+                    Source="{Binding AboutMeSource}"/>
+                <Label
+                    Margin="16.5,0,16.5,0"
+                    TranslationY="-170"
+                    TextColor="#9C9A9B">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Gender: "/>
+                            <Span Text="{Binding KawanUser.Gender}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label
+                    Margin="16.5,0"
+                    TranslationY="-170"
+                    TextColor="#9C9A9B"
+                    IsVisible="{Binding KawanUser.FriendStatus, Converter={StaticResource FriendStatusToBool}}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Email: "/>
+                            <Span Text="{Binding KawanUser.Email}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label
+                    Margin="16.5,0"
+                    TranslationY="-170"
+                    TextColor="#9C9A9B"
+                    IsVisible="{Binding KawanUser.FriendStatus, Converter={StaticResource FriendStatusToBool}}">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Phone Number: "/>
+                            <Span Text="{Binding KawanUser.PhoneNum}"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <BoxView 
+                    TranslationY="-170"
+                    Margin="10,5,10,-150"
+                    HorizontalOptions="FillAndExpand"
+                    HeightRequest="1"
+                    Color="LightGray"/>
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

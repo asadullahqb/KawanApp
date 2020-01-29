@@ -20,6 +20,10 @@ namespace KawanApp.Views.Popups
         {
             InitializeComponent();
             this.BindingContext = new CountryPopupViewModel(locd);
+            if (!string.IsNullOrEmpty(DataService.Country))
+                for (int x = 0; x < locd.Count; x++)
+                    if (locd[x].CountryName == DataService.Country)
+                        FlagPicker.SelectedIndex = x;
         }
 
         protected override void OnDisappearing()
@@ -27,26 +31,18 @@ namespace KawanApp.Views.Popups
             if (string.IsNullOrEmpty(DataService.Country))
             {
                 DataService.Country = null;
-                MessagingCenter.Send<CountryPopup>(this, "clearSearch"); //Send to ViewAllProfilesViewModel to clear the search and display all users
+                MessagingCenter.Send(this, "clearSearch"); //Send to ViewAllProfilesPageViewModel to clear the search and display all users
             }
             base.OnDisappearing();
         }
 
-        private void CountryEntry_Focused(object sender, FocusEventArgs e)
-        {
-            MainFrame.Margin = new Thickness(40, 80, 40, 60);
-        }
-
-        private void CountryEntry_Unfocused(object sender, FocusEventArgs e)
-        {
-            MainFrame.Margin = new Thickness(40, 80, 40, 320);
-        }
-
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if(string.IsNullOrEmpty(e.NewTextValue))
+                FlagPicker.SelectedIndex = -1;
             DataService.Country = e.NewTextValue;
             ObservableCollection<KawanUser> SearchResults = DataService.GetSearchResults(e.NewTextValue);
-            MessagingCenter.Send<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", SearchResults); //Send to ViewAllProfilesViewModel to filter the list
+            MessagingCenter.Send(this, "updateList", SearchResults); //Send to ViewAllProfilesPageViewModel to filter the list
         }
     }
 }

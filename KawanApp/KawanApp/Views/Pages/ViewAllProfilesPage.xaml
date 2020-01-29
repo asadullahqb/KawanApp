@@ -25,6 +25,7 @@
                 HorizontalOptions="Center"
                 FontSize="Large"
                 FontAttributes="Bold"
+                TextColor="#393536"
                 Margin="0,15"
                 IsVisible="{Binding IsKawanTitleVisible}"/>
             <Label 
@@ -32,6 +33,7 @@
                 HorizontalOptions="Center"
                 FontSize="Large"
                 FontAttributes="Bold"
+                TextColor="#393536"
                 Margin="0,15"
                 IsVisible="{Binding IsInternationalStudentsTitleVisible}"/>
             <BoxView 
@@ -58,8 +60,8 @@
                     </Label.GestureRecognizers>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="Country"/>
-                            <Span Text="{Binding IsSearchedCountry}"/>
+                            <Span Text="Country" TextColor="#393536"/>
+                            <Span Text="{Binding IsSearchedCountry}" TextColor="#393536"/>
                             <Span Text="{Binding SearchedCountry}" TextColor="#B0B0B0"/>
                         </FormattedString>
                     </Label.FormattedText>
@@ -74,7 +76,8 @@
                     WidthRequest="20"
                     HeightRequest="20"/>
                 <Label
-                    Text="Refine"/>
+                    Text="Refine"
+                    TextColor="#393536"/>
             </StackLayout>
             <BoxView 
                 HeightRequest="1"
@@ -125,20 +128,19 @@
                                             Text="{Binding FullName, Converter={StaticResource NameFormat}}" 
                                             FontSize="Medium"
                                             FontAttributes="Bold"
+                                            TextColor="#393536"
                                             HorizontalOptions="FillAndExpand"/>
-                                        <!--Insert converter to determine if the icon to display is send message, add friend or friend request sent-->
-                                        <Image
+                                        <ImageButton
+                                            CornerRadius="90"
                                             ClassId="{Binding Index}"
                                             Source="{Binding FriendStatus, Converter={StaticResource IconFormat}}"
                                             HeightRequest="28" 
-                                            WidthRequest="28">
-                                            <Image.GestureRecognizers>
-                                                <TapGestureRecognizer
-                                                    Tapped="Icon_Tapped"
-                                                    NumberOfTapsRequired="1"/>
-                                            </Image.GestureRecognizers>
-                                        </Image>
+                                            WidthRequest="28"
+                                            Clicked="Icon_Tapped"
+                                            BackgroundColor="Transparent"
+                                            Aspect="Fill"/>
                                     </StackLayout>
+                                    
                                     <!--#region Rating-->
                                     <StackLayout
                                         HorizontalOptions="Start"
@@ -186,10 +188,12 @@
                                         </ffimageloading:CachedImage>
                                     </StackLayout>
                                     <!--#endregion-->
+                                    
                                     <StackLayout 
                                         Orientation="Horizontal">
                                         <Label 
-                                            Text="{Binding Country}" 
+                                            Text="{Binding Country}"
+                                            TextColor="#393536"
                                             HorizontalOptions="FillAndExpand"/>
                                         <Image
                                             Source="messageTime.png"
@@ -197,6 +201,7 @@
                                             WidthRequest="20"
                                             IsVisible="{Binding Type, Converter={StaticResource UserFormat}}"/>
                                         <Label
+                                            TextColor="#393536"
                                             IsVisible="{Binding Type, Converter={StaticResource UserFormat}}">
                                             <Label.FormattedText>
                                                 <FormattedString>
