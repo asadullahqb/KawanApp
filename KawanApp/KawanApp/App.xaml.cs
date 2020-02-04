@@ -53,15 +53,20 @@ namespace KawanApp
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
+            //Navigation to views outside of the app shell and back:
+            //
+            //Messaging center is used for view navigation so that the same app shell 
+            //(with its state conserved) is used.
             MessagingCenter.Subscribe<LoginPage>(this, "navigateToSignUp", (sender) => { MainPage.Navigation.PushModalAsync(new SignUpPage()); });
             MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White  }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopModalAsync(); else MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateToAnalyticsPage", (sender) => { MainPage.Navigation.PushModalAsync(new AnalyticsPage()); });
-            MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopModalAsync(); });
+            MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToAnalyticsPage", (sender, KawanUserStudentId) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new AnalyticsPage(KawanUserStudentId)); });
+            MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell();  MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); });
+            //
         }
 
         private void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)

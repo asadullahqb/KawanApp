@@ -128,6 +128,20 @@ namespace KawanApp.ViewModels
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchAllUsers(); FetchCountriesList(); });
             MessagingCenter.Subscribe<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", (sender, SearchResults) => { AllUsers = SearchResults; SetCountryViewParameters(); });
             MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { AllUsers = DataService.AllUsers; SetCountryViewParameters(); });
+            MessagingCenter.Subscribe<ViewAProfilePage>(this, "updateData", (sender) => 
+            { 
+                if (!string.IsNullOrEmpty(DataService.Country)) 
+                { 
+                    AllUsers = DataService.GetSearchResults(DataService.Country);
+                    SetCountryViewParameters();
+                } 
+                else 
+                {
+                    AllUsers = DataService.GetSearchResults("Search"); //Simulate a change in the data so that the view updates
+                    AllUsers = DataService.GetSearchResults("");
+                    SetCountryViewParameters();
+                } 
+            });
             FetchAllUsers();
             FetchCountriesList();
             SetCountryViewParameters();

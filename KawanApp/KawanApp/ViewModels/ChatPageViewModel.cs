@@ -177,7 +177,7 @@ namespace KawanApp.ViewModels
             }
             catch
             {
-                App.Current.MainPage.DisplayAlert("Error", "Problem while building connection. Please try again later.", "OK");
+                App.Current.MainPage.DisplayAlert("Error", "Problem while building connection. Please try again later.", "Ok");
             }
 
             #region Hub functions
@@ -193,7 +193,7 @@ namespace KawanApp.ViewModels
             hubConnection.On<string>("ReceiveSystemMessage", (string systemmessage) =>
             {
                 Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + systemmessage });
-                //App.Current.MainPage.DisplayAlert("Chathub Message", systemmessage, "OK");
+                //App.Current.MainPage.DisplayAlert("Chathub Message", systemmessage, "Ok");
                 if (systemmessage.Contains("#101"))
                 {
                     Disconnect(App.CurrentUser);
@@ -232,7 +232,7 @@ namespace KawanApp.ViewModels
             }
             catch
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Problem while connecting to server. Please try again later.", "OK");
+                await App.Current.MainPage.DisplayAlert("Error", "Problem while connecting to server. Please try again later.", "Ok");
             }
         }
 
@@ -258,7 +258,7 @@ namespace KawanApp.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                        await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
                     }
                     //Store message in SQLite database.
                     //Not implemented yet.
@@ -275,11 +275,11 @@ namespace KawanApp.ViewModels
                     }
                     //Just for debugging:
                     if (!rm.Status)
-                        await App.Current.MainPage.DisplayAlert("Failure!", rm.Message, "OK");
+                        await App.Current.MainPage.DisplayAlert("Failure!", rm.Message, "Ok");
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Note", "You are currently offline! The message will be sent once you are online.", "OK");
+                    await App.Current.MainPage.DisplayAlert("Note", "You are currently offline! The message will be sent once you are online.", "Ok");
                     //Store message in SQLite database
                 }
             }
@@ -295,7 +295,7 @@ namespace KawanApp.ViewModels
             }
             catch
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Problem while disconnecting from server. Please try again later.", "OK");
+                await App.Current.MainPage.DisplayAlert("Error", "Problem while disconnecting from server. Please try again later.", "Ok");
             }
         }
 

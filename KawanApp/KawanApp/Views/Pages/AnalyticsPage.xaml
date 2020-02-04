@@ -3,13 +3,154 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              mc:Ignorable="d"
-             x:Class="KawanApp.Views.Pages.AnalyticsPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+             x:Class="KawanApp.Views.Pages.AnalyticsPage"
+             NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <ImageButton
+                CornerRadius="90"
+                WidthRequest="20"
+                HeightRequest="20"
+                Source="back.png"
+                Margin="0,0,15,0"
+                BackgroundColor="White"
+                Clicked="BackIcon_Tapped"/>
+            <Label 
+                Text="Analytics" 
+                FontSize="Medium"
+                TextColor="#393536"/>
         </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout
+            BackgroundColor="White">
+                
+                <!--#region Predictive Analytics: Kawan Ranking (Contribution)-->
+                <Grid
+                    Margin="35,10"
+                    IsVisible="{Binding IsKawan}">
+                    
+                    <oxy:PlotView
+                        Model="{Binding RankModel}" 
+                        HorizontalOptions="Center" 
+                        WidthRequest="1000"
+                        HeightRequest="315"
+                        IsEnabled="False"/>
+                    
+                    <!--#region X-Axis Labels-->
+                    <Label 
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        BackgroundColor="White"
+                        TranslationY="-5"
+                        TranslationX="-120"
+                        FontSize="13"
+                        Text="{Binding FirstMonth}"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        BackgroundColor="White"
+                        TranslationY="-5"
+                        TranslationX="-34"
+                        FontSize="13"
+                        Text="{Binding SecondMonth}"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        BackgroundColor="White"
+                        TranslationY="-5"
+                        TranslationX="51"
+                        FontSize="13"
+                        Text="{Binding ThirdMonth}"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        BackgroundColor="White"
+                        TranslationY="-5"
+                        TranslationX="136"
+                        FontSize="13"
+                        Text="{Binding PredictedMonth}"
+                        TextColor="#393536"/>
+                    <!--#endregion-->
+                    
+                    <!--#region Y-Axis Labels-->
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="-125"
+                        TranslationX="-12"
+                        FontSize="13"
+                        Text="        "/>
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="-74"
+                        TranslationX="-12"
+                        FontSize="13"
+                        Text="Best"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="-24"
+                        TranslationX="-15"
+                        FontSize="13"
+                        Text="Good"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="25"
+                        TranslationX="-14"
+                        FontSize="13"
+                        Text="Okay"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="74"
+                        TranslationX="-8"
+                        FontSize="13"
+                        Text="Bad"
+                        TextColor="#393536"/>
+                    <Label 
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        BackgroundColor="White"
+                        TranslationY="124"
+                        TranslationX="-12"
+                        FontSize="13"
+                        Text="        "/>
+                    <!--#endregion-->
+                    
+                </Grid>
+                <!--#endregion-->
+                
+                <!--#region Descriptive Analytics: Average User Online Time-->
+                <oxy:PlotView
+                    Margin="25,30,25,10"
+                    Model="{Binding AverageOnlineTimeModel}" 
+                    HorizontalOptions="Center" 
+                    WidthRequest="1000"
+                    HeightRequest="515"
+                    IsEnabled="False"/>
+                <!--#endregion-->
+                
+            </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -36,5 +36,11 @@ namespace KawanApp.Interfaces
 
         [Post("/kawanapis/functions/unsendFriendRequest.php")]
         Task<ReplyMessage> UnsendFriendRequest([Body] FriendRequest fr);
+
+        [Post("/kawanapis/functions/acceptFriendRequest.php")]
+        Task<ReplyMessage> AcceptFriendRequest([Body] FriendRequest fr);
+
+        [Post("/kawanapis/functions/rejectFriendRequest.php")]
+        Task<ReplyMessage> RejectFriendRequest([Body] FriendRequest fr);
     }
 }

@@ -70,7 +70,7 @@ namespace KawanApp.ViewModels
                 Pic = "uploads/IMG20181221155121.jpg",
                 Rating = 4.74,
                 StudentId = "132879",
-                Type = "Kawan",
+                Type = "International Student",
                 School = "School of Computer Sciences"
             };
             KawanUser = ku;
