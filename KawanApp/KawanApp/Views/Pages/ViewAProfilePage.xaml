@@ -139,17 +139,31 @@
                             IsVisible="{Binding KawanUser.Type, Converter={StaticResource UserFormat}}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition Width="105"/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Label 
+                            <StackLayout
                                 Grid.Column="0"
-                                Margin="5,0"
-                                Text="{Binding KawanUser.CampusShort}"
-                                FontSize="11"
-                                TextColor="#393536"
                                 VerticalOptions="Center"
-                                HorizontalOptions="Center"/>
+                                HorizontalOptions="Center"
+                                Margin="5,0,10,0">
+                                <Label
+                                    Margin="0,0,0,-7"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="Campus:"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                                <Label 
+                                    Grid.Column="0"
+                                    Margin="5,0"
+                                    Text="{Binding KawanUser.CampusShort}"
+                                    FontSize="11"
+                                    TextColor="#393536"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"/>
+                            </StackLayout>
+                            
                             <BoxView 
                                 Grid.Column="0"
                                 WidthRequest="1"
@@ -214,14 +228,27 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="175"/>
                             </Grid.ColumnDefinitions>
-                            <Label 
+                            <StackLayout
                                 Grid.Column="0"
-                                Margin="5,0"
-                                Text="{Binding KawanUser.CampusShort}"
-                                FontSize="11"
-                                TextColor="#393536"
                                 VerticalOptions="Center"
-                                HorizontalOptions="Center"/>
+                                HorizontalOptions="Center"
+                                Margin="5,0,10,0">
+                                <Label
+                                    Margin="0,0,0,-7"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"
+                                    Text="Campus:"
+                                    FontSize="11"
+                                    TextColor="#393536"/>
+                                <Label 
+                                    Grid.Column="0"
+                                    Margin="5,0"
+                                    Text="{Binding KawanUser.CampusShort}"
+                                    FontSize="11"
+                                    TextColor="#393536"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="Center"/>
+                            </StackLayout>
                             <BoxView 
                                 Grid.Column="0"
                                 WidthRequest="1"
@@ -316,13 +343,13 @@
                 <BoxView 
                     TranslationY="-170"
                     HorizontalOptions="FillAndExpand"
-                    Margin="10,5"
+                    Margin="10,5,10,0"
                     HeightRequest="1"
                     Color="LightGray"/>
                 <!-- The WebView is used to incorporate HTML formatted
                 justified text into the layout-->
                 <WebView
-                    HeightRequest="48"
+                    HeightRequest="58"
                     TranslationY="-170"
                     Margin="10,5"
                     Source="{Binding AboutMeSource}"/>
@@ -363,7 +390,7 @@
                 </Label>
                 <BoxView 
                     TranslationY="-170"
-                    Margin="10,5,10,-150"
+                    Margin="10,5,10,-155"
                     HorizontalOptions="FillAndExpand"
                     HeightRequest="1"
                     Color="LightGray"/>

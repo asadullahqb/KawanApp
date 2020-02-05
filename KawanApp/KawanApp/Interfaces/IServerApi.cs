@@ -42,5 +42,8 @@ namespace KawanApp.Interfaces
 
         [Post("/kawanapis/functions/rejectFriendRequest.php")]
         Task<ReplyMessage> RejectFriendRequest([Body] FriendRequest fr);
+
+        [Get("/kawanapis/functions/fetchUserOnlineTimeFrequencies.php")]
+        Task<int[]> FetchUserOnlineTimeFrequencies([Body] FriendRequest fr);
     }
 }

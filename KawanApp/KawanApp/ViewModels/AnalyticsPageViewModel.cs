@@ -1,13 +1,16 @@
-﻿using OxyPlot;
+﻿using KawanApp.Interfaces;
+using KawanApp.Models;
+using OxyPlot;
 using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Series;
+using Refit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
@@ -21,7 +24,10 @@ namespace KawanApp.ViewModels
         private string _thirdMonth = "Mar";
         private string _predictedMonth = "Apr";
         private bool _isKawan;
-        
+        private int[] _arrayOfOnlineFrequencies = new int[24];
+
+        private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
+
         public PlotModel RankModel
         {
             get { return _rankModel; }
@@ -87,12 +93,30 @@ namespace KawanApp.ViewModels
             }
         }
 
+        public int[] ArrayOfOnlineFrequencies
+        {
+            get { return _arrayOfOnlineFrequencies; }
+            set
+            {
+                _arrayOfOnlineFrequencies = value;
+                OnPropertyChanged();
+            }
+        }
+
         public AnalyticsPageViewModel(string kawanuserstudentid)
         {
             IsKawan = App.CurrentUserType.Equals("Kawan");
 
-            //Fetch user ranks
-            //Fetch average user online time frequencies
+            if (App.NetworkStatus)
+            {
+                //Fetch and set user ranks
+                FetchAndSetUserOnlineTimeFrequencies();
+            }
+            else
+            {
+                App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
 
             #region Setup Contribution Graph
             //Set first, second, third and predicted month names.
@@ -124,7 +148,7 @@ namespace KawanApp.ViewModels
             var blank = new LineSeries
             {
                 StrokeThickness = 1.0,
-                Color = OxyColor.FromRgb(57, 53, 54) 
+                Color = OxyColor.FromRgb(57, 53, 54)
             };
 
             blank.Points.Add(new DataPoint(0, 5));
@@ -169,8 +193,17 @@ namespace KawanApp.ViewModels
             RankModel.Axes.Add(xAxisRankModel);
             RankModel.Axes.Add(yAxisRankModel);
             #endregion
+        }
 
-            #region Setup Average User Online Time Bar Chart
+        private async void FetchAndSetUserOnlineTimeFrequencies()
+        {
+            FriendRequest fr = new FriendRequest();
+            ArrayOfOnlineFrequencies = await ServerApi.FetchUserOnlineTimeFrequencies(fr);
+            await SetUserOnlineTimeFrequenciesChart();
+        }
+
+        private async Task SetUserOnlineTimeFrequenciesChart() 
+        {
             AverageOnlineTimeModel = new PlotModel
             {
                 Title = "When Users Were Online Last Month",
@@ -181,7 +214,13 @@ namespace KawanApp.ViewModels
                 AxisTierDistance = 1.0,
             };
 
-            CategoryAxis xAxisAverageOnlineTime = new CategoryAxis() { Minimum = 0, AbsoluteMinimum = 0, Maximum = 50, AbsoluteMaximum = 50, Key = "Frequency", Position = AxisPosition.Bottom };
+            //Find index of highest value
+            int highestValue = ArrayOfOnlineFrequencies.Max();
+
+            int xAxisMaximum = 50;
+            if (highestValue < 50) xAxisMaximum = highestValue + 10;
+            if (xAxisMaximum > 50) xAxisMaximum = 50;
+            CategoryAxis xAxisAverageOnlineTime = new CategoryAxis() { Minimum = 0, AbsoluteMinimum = 0, Maximum = xAxisMaximum, AbsoluteMaximum = xAxisMaximum, Key = "Frequency", Position = AxisPosition.Bottom };
             CategoryAxis yAxisAverageOnlineTime = new CategoryAxis() { AbsoluteMinimum = 0, AbsoluteMaximum = 26, Key = "Time", Position = AxisPosition.Left, IntervalLength = 50 };
             yAxisAverageOnlineTime.Labels.Add("");
             yAxisAverageOnlineTime.Labels.Add("12AM");
@@ -209,11 +248,11 @@ namespace KawanApp.ViewModels
             yAxisAverageOnlineTime.Labels.Add("10PM");
             yAxisAverageOnlineTime.Labels.Add("11PM");
             yAxisAverageOnlineTime.Labels.Add("");
-            
+
             xAxisAverageOnlineTime.Labels.Add("1");
-            for(int i=1; i<=50;i++)
+            for (int i = 1; i <= 50; i++)
             {
-                if(i%10>0)
+                if (i % 10 > 0)
                     xAxisAverageOnlineTime.Labels.Add("");
                 else
                     xAxisAverageOnlineTime.Labels.Add(i.ToString());
@@ -229,42 +268,31 @@ namespace KawanApp.ViewModels
                 BarWidth = 4
             };
 
-            double[] arrayOfOnlineFrequencies = new double[24];
-            arrayOfOnlineFrequencies[0] = 10; //12AM
-            arrayOfOnlineFrequencies[1] = 2; //1AM
-            arrayOfOnlineFrequencies[2] = 41; //2AM
-            arrayOfOnlineFrequencies[3] = 40; //3AM
-            arrayOfOnlineFrequencies[4] = 15; //4AM
-
-            //Find index of highest value
-            double highestValue = arrayOfOnlineFrequencies.Max();
-
             //Tag each hour as is highest or not
             bool[] indexesOfIsHighestValue = new bool[24];
-            for (int i=1; i<24; i++)
+            for (int i = 1; i < 24; i++)
             {
-                indexesOfIsHighestValue[i] = arrayOfOnlineFrequencies[i] == highestValue;
+                indexesOfIsHighestValue[i] = ArrayOfOnlineFrequencies[i] == highestValue;
             }
 
             //Create columns:
             barSeries.Items.Add(new BarItem(0) { Color = OxyColors.White }); //Blank column for better look
-            for (int i=0; i<24; i++)
+            for (int i = 0; i < 24; i++)
             {
                 OxyColor columnColor;
-                double val = arrayOfOnlineFrequencies[i];
+                double val = ArrayOfOnlineFrequencies[i];
                 if (val == 0)
                     columnColor = OxyColors.White;
                 else if (indexesOfIsHighestValue[i])
                     columnColor = OxyColor.FromRgb(80, 128, 25); //Dark green, hex = 508019
                 else
                     columnColor = OxyColor.FromRgb(128, 204, 40); //Green, hex = 80cc28
-                barSeries.Items.Add(new BarItem(arrayOfOnlineFrequencies[i]) { Color = columnColor });
+                barSeries.Items.Add(new BarItem(ArrayOfOnlineFrequencies[i]) { Color = columnColor });
             }
 
             AverageOnlineTimeModel.Series.Add(barSeries);
             AverageOnlineTimeModel.Axes.Add(xAxisAverageOnlineTime);
             AverageOnlineTimeModel.Axes.Add(yAxisAverageOnlineTime);
-            #endregion
         }
     }
 }

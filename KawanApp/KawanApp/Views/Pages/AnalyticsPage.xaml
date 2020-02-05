@@ -142,7 +142,7 @@
                 
                 <!--#region Descriptive Analytics: Average User Online Time-->
                 <oxy:PlotView
-                    Margin="25,30,25,10"
+                    Margin="25,10"
                     Model="{Binding AverageOnlineTimeModel}" 
                     HorizontalOptions="Center" 
                     WidthRequest="1000"

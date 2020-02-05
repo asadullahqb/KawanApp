@@ -97,16 +97,24 @@ namespace KawanApp.Views.Pages
                     }
                     else
                     {
-                        if (App.NetworkStatus)
-                            await ServerApi.RejectFriendRequest(fr);
+                        var accepted2 = await DisplayAlert("Rejecting friend request", "Are you sure you want to reject " + DataService.AllUsers[index].FirstName + "'s friend request?", "Yes", "No");
+                        if(accepted2)
+                        {
+                            if (App.NetworkStatus)
+                                await ServerApi.RejectFriendRequest(fr);
+                            else
+                            {
+                                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                                return;
+                            }
+                            DataService.AllUsers[index].FriendStatus = 0;
+                            img.Source = (ImageSource)converter.ConvertFromInvariantString("addFriend.png");
+                            break;
+                        }
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
-                            return;
+                            break; //Do nothing
                         }
-                        DataService.AllUsers[index].FriendStatus = 0;
-                        img.Source = (ImageSource)converter.ConvertFromInvariantString("addFriend.png");
-                        break;
                     }
                 case "File: sendMessage.png":
                     MessagingCenter.Send(this, "navigateToChatPage", DataService.AllUsers[index].StudentId); //Send to App.xaml.cs

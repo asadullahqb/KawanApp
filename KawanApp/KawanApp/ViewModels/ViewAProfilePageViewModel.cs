@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -53,41 +54,24 @@ namespace KawanApp.ViewModels
         public ViewAProfilePageViewModel()
         {
             IsOwnProfile = true;
-            KawanUser ku = new KawanUser()
+            FetchDataFromServer();
+        }
+
+        private async void FetchDataFromServer()
+        {
+            User u = new User() { StudentId = App.CurrentUser, Type = App.CurrentUserType };
+            KawanUser = await ServerApi.FetchCurrentKawanUser(u);
+            await Task.Run(() =>
             {
-                AboutMe = "Hello everyone! I'm a meow!! I love saying meows",
-                AverageResponseTime = "--",
-                Campus = "Engineering",
-                Country = "Malaysia",
-                DateOfBirth = DateTime.Now,
-                Email = "asadqb16@gmail.com",
-                FirstName = "Asadullah",
-                LastName = "Qamar",
-                FriendStatus = 2,
-                Gender = "Male",
-                Index = 0,
-                PhoneNum = "0127865652",
-                Pic = "uploads/IMG20181221155121.jpg",
-                Rating = 4.74,
-                StudentId = "132879",
-                Type = "International Student",
-                School = "School of Computer Sciences"
-            };
-            KawanUser = ku;
-            FetchCurrentUser();
-            AboutMeSource = new HtmlWebViewSource
-            {
-                Html = "<html>" +
+                AboutMeSource = new HtmlWebViewSource
+                {
+                    Html = "<html>" +
                     "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
                     String.Format("<p>{0}</p>", KawanUser.AboutMe) +
                     "</body>" +
                     "</html>"
-            };
-        }
-
-        private async void FetchCurrentUser()
-        {
-            //KawanUser = await ServerApi.FetchCurrentKawanUser;
+                };
+            }); 
         }
 
         public ViewAProfilePageViewModel(KawanUser KawanData)

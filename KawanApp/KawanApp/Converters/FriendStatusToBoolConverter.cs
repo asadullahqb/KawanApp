@@ -25,6 +25,9 @@ namespace KawanApp.Converters
                         IsVisible = false;
                         break;
                     case 2:
+                        IsVisible = false;
+                        break;
+                    case 3:
                         IsVisible = true;
                         break;
                     default:
