@@ -173,6 +173,8 @@ namespace KawanApp.ViewModels
             else
                 return;
 
+            await Task.Run(() => { App.CheckConnectivity(); });
+
             if (App.NetworkStatus)
             {
                 ListOfCountriesFromDb = await ServerApi.FetchListOfCountries(u);
@@ -209,6 +211,8 @@ namespace KawanApp.ViewModels
                 List<KawanUser> AllKawanUsersFromDb;
                 User u = new User() { StudentId = App.CurrentUser };
 
+                await Task.Run(() => { App.CheckConnectivity(); });
+
                 if (App.NetworkStatus)
                     AllKawanUsersFromDb = await ServerApi.FetchAllKawanUsers(u);
                 else
@@ -227,6 +231,8 @@ namespace KawanApp.ViewModels
                 IsKawanTitleVisible = false;
                 List<User> AllInternationalStudentUsersFromDb;
                 User u = new KawanUser() { StudentId = App.CurrentUser };
+
+                await Task.Run(() => { App.CheckConnectivity(); });
 
                 if (App.NetworkStatus)
                     AllInternationalStudentUsersFromDb = await ServerApi.FetchAllInternationalStudentUsers(u);

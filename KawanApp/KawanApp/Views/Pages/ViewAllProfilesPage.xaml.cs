@@ -62,7 +62,7 @@ namespace KawanApp.Views.Pages
                         await ServerApi.SendFriendRequest(fr);
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        await DisplayAlert("Error", "Please turn on internet.", "Ok");
                         return;
                     }
                     DataService.AllUsers[index].FriendStatus = 1;
@@ -73,7 +73,7 @@ namespace KawanApp.Views.Pages
                         await ServerApi.UnsendFriendRequest(fr);
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        await DisplayAlert("Error", "Please turn on internet.", "Ok");
                         return;
                     }
                     DataService.AllUsers[index].FriendStatus = 0;
@@ -87,7 +87,7 @@ namespace KawanApp.Views.Pages
                             await ServerApi.AcceptFriendRequest(fr);
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                            await DisplayAlert("Error", "Please turn on internet.", "Ok");
                             return;
                         }
                         DataService.AllUsers[index].FriendStatus = 3;
@@ -104,7 +104,7 @@ namespace KawanApp.Views.Pages
                                 await ServerApi.RejectFriendRequest(fr);
                             else
                             {
-                                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                                await DisplayAlert("Error", "Please turn on internet.", "Ok");
                                 return;
                             }
                             DataService.AllUsers[index].FriendStatus = 0;

@@ -15,7 +15,7 @@ namespace KawanApp.ViewModels
         private string _studentId;
         private string _currentUserType;
         private string _password;
-        private bool _stayLoggedIn;
+        private bool _stayLoggedIn = true; //Set as true by default so that user only has to toggle stay logged in to be off
         private bool _isLoadingVisible;
         private bool _isValid;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);

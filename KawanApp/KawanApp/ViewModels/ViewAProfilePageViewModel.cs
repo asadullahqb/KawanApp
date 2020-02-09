@@ -51,27 +51,15 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public ICommand EditCommand { get; set; }
         public ViewAProfilePageViewModel()
         {
+            EditCommand = new Command(() => {
+                MessagingCenter.Send(this, "navigateToEditPage", KawanUser);
+            });
             IsOwnProfile = true;
             FetchDataFromServer();
-        }
-
-        private async void FetchDataFromServer()
-        {
-            User u = new User() { StudentId = App.CurrentUser, Type = App.CurrentUserType };
-            KawanUser = await ServerApi.FetchCurrentKawanUser(u);
-            await Task.Run(() =>
-            {
-                AboutMeSource = new HtmlWebViewSource
-                {
-                    Html = "<html>" +
-                    "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
-                    String.Format("<p>{0}</p>", KawanUser.AboutMe) +
-                    "</body>" +
-                    "</html>"
-                };
-            }); 
         }
 
         public ViewAProfilePageViewModel(KawanUser KawanData)
@@ -87,5 +75,29 @@ namespace KawanApp.ViewModels
                     "</html>"
             };
         }
+
+        private async void FetchDataFromServer()
+        {
+            User u = new User() { StudentId = App.CurrentUser, Type = App.CurrentUserType };
+            if(App.NetworkStatus)
+                KawanUser = await ServerApi.FetchCurrentKawanUser(u);
+            else 
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
+            await Task.Run(() =>
+            {
+                AboutMeSource = new HtmlWebViewSource
+                {
+                    Html = "<html>" +
+                    "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
+                    String.Format("<p>{0}</p>", KawanUser.AboutMe) +
+                    "</body>" +
+                    "</html>"
+                };
+            }); 
+        }
+
     }
 }

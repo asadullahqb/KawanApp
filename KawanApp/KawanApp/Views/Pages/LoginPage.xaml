@@ -96,7 +96,6 @@
 
                 <!--#region Checkbox-->
                 <CheckBox 
-                    d:IsChecked="True"
                     IsChecked="{Binding StayLoggedIn}"
                     Color="#393536"
                     VerticalOptions="Center"

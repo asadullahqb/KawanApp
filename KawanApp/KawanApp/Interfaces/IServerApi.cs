@@ -10,8 +10,17 @@ namespace KawanApp.Interfaces
 {
     public interface IServerApi
     {
+        [Post("/kawanapis/functions/sessionStart.php")]
+        Task<SessionReply> StartSession([Body] Session s);
+
+        [Post("/kawanapis/functions/sessionEnd.php")] //should be Put but server does not accept Put requests for some reason
+        Task<SessionReply> EndSession([Body] Session s);
+
         [Get("/kawanapis/functions/login.php")]
         Task<LoginReply> Login([Body] UserAuthentication ua);
+        
+        [Post("/kawanapis/functions/signUp.php")]
+        Task<ReplyMessage> SignUp([Body] KawanUser ku);
 
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
         Task<List<KawanUser>> FetchAllKawanUsers([Body] User u);

@@ -25,6 +25,8 @@ namespace KawanApp.ViewModels
         private string _predictedMonth = "Apr";
         private bool _isKawan;
         private int[] _arrayOfOnlineFrequencies = new int[24];
+        private int _highestNumberOfUsers;
+        private string _listOfPeakTimes = "";
 
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
 
@@ -83,7 +85,7 @@ namespace KawanApp.ViewModels
             }
         }
 
-        public PlotModel AverageOnlineTimeModel
+        public PlotModel AverageUsageTimeModel
         {
             get { return _averageOnlineTimeModel; }
             set
@@ -99,6 +101,26 @@ namespace KawanApp.ViewModels
             set
             {
                 _arrayOfOnlineFrequencies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int HighestNumberOfUsers
+        {
+            get { return _highestNumberOfUsers; }
+            set
+            {
+                _highestNumberOfUsers = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ListOfPeakTimes
+        {
+            get { return _listOfPeakTimes; }
+            set
+            {
+                _listOfPeakTimes = value;
                 OnPropertyChanged();
             }
         }
@@ -134,7 +156,6 @@ namespace KawanApp.ViewModels
             //Create plot model:
             RankModel = new PlotModel
             {
-                Title = "Your Contribution",
                 TitleFontSize = 15.5,
                 TitlePadding = 10,
                 TitleColor = OxyColor.FromRgb(57, 53, 54), //Hex = 393536
@@ -204,10 +225,10 @@ namespace KawanApp.ViewModels
 
         private async Task SetUserOnlineTimeFrequenciesChart() 
         {
-            AverageOnlineTimeModel = new PlotModel
+            AverageUsageTimeModel = new PlotModel
             {
-                Title = "When Users Were Online Last Month",
-                TitleFontSize = 15.5,
+                Title = "When Users Used Kawan App Last Month",
+                TitleFontSize = 14,
                 TitlePadding = 10,
                 TitleColor = OxyColor.FromRgb(57, 53, 54), //Hex = 393536
                 PlotAreaBorderColor = OxyColor.FromRgb(57, 53, 54), //Hex = 393536
@@ -215,53 +236,78 @@ namespace KawanApp.ViewModels
             };
 
             //Find index of highest value
-            int highestValue = ArrayOfOnlineFrequencies.Max();
+            HighestNumberOfUsers = ArrayOfOnlineFrequencies.Max();
 
-            int xAxisMaximum = 50;
-            if (highestValue < 50) xAxisMaximum = highestValue + 10;
-            if (xAxisMaximum > 50) xAxisMaximum = 50;
-            CategoryAxis xAxisAverageOnlineTime = new CategoryAxis() { Minimum = 0, AbsoluteMinimum = 0, Maximum = xAxisMaximum, AbsoluteMaximum = xAxisMaximum, Key = "Frequency", Position = AxisPosition.Bottom };
-            CategoryAxis yAxisAverageOnlineTime = new CategoryAxis() { AbsoluteMinimum = 0, AbsoluteMaximum = 26, Key = "Time", Position = AxisPosition.Left, IntervalLength = 50 };
-            yAxisAverageOnlineTime.Labels.Add("");
-            yAxisAverageOnlineTime.Labels.Add("12AM");
-            yAxisAverageOnlineTime.Labels.Add("1AM");
-            yAxisAverageOnlineTime.Labels.Add("2AM");
-            yAxisAverageOnlineTime.Labels.Add("3AM");
-            yAxisAverageOnlineTime.Labels.Add("4AM");
-            yAxisAverageOnlineTime.Labels.Add("5AM");
-            yAxisAverageOnlineTime.Labels.Add("6AM");
-            yAxisAverageOnlineTime.Labels.Add("7AM");
-            yAxisAverageOnlineTime.Labels.Add("8AM");
-            yAxisAverageOnlineTime.Labels.Add("9AM");
-            yAxisAverageOnlineTime.Labels.Add("10AM");
-            yAxisAverageOnlineTime.Labels.Add("11AM");
-            yAxisAverageOnlineTime.Labels.Add("12PM");
-            yAxisAverageOnlineTime.Labels.Add("1PM");
-            yAxisAverageOnlineTime.Labels.Add("2PM");
-            yAxisAverageOnlineTime.Labels.Add("3PM");
-            yAxisAverageOnlineTime.Labels.Add("4PM");
-            yAxisAverageOnlineTime.Labels.Add("5PM");
-            yAxisAverageOnlineTime.Labels.Add("6PM");
-            yAxisAverageOnlineTime.Labels.Add("7PM");
-            yAxisAverageOnlineTime.Labels.Add("8PM");
-            yAxisAverageOnlineTime.Labels.Add("9PM");
-            yAxisAverageOnlineTime.Labels.Add("10PM");
-            yAxisAverageOnlineTime.Labels.Add("11PM");
-            yAxisAverageOnlineTime.Labels.Add("");
+            int max = 100; //Maximum value for frequency's scale
+            int frequencyAxisMaximum = max;
+            if (HighestNumberOfUsers < max) frequencyAxisMaximum = HighestNumberOfUsers + 10;
+            if (frequencyAxisMaximum > max) frequencyAxisMaximum = max;
+            CategoryAxis frequencyAxisAverageUsageTime = new CategoryAxis() { Minimum = 0, AbsoluteMinimum = 0, Maximum = frequencyAxisMaximum, AbsoluteMaximum = frequencyAxisMaximum, Key = "Frequency", Position = AxisPosition.Left }; //y-axis
+            CategoryAxis timeAxisAverageUsageTime = new CategoryAxis() { Minimum = -0.3, Maximum = 0.3, Key = "Time", Position = AxisPosition.Bottom }; //x-axis
 
-            xAxisAverageOnlineTime.Labels.Add("1");
-            for (int i = 1; i <= 50; i++)
+            /*//For time axis if is separated bar chart
+            string ampm = "AM";
+            for (int i = 0; i < 24; i++)
+            {
+                int time;
+                if (i < 12)
+                {
+                    time = i + 12;
+                    ampm = "AM";
+                }
+                else 
+                {
+                    time = i;
+                    ampm = "PM";
+                }
+
+                if (time > 12) //Reset to 12hrs format
+                    time -= 12;
+                timeAxisAverageOnlineTime.Labels.Add(time.ToString() + ampm);
+            }*/
+
+            /*//For time axis if continuous bar chart (but, not working as intended since OxyPlot does not support new line
+            string label = "";
+            string ampm;
+            for (int i = 0; i < 24; i++)
+            {
+                int time;
+                if (i < 12)
+                {
+                    time = i + 12;
+                    ampm = "AM";
+                }
+                else 
+                {
+                    time = i;
+                    ampm = "PM";
+                }
+
+                if (time > 12) //Reset to 12hrs format
+                    time -= 12;
+
+                label += time.ToString() + ampm + Environment.NewLine;
+            }*/
+
+            //For time axis if using columns instead of bars
+            string label = "12AM                           12PM                           12AM";
+            timeAxisAverageUsageTime.Labels.Add(label);
+
+            frequencyAxisAverageUsageTime.Labels.Add("0");
+            for (int i = 1; i <= max; i++)
             {
                 if (i % 10 > 0)
-                    xAxisAverageOnlineTime.Labels.Add("");
+                    frequencyAxisAverageUsageTime.Labels.Add("");
                 else
-                    xAxisAverageOnlineTime.Labels.Add(i.ToString());
+                    frequencyAxisAverageUsageTime.Labels.Add(i.ToString());
             }
-            xAxisAverageOnlineTime.Labels.Add("");
-            xAxisAverageOnlineTime.Labels.Add("");
-            xAxisAverageOnlineTime.Labels.Add("");
-            xAxisAverageOnlineTime.Labels.Add("");
+            frequencyAxisAverageUsageTime.Labels.Add("");
+            frequencyAxisAverageUsageTime.Labels.Add("");
+            frequencyAxisAverageUsageTime.Labels.Add("");
+            frequencyAxisAverageUsageTime.Labels.Add("");
+            frequencyAxisAverageUsageTime.Labels.Add("");
 
+            /*//Creating separated bars
             var barSeries = new BarSeries
             {
                 StrokeThickness = 0,
@@ -275,24 +321,96 @@ namespace KawanApp.ViewModels
                 indexesOfIsHighestValue[i] = ArrayOfOnlineFrequencies[i] == highestValue;
             }
 
-            //Create columns:
-            barSeries.Items.Add(new BarItem(0) { Color = OxyColors.White }); //Blank column for better look
+            //Create separated bars:
+            barSeries.Items.Add(new BarItem(0) { Color = OxyColors.White }); //Start with a blank bar for better look
             for (int i = 0; i < 24; i++)
             {
-                OxyColor columnColor;
+                OxyColor barColor;
                 double val = ArrayOfOnlineFrequencies[i];
                 if (val == 0)
-                    columnColor = OxyColors.White;
+                    barColor = OxyColors.White;
                 else if (indexesOfIsHighestValue[i])
-                    columnColor = OxyColor.FromRgb(80, 128, 25); //Dark green, hex = 508019
+                    barColor = OxyColor.FromRgb(80, 128, 25); //Dark green, hex = 508019
                 else
-                    columnColor = OxyColor.FromRgb(128, 204, 40); //Green, hex = 80cc28
-                barSeries.Items.Add(new BarItem(ArrayOfOnlineFrequencies[i]) { Color = columnColor });
+                    barColor = OxyColor.FromRgb(128, 204, 40); //Green, hex = 80cc28
+                barSeries.Items.Add(new BarItem(ArrayOfOnlineFrequencies[i]) { Color = barColor });
             }
 
             AverageOnlineTimeModel.Series.Add(barSeries);
-            AverageOnlineTimeModel.Axes.Add(xAxisAverageOnlineTime);
-            AverageOnlineTimeModel.Axes.Add(yAxisAverageOnlineTime);
+            */
+
+
+            //Creating continuous columns (can also be used for bars):
+
+            //Tag each hour as is highest or not and add the highest hour to an appended list
+            bool[] indexesOfIsHighestValue = new bool[24];
+            string ampm;
+            string ampmplus1;
+            for (int i = 0; i < 24; i++)
+            {
+                indexesOfIsHighestValue[i] = ArrayOfOnlineFrequencies[i] == HighestNumberOfUsers;
+                
+                int time;
+                int timeplus1;
+                if (i < 12)
+                {
+                    time = i + 12;
+                    ampm = "AM";
+                    ampmplus1 = "AM";
+                }
+                else
+                {
+                    time = i;
+                    ampm = "PM";
+                    ampmplus1 = "PM";
+                }
+
+                if (time > 12) //Reset to 12hrs format
+                    time -= 12;
+
+                timeplus1 = time + 1;
+                
+                if (timeplus1 > 12)
+                    timeplus1 -= 12;
+
+                if (timeplus1 == 12)
+                {
+                    if (ampmplus1.Equals("AM"))
+                        ampmplus1 = "PM";
+                    else
+                        ampmplus1 = "AM";
+                }
+                    
+
+                if (ArrayOfOnlineFrequencies[i] == HighestNumberOfUsers)
+                        ListOfPeakTimes += "• " + time.ToString() + ampm + " - " + timeplus1.ToString() + ampmplus1 + Environment.NewLine;
+            }
+
+            for (int i=0; i<24; i++)
+            {
+                OxyColor barColor;
+                double val = ArrayOfOnlineFrequencies[i];
+                if (val == 0)
+                    barColor = OxyColors.White;
+                else if (indexesOfIsHighestValue[i])
+                    barColor = OxyColor.FromRgb(80, 128, 25); //Dark green, hex = 508019
+                else
+                    barColor = OxyColor.FromRgb(128, 204, 40); //Green, hex = 80cc28
+                var columnSeries = new ColumnSeries
+                {
+                    StrokeThickness = 0,
+                    ColumnWidth = 14,
+                    FillColor = barColor
+                };
+
+                columnSeries.Items.Add(new ColumnItem { Value = ArrayOfOnlineFrequencies[i] });
+
+
+                AverageUsageTimeModel.Series.Add(columnSeries);
+            }
+
+            AverageUsageTimeModel.Axes.Add(timeAxisAverageUsageTime);
+            AverageUsageTimeModel.Axes.Add(frequencyAxisAverageUsageTime);
         }
     }
 }

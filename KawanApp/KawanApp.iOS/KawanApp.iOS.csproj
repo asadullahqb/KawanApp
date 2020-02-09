@@ -240,4 +240,13 @@
   <ItemGroup>
     <BundleResource Include="Resources\friendRequestReceived.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\profileplaceholdergreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\usagestats.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\yourcontribution.png" />
+  </ItemGroup>
 </Project>

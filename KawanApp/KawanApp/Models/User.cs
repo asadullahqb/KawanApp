@@ -10,6 +10,7 @@ namespace KawanApp.Models
         public string ServerKey { get { return App.ServerKey; } }
         public int Index { get; set; }
         public string StudentId { get; set; }
+        public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get { return FirstName + " " + LastName; } }
@@ -21,7 +22,24 @@ namespace KawanApp.Models
         public string Campus { get; set; }
         public string CampusShort { get { if (!string.IsNullOrEmpty(Campus)) return Regex.Replace(Campus, "(.*) Campus", "$1"); else return null; } }
         public string School { get; set; }
-        public string SchoolShort { get { if (!string.IsNullOrEmpty(School)) return Regex.Replace(Regex.Replace(School, "School of (.*)", "$1"), "Languages, Literacies and Translations", "Lang., Literacies and Translations"); else return null; } }
+        public string SchoolShort 
+        { 
+            get 
+            {
+                string schoolshort = School;
+                if (!string.IsNullOrEmpty(schoolshort))
+                {
+                    schoolshort = Regex.Replace(schoolshort, "School of (.*)", "$1"); // Remove "school of "
+                    schoolshort = Regex.Replace(schoolshort, "Languages, Literacies and Translations", "Lang., Literacies and Translations"); // Shorten "Languages"
+                    schoolshort = Regex.Replace(schoolshort, "Engineering", "Eng."); // Shorten "Engineering"
+                    schoolshort = Regex.Replace(schoolshort, "Materials", "Mat."); // Shorten "Material"
+                    schoolshort = Regex.Replace(schoolshort, "Mineral", "Min."); // Shorten "Mineral"
+                    return schoolshort;
+                }
+                else 
+                    return null; 
+            } 
+        }
         public string Country { get; set; }
         public string AboutMe { get; set; }
         public string Pic { get; set; }

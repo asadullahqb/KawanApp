@@ -3,13 +3,276 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:KawanApp.Converters"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.SignUpPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolUserConverter x:Key="InverseUserFormat" />
+            <converters:BoolUserConverter x:Key="UserFormat" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid
+            BackgroundColor="White">
+            <StackLayout
+                Margin="40"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                IsVisible="{Binding IsSelecting, Converter={StaticResource InverseBool}}">
+                <Label 
+                    IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
+                    Margin="10,0,0,15"
+                    TextColor="#393536"
+                    FontSize="16">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="Sign Up for " />
+                            <Span Text="{Binding KawanUser.Type}"  />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Label 
+                    IsVisible="{Binding IsEdit}"
+                    Margin="0,0,0,10"
+                    TextColor="#393536"
+                    Text="Edit Profile"
+                    FontSize="16"/>
+                <Label 
+                    IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
+                    Margin="15,0,15,10"
+                    TextColor="#e2050a"
+                    Text="*All information is needed and any false information will be rejected."
+                    FontSize="13"/>
+                <ScrollView
+                    VerticalOptions="FillAndExpand">
+                    
+                    <!--#region Sign Up Fields-->
+                    <StackLayout
+                        BackgroundColor="White"
+                        Margin="15,0"
+                        VerticalOptions="FillAndExpand">
+                        <Entry
+                            IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Matric Number"
+                            Text="{Binding KawanUser.StudentId}"/>
+                        <Entry
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="First Name"
+                            Text="{Binding KawanUser.FirstName}"/>
+                        <Entry
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Last Name"
+                            Text="{Binding KawanUser.LastName}"/>
+                        <Entry
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Email"
+                            Text="{Binding KawanUser.Email}"/>
+                        <Entry
+                            ReturnType="Next"
+                            IsPassword="True"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Password"
+                            Text="{Binding KawanUser.Password}"/>
+                        <Entry
+                            ReturnType="Next"
+                            IsPassword="True"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Confirm Password"
+                            Text="{Binding ConfirmPassword}"/>
+                        <Picker
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Title="Gender"
+                            TitleColor="#393536"
+                            SelectedItem="{Binding KawanUser.Gender}">
+                            <Picker.Items>
+                                <x:String>Male</x:String>
+                                <x:String>Female</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Entry
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Phone Number"
+                            Text="{Binding KawanUser.PhoneNum}"/>
+                        <Picker
+                            IsVisible="{Binding KawanUser.Type, Converter={StaticResource UserFormat}}"
+                            x:Name="campusPicker"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Title="Campus"
+                            TitleColor="#393536"
+                            SelectedItem="{Binding KawanUser.Campus}">
+                            <Picker.Items>
+                                <x:String>Main</x:String>
+                                <x:String>Engineering</x:String>
+                                <x:String>Health</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Picker
+                            IsVisible="{Binding KawanUser.Type, Converter={StaticResource InverseUserFormat}}"
+                            x:Name="campusPicker2"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Title="Campus"
+                            TitleColor="#393536"
+                            SelectedItem="{Binding KawanUser.Campus}">
+                            <Picker.Items>
+                                <x:String>Main Campus</x:String>
+                                <x:String>Engineering Campus</x:String>
+                                <x:String>Health Campus</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Picker
+                            x:Name="schoolPicker"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Title="School"
+                            TitleColor="#393536"
+                            SelectedItem="{Binding KawanUser.School}">
+                            <Picker.Items>
+                                <x:String>School of The Arts</x:String>
+                                <x:String>School of Education</x:String>
+                                <x:String>School of Humanities</x:String>
+                                <x:String>School of Social Science</x:String>
+                                <x:String>School of Communication</x:String>
+                                <x:String>School of Computer Sciences</x:String>
+                                <x:String>School of Industrial Technology</x:String>
+                                <x:String>School of Pharmaceutical Sciences</x:String>
+                                <x:String>School of Management</x:String>
+                                <x:String>School of Housing, Building and Planning</x:String>
+                                <x:String>School of Languages, Literacies and Translations</x:String>
+                                <x:String>School of Physics</x:String>
+                                <x:String>School of Chemistry</x:String>
+                                <x:String>School of Biology</x:String>
+                                <x:String>School of Mathematics</x:String>
+                                <x:String>School of Civil Engineering</x:String>
+                                <x:String>School of Chemical Engineering</x:String>
+                                <x:String>School of Aerospace Engineering</x:String>
+                                <x:String>School of Mechanical Engineering</x:String>
+                                <x:String>School of Electrical and Electronic Engineering</x:String>
+                                <x:String>School of Materials and Mineral Resources Engineering</x:String>
+                                <x:String>School of Health Sciences</x:String>
+                                <x:String>School of Dental Sciences</x:String>
+                                <x:String>School of Medical Sciences</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Entry
+                            ReturnType="Next"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="Country"
+                            Text="{Binding KawanUser.Country}"/>
+                        <Editor
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Placeholder="About Me"
+                            Text="{Binding KawanUser.AboutMe}"/>
+                    </StackLayout>
+                    <!--#endregion-->
+                    
+                </ScrollView>
+                <StackLayout
+                    Margin="40,35,40,0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="End"
+                    Orientation="Horizontal">
+                    <Button 
+                        IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
+                        BackgroundColor="White"
+                        BorderColor="LightGray"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        TextColor="#393536"
+                        HeightRequest="40"
+                        Text="Submit"
+                        Command="{Binding SubmitCommand}"/>
+                    <Button 
+                        IsVisible="{Binding IsEdit}"
+                        BackgroundColor="White"
+                        BorderColor="LightGray"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        TextColor="#393536"
+                        HeightRequest="40"
+                        Text="Save"
+                        Command="{Binding SubmitCommand}"/>
+                    <Button 
+                        Margin="15,0,0,0"
+                        BackgroundColor="White"
+                        BorderColor="LightGray"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        TextColor="#393536"
+                        HeightRequest="40"
+                        Text="Go Back"
+                        Command="{Binding GoBackCommand}"/>
+                </StackLayout>
+            </StackLayout>
+            
+            <!--#region Initial Display-->
+            <StackLayout
+                IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
+                Margin="80,10"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center">
+                <StackLayout
+                    IsVisible="{Binding IsSelecting}">
+                    <Label
+                        Margin="0,0,0,15"
+                        Text="Which are you?"
+                        TextColor="#393536"
+                        HorizontalTextAlignment="Center"/>
+                    <Button 
+                        Margin="0,0,0,10"
+                        BackgroundColor="White"
+                        BorderColor="LightGray"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        TextColor="#393536"
+                        HeightRequest="40"
+                        Text="Kawan" 
+                        Command="{Binding IsKawanCommand}"/>
+                    <Button 
+                        BackgroundColor="White"
+                        BorderColor="LightGray"
+                        BorderWidth="1"
+                        CornerRadius="8"
+                        TextColor="#393536"
+                        HeightRequest="40"
+                        Text="International Student"
+                        Command="{Binding IsInternationalStudentCommand}"/>
+                </StackLayout>
+            </StackLayout>
+            <!--#endregion-->
+            
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

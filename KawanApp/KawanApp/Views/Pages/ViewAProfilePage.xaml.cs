@@ -67,7 +67,7 @@ namespace KawanApp.Views.Pages
                         await ServerApi.SendFriendRequest(fr);
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        await DisplayAlert("Error", "Please turn on internet.", "Ok");
                         return;
                     }
                     KawanDataForView.FriendStatus = 1;
@@ -79,7 +79,7 @@ namespace KawanApp.Views.Pages
                         await ServerApi.UnsendFriendRequest(fr);
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                        await DisplayAlert("Error", "Please turn on internet.", "Ok");
                         return;
                     }
                     KawanDataForView.FriendStatus = 0;
@@ -94,7 +94,7 @@ namespace KawanApp.Views.Pages
                             await ServerApi.AcceptFriendRequest(fr);
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                            await DisplayAlert("Error", "Please turn on internet.", "Ok");
                             return;
                         }
                         KawanDataForView.FriendStatus = 3;
@@ -112,7 +112,7 @@ namespace KawanApp.Views.Pages
                                 await ServerApi.RejectFriendRequest(fr);
                             else
                             {
-                                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                                await DisplayAlert("Error", "Please turn on internet.", "Ok");
                                 return;
                             }
                             KawanDataForView.FriendStatus = 0;
@@ -131,14 +131,16 @@ namespace KawanApp.Views.Pages
             }
         }
 
-        private void Analytics_Tapped(object sender, EventArgs e)
+        private async void Analytics_Tapped(object sender, EventArgs e)
         {
-            string si;
-            if (IsOwnProfile)
-                si = App.CurrentUser;
+            if (App.NetworkStatus)
+                MessagingCenter.Send(this, "navigateToAnalyticsPage", App.CurrentUser); //Send to App.xaml.cs
             else
-                si = KawanDataForView.StudentId;
-            MessagingCenter.Send(this, "navigateToAnalyticsPage", si); //Send to App.xaml.cs
+            {
+                await DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
         }
+
     }
 }
