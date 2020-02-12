@@ -13,7 +13,7 @@ namespace KawanApp.Interfaces
         [Post("/kawanapis/functions/sessionStart.php")]
         Task<SessionReply> StartSession([Body] Session s);
 
-        [Post("/kawanapis/functions/sessionEnd.php")] //should be Put but server does not accept Put requests for some reason
+        [Post("/kawanapis/functions/sessionEnd.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<SessionReply> EndSession([Body] Session s);
 
         [Get("/kawanapis/functions/login.php")]
@@ -21,6 +21,9 @@ namespace KawanApp.Interfaces
         
         [Post("/kawanapis/functions/signUp.php")]
         Task<ReplyMessage> SignUp([Body] KawanUser ku);
+
+        [Post("/kawanapis/functions/edit.php")] //should be "Put" but server does not accept Put requests for some reason
+        Task<ReplyMessage> Edit([Body] KawanUser ku);
 
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
         Task<List<KawanUser>> FetchAllKawanUsers([Body] User u);
@@ -33,7 +36,10 @@ namespace KawanApp.Interfaces
 
         [Get("/kawanapis/functions/fetchListOfCountries.php")]
         Task<List<Country>> FetchListOfCountries([Body] User u);
-        
+
+        [Get("/kawanapis/functions/fetchAllMessages.php")]
+        Task<List<ChatMessageItem>> FetchAllMessages([Body] ChatMessageRequest cmr);
+
         [Get("/kawanapis/functions/fetchMessages.php")]
         Task<List<ChatMessage>> FetchMessages([Body] ChatMessage cm);
         
@@ -54,5 +60,8 @@ namespace KawanApp.Interfaces
 
         [Get("/kawanapis/functions/fetchUserOnlineTimeFrequencies.php")]
         Task<int[]> FetchUserOnlineTimeFrequencies([Body] FriendRequest fr);
+
+        [Post("/kawanapis/functions/updatePassword.php")] //should be "Put" but server does not accept Put requests for some reason
+        Task<ReplyMessage> UpdatePassword([Body] KawanUser ku);
     }
 }

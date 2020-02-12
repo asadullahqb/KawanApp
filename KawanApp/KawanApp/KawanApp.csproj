@@ -22,6 +22,9 @@
     <Compile Update="Views\Cells\OutgoingViewCell.xaml.cs">
       <DependentUpon>OutgoingViewCell.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Popups\UpdatePasswordPopup.xaml.cs">
+      <DependentUpon>UpdatePasswordPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Popups\CountryPopup.xaml.cs">
       <DependentUpon>CountryPopup.xaml</DependentUpon>
     </Compile>

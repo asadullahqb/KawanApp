@@ -10,6 +10,7 @@ namespace KawanApp.Models
         public string ServerKey { get { return App.ServerKey; } }
         public int Index { get; set; }
         public string StudentId { get; set; }
+        public string CurrentPassword { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

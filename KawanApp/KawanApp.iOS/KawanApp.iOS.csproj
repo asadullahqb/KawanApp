@@ -249,4 +249,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\yourcontribution.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\profileplaceholderblue.png" />
+  </ItemGroup>
 </Project>

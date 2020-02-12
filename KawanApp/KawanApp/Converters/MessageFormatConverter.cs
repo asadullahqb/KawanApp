@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace KawanApp.Converters
 {
-    public class MessageFormatConverter : IValueConverter
+    public class NameFormatConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -17,8 +17,8 @@ namespace KawanApp.Converters
                 FormattedName = (string)value;
             }
 
-            if (FormattedName.Length > 20)
-                return FormattedName.Substring(0, 20) + "..."; //Cut off the message at 20 characters
+            if (FormattedName.Length > 11)
+                return FormattedName.Substring(0, 11) + "..."; //Cut off the name at 11 characters
             else
                 return FormattedName;
         }

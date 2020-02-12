@@ -1,5 +1,6 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
+using KawanApp.Services;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace KawanApp.ViewModels
     {
         private bool _isEdit;
         private bool _isSelecting = true;
-        private KawanUser _kawanUser = new KawanUser() { AboutMe = "Hi! I am excited to use this app. :)" };
+        private KawanUser _kawanUser = new KawanUser();
         private string _confirmPassword;
 
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
@@ -96,9 +97,11 @@ namespace KawanApp.ViewModels
             IsEdit = true;
             IsSelecting = false;
             string abtme = "Hi! I am excited to use this app. :)";
-            if (string.IsNullOrEmpty(KawanUser.AboutMe))
+            if (string.IsNullOrEmpty(ku.AboutMe))
                 ku.AboutMe = abtme;
             KawanUser = ku;
+            KawanUser.Password = "123456"; //Just set a value to bypass the check when submitting
+            ConfirmPassword = "123456"; //Just set a value to bypass the check when submitting
             SubmitCommand = new Command(() => { SubmitToServer(); });
             GoBackCommand = new Command(() => { App.Current.MainPage.Navigation.PopModalAsync(); });
 
@@ -110,8 +113,9 @@ namespace KawanApp.ViewModels
             if (string.IsNullOrEmpty(KawanUser.StudentId) || string.IsNullOrEmpty(KawanUser.FirstName) ||
                 string.IsNullOrEmpty(KawanUser.LastName) || string.IsNullOrEmpty(KawanUser.Email) ||
                 string.IsNullOrEmpty(KawanUser.Password) || string.IsNullOrEmpty(ConfirmPassword) ||
-                string.IsNullOrEmpty(KawanUser.Gender) || string.IsNullOrEmpty(KawanUser.PhoneNum) ||
-                string.IsNullOrEmpty(KawanUser.Campus) || string.IsNullOrEmpty(KawanUser.School) ||
+                string.IsNullOrEmpty(KawanUser.DateOfBirth.ToShortDateString()) || 
+                string.IsNullOrEmpty(KawanUser.Gender) || string.IsNullOrEmpty(KawanUser.PhoneNum) || 
+                string.IsNullOrEmpty(KawanUser.Campus) || string.IsNullOrEmpty(KawanUser.School) || 
                 string.IsNullOrEmpty(KawanUser.Country) || string.IsNullOrEmpty(KawanUser.AboutMe)
               ) // Make sure all fields are filled in
                 await App.Current.MainPage.DisplayAlert("Note", "Please fill out all fields!", "Ok");
@@ -127,12 +131,30 @@ namespace KawanApp.ViewModels
 
             else
             {
-                await ServerApi.SignUp(KawanUser);
-                if (KawanUser.Type.Equals("Kawan"))
-                    await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! Please wait for the admin to approve your account so that it may be used to login.", "Ok");
-                else if (KawanUser.Type.Equals("International Student"))
-                    await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! You may now proceed to login.", "Ok");
+                ReplyMessage rm;
 
+                if (IsEdit)
+                    rm = await ServerApi.Edit(KawanUser);
+                else
+                    rm = await ServerApi.SignUp(KawanUser);
+                
+                if(rm.Status)
+                {
+                    if (IsEdit)
+                    {
+                        await App.Current.MainPage.DisplayAlert("Success", "User updated", "Ok");
+                        DataService.KawanUser = KawanUser;
+                        MessagingCenter.Send(this, "updateAfterEdit"); //Send to view a profile page
+                        return;
+                    }
+                    if (KawanUser.Type.Equals("Kawan"))
+                        await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! Please wait for the admin to approve your account so that it may be used to login.", "Ok");
+                    else if (KawanUser.Type.Equals("International Student"))
+                        await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! You may now proceed to login.", "Ok");
+
+                }
+                else
+                    await App.Current.MainPage.DisplayAlert("Failure", rm.Message, "Ok");
             }
         }
     }

@@ -17,10 +17,16 @@ namespace KawanApp.Views.Pages
         {
             InitializeComponent();
             this.BindingContext = new SignUpPageViewModel();
+            dateOfBirthPicker.MinimumDate = DateTime.Now.AddYears(-50); //The oldest a user can be is 50 years old
+            dateOfBirthPicker.MaximumDate = DateTime.Now.AddYears(-13); //The youngest a user can be is 13 years old
         }
         public SignUpPage(KawanUser ku)
         {
             InitializeComponent();
+            this.BindingContext = new SignUpPageViewModel(ku);
+
+            dateOfBirthPicker.MinimumDate = DateTime.Now.AddYears(-50); //The oldest a user can be is 50 years old
+            dateOfBirthPicker.MaximumDate = DateTime.Now.AddYears(-13); //The youngest a user can be is 13 years old
 
             #region Set The School Picker
             switch (ku.SchoolShort)
@@ -136,14 +142,11 @@ namespace KawanApp.Views.Pages
                     campusPicker2.SelectedIndex = 1;
                     break;
 
-
                 case "Health Campus":
                     campusPicker2.SelectedIndex = 2;
                     break;
             }
             #endregion
-
-            this.BindingContext = new SignUpPageViewModel(ku);
         }
     }
 }

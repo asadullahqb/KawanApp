@@ -83,6 +83,7 @@
                             Placeholder="Email"
                             Text="{Binding KawanUser.Email}"/>
                         <Entry
+                            IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
                             ReturnType="Next"
                             IsPassword="True"
                             HorizontalOptions="FillAndExpand"
@@ -91,6 +92,7 @@
                             Placeholder="Password"
                             Text="{Binding KawanUser.Password}"/>
                         <Entry
+                            IsVisible="{Binding IsEdit, Converter={StaticResource InverseBool}}"
                             ReturnType="Next"
                             IsPassword="True"
                             HorizontalOptions="FillAndExpand"
@@ -98,6 +100,12 @@
                             HeightRequest="45"
                             Placeholder="Confirm Password"
                             Text="{Binding ConfirmPassword}"/>
+                        <DatePicker
+                            x:Name="dateOfBirthPicker"
+                            HorizontalOptions="FillAndExpand"
+                            FontSize="Small"
+                            HeightRequest="45"
+                            Date="{Binding KawanUser.DateOfBirth}"/>
                         <Picker
                             HorizontalOptions="FillAndExpand"
                             FontSize="Small"
@@ -192,7 +200,8 @@
                         <Editor
                             HorizontalOptions="FillAndExpand"
                             FontSize="Small"
-                            HeightRequest="45"
+                            HeightRequest="90"
+                            MaxLength="300"
                             Placeholder="About Me"
                             Text="{Binding KawanUser.AboutMe}"/>
                     </StackLayout>

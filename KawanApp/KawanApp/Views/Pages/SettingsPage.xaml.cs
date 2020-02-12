@@ -1,4 +1,9 @@
-﻿using System;
+﻿using KawanApp.Interfaces;
+using KawanApp.Models;
+using KawanApp.Views.Popups;
+using Refit;
+using Rg.Plugins.Popup.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +24,13 @@ namespace KawanApp.Views.Pages
         private void Logout_Clicked(object sender, EventArgs e)
         {
             MessagingCenter.Send(this, "navigateToLoginPage"); //Send to App.xaml.cs
+        }
+
+        private async void Password_Clicked(object sender, EventArgs e)
+        {
+            var accepted = await DisplayAlert("Note", "Would you like to change your password?", "Yes", "No");
+            if(accepted)
+                await PopupNavigation.Instance.PushAsync(new UpdatePasswordPopup());
         }
     }
 }

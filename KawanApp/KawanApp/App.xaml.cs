@@ -17,7 +17,7 @@ namespace KawanApp
     public partial class App : Application
     {
         private static bool _isUserLoggedIn;
-        public static string ServerKey => "4&6R=KLL2gf%7^+E";
+        public static string ServerKey => "zAWscvPdyx8YFCZAvDmGcw3pmG6jcSbF7THV5WCNGzu6axRFVfA3aFHuKarkbK7tXuLTyF7xGWNapgDphm832S8KpmjAFxNxpzy8f5Ef2FMtmZxuFsnmVfxaA467wQZWq3P3qKFfP5wzrbhGKBEge4BtYZjb5LA3a8gMtyLNQUNkQq2YcbURK838fkdyD7rUPWfswr9BWGeT5aV674yDTqFsH95a3rTPdV38aaHu8Q9GCGayUWSVaqYkCrzPr5tc";
         public static string Server => "http://www.imcc.usm.my/kawan/";
         //at Sunny Ville home: http://192.168.0.157/
         //at KL home: http://192.168.0.197/
@@ -74,6 +74,7 @@ namespace KawanApp
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAProfilePageViewModel, KawanUser>(this, "navigateToEditPage", (sender, KawanData) => { MainPage.Navigation.PushModalAsync(new SignUpPage(KawanData)); });
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<AllMessagesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell();  MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); LogOutSession(); });
             //
         }

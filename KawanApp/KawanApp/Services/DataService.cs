@@ -9,6 +9,7 @@ namespace KawanApp.Services
     public static class DataService
     {
         public static ObservableCollection<KawanUser> AllUsers { get; set; }
+        public static KawanUser KawanUser { get; set; }
         public static string Country { get; set; }
         public static ObservableCollection<KawanUser> GetSearchResults(string queryString)
         {

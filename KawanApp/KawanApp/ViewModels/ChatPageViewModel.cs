@@ -226,8 +226,8 @@ namespace KawanApp.ViewModels
         {
             try
             {
-                await hubConnection.StartAsync();
-                await hubConnection.InvokeAsync("OnConnected", user);
+                //await hubConnection.StartAsync();
+                //await hubConnection.InvokeAsync("OnConnected", user);
                 IsConnected = true;
             }
             catch
@@ -252,7 +252,7 @@ namespace KawanApp.ViewModels
                 {
                     try
                     {
-                        await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
+                        //await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
                         if (message=="!users")
                             return; //Don't store the message in any databases
                     }
@@ -288,8 +288,8 @@ namespace KawanApp.ViewModels
         {
             try
             {
-                await hubConnection.InvokeAsync("OnDisconnected", user);
-                await hubConnection.StopAsync();
+                //await hubConnection.InvokeAsync("OnDisconnected", user);
+                //await hubConnection.StopAsync();
                 IsConnected = false;
                 Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + "You have been disconnected from the chat." });
             }

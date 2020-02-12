@@ -6,16 +6,27 @@
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.SettingsPage">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout
+            VerticalOptions="Center" >
+            <Button 
+                Text="Change Password"
+                CornerRadius="8"
+                HeightRequest="40"
+                Margin="110,0,110,15"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                BackgroundColor="White"
+                Clicked="Password_Clicked"/>
             <Button 
                 Text="Logout"
-                CornerRadius="20"
-                VerticalOptions="CenterAndExpand" 
+                CornerRadius="8"
+                HeightRequest="40"
                 Margin="110,0"
                 BorderColor="LightGray"
                 BorderWidth="1"
                 BackgroundColor="White"
                 Clicked="Logout_Clicked"/>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,6 +1,7 @@
 ﻿using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
+using KawanApp.Services;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -55,11 +56,21 @@ namespace KawanApp.ViewModels
         public ICommand EditCommand { get; set; }
         public ViewAProfilePageViewModel()
         {
-            EditCommand = new Command(() => {
-                MessagingCenter.Send(this, "navigateToEditPage", KawanUser);
-            });
+            EditCommand = new Command(() => { MessagingCenter.Send(this, "navigateToEditPage", KawanUser); });
             IsOwnProfile = true;
             FetchDataFromServer();
+            MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => {
+                KawanUser = new KawanUser();
+                KawanUser = DataService.KawanUser;
+                AboutMeSource = new HtmlWebViewSource
+                {
+                    Html = "<html>" +
+                    "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
+                    String.Format("<p>{0}</p>", KawanUser.AboutMe) +
+                    "</body>" +
+                    "</html>"
+                };
+            });
         }
 
         public ViewAProfilePageViewModel(KawanUser KawanData)

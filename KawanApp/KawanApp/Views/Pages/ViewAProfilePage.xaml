@@ -343,16 +343,30 @@
                     </Label.FormattedText>
                 </Label>
 
-                <ImageButton
+                <StackLayout
                     IsVisible="{Binding IsOwnProfile}"
+                    Orientation="Horizontal"
                     TranslationY="-205"
-                    Margin="0,0,25,-28"
-                    HorizontalOptions="End"
-                    Source="profile.png"
-                    HeightRequest="28"
-                    WidthRequest="28"
-                    Command="{Binding EditCommand}"/>
-                
+                    Margin="0,0,20,-28"
+                    HorizontalOptions="End">
+                    <ImageButton
+                        Aspect="Fill"
+                        CornerRadius="90"
+                        BackgroundColor="White"
+                        Source="edit.png"
+                        HeightRequest="24"
+                        WidthRequest="24"
+                        Command="{Binding EditCommand}"/>
+                    <ImageButton
+                        Aspect="Fill"
+                        CornerRadius="90"
+                        BackgroundColor="White"
+                        Source="delete.png"
+                        HeightRequest="24"
+                        WidthRequest="24"
+                        Command="{Binding DeleteCommand}"/>
+                </StackLayout>
+              
                 <BoxView 
                     TranslationY="-170"
                     HorizontalOptions="FillAndExpand"
