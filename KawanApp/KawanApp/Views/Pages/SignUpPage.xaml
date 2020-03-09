@@ -111,7 +111,6 @@
                             FontSize="Small"
                             HeightRequest="45"
                             Title="Gender"
-                            TitleColor="#393536"
                             SelectedItem="{Binding KawanUser.Gender}">
                             <Picker.Items>
                                 <x:String>Male</x:String>
@@ -132,7 +131,6 @@
                             FontSize="Small"
                             HeightRequest="45"
                             Title="Campus"
-                            TitleColor="#393536"
                             SelectedItem="{Binding KawanUser.Campus}">
                             <Picker.Items>
                                 <x:String>Main</x:String>
@@ -147,7 +145,6 @@
                             FontSize="Small"
                             HeightRequest="45"
                             Title="Campus"
-                            TitleColor="#393536"
                             SelectedItem="{Binding KawanUser.Campus}">
                             <Picker.Items>
                                 <x:String>Main Campus</x:String>
@@ -161,7 +158,6 @@
                             FontSize="Small"
                             HeightRequest="45"
                             Title="School"
-                            TitleColor="#393536"
                             SelectedItem="{Binding KawanUser.School}">
                             <Picker.Items>
                                 <x:String>School of The Arts</x:String>

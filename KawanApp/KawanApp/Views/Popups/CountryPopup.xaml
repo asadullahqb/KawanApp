@@ -17,7 +17,7 @@
     <Frame
         Padding="20,35"
         TranslationY="80"
-        HeightRequest="125"
+        HeightRequest="156"
         VerticalOptions="Start"
         Margin="40,0"
         BackgroundColor="White"
@@ -38,7 +38,9 @@
                 <Label
                     HorizontalOptions="FillAndExpand"
                     FontAttributes="Bold"
-                    Text="Country"/>
+                    TextColor="#393536"
+                    Text="Country"
+                    FontSize="15"/>
                 <Picker
                     x:Name="FlagPicker"
                     Margin="0,-13"
@@ -60,6 +62,17 @@
                     Text="{Binding SelectedCountry.CountryName, Mode=OneWay}"
                     TextChanged="SearchBar_TextChanged"/>
             </Frame>
+            <Label 
+                HorizontalOptions="End"
+                Margin="0,20,15,0"
+                FontSize="14"
+                Text="Ok"
+                TextColor="#524E4F"
+                FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Ok_Tapped"/>
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
     </Frame>
 </pages:PopupPage >

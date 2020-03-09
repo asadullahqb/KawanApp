@@ -30,7 +30,8 @@ namespace KawanApp.Views.Pages
         {
             var accepted = await DisplayAlert("Note", "Would you like to change your password?", "Yes", "No");
             if(accepted)
-                await PopupNavigation.Instance.PushAsync(new UpdatePasswordPopup());
+                if (PopupNavigation.Instance.PopupStack.Count < 1) 
+                    await PopupNavigation.Instance.PushAsync(new UpdatePasswordPopup());
         }
     }
 }

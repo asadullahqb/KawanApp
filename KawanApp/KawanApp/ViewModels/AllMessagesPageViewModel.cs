@@ -69,7 +69,13 @@ namespace KawanApp.ViewModels
         {
             List<ChatMessageItem> AllChatMessagesFromDb;
             ChatMessageRequest cmr = new ChatMessageRequest() { SendingUser = App.CurrentUser , CurrentUserType = App.CurrentUserType};
-            AllChatMessagesFromDb = await ServerApi.FetchAllMessages(cmr);
+            if (App.NetworkStatus)
+                AllChatMessagesFromDb = await ServerApi.FetchAllMessages(cmr);
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
             ObservableCollection<ChatMessageItem> temp = new ObservableCollection<ChatMessageItem>(AllChatMessagesFromDb);
             AllChatMessages = temp;
         }

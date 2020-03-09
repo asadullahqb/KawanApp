@@ -19,8 +19,9 @@ namespace KawanApp.ViewModels
 {
     public class ViewAProfilePageViewModel : BaseViewModel
     {
-        private bool _isOwnProfile;
-        private KawanUser _kawanUser;
+        private bool _isOwnProfile = true;
+        private bool _isLoading = true;
+        private KawanUser _kawanUser = new KawanUser() { Type = "International Student" };
         private HtmlWebViewSource _aboutMeSource;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public bool IsOwnProfile
@@ -32,7 +33,17 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public KawanUser KawanUser
         {
             get => _kawanUser;
@@ -76,6 +87,7 @@ namespace KawanApp.ViewModels
         public ViewAProfilePageViewModel(KawanUser KawanData)
         {
             IsOwnProfile = false;
+            IsLoading = false;
             KawanUser = KawanData;
             AboutMeSource = new HtmlWebViewSource
             {
@@ -107,7 +119,8 @@ namespace KawanApp.ViewModels
                     "</body>" +
                     "</html>"
                 };
-            }); 
+            });
+            await Task.Run(() => { IsLoading = false; });
         }
 
     }

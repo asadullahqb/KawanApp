@@ -58,8 +58,8 @@
                                     Margin="10,3,3,3"
                                     IsClippedToBounds="True"
                                     BackgroundColor="#3871c1"
-                                    WidthRequest="75"
-                                    HeightRequest="75">
+                                    WidthRequest="78"
+                                    HeightRequest="78">
                                     <ffimageloading:CachedImage 
                                         Source="{Binding Pic, Converter={StaticResource ImageFormat}}"
                                         ErrorPlaceholder="profileplaceholderblue.png"

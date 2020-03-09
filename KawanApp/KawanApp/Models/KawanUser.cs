@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace KawanApp.Models
@@ -8,9 +9,10 @@ namespace KawanApp.Models
     {
         public double Rating { get; set; }
         public int[] Stars 
-        { 
+        {
+            #region Constructing Stars Array
             //0 is for empty star, 1 is for half star, 2 is for filled star. s[n-1] refers to star position N, where N = {1,2,...5} and (N = n-1)
-            get 
+            get
             {
                 int[] s = new int[5]; //This array stores the code for each star.
 
@@ -76,8 +78,82 @@ namespace KawanApp.Models
                     else
                         s[0] = 0; //Leave all stars blank
                 return s; 
-            } 
+            }
+            #endregion
         }
         public string AverageResponseTime { get; set; }
+        public string AverageResponseTimeSeconds { get; set; }
+
+        public bool IsFilterFieldsNull
+        {
+            get
+            {
+                //return false if any of the fields is not null or empty
+                //return true if all fields are null and/or empty
+                if (!string.IsNullOrEmpty(FirstName))
+                    return false;
+                else if (!string.IsNullOrEmpty(Email))
+                    return false;
+                else if (!string.IsNullOrEmpty(Gender))
+                    return false;
+                else if (!string.IsNullOrEmpty(PhoneNum))
+                    return false;
+                else if (!string.IsNullOrEmpty(Campus))
+                    return false;
+                else if (!string.IsNullOrEmpty(School))
+                    return false;
+                else if (!string.IsNullOrEmpty(Country))
+                    return false;
+                else if (!string.IsNullOrEmpty(AboutMe))
+                    return false;
+                else if (!string.IsNullOrEmpty(AverageResponseTime))
+                    return false;
+                else
+                    return true;
+            }
+        }
+
+        public KawanUser NormaliseFilterFields()
+        {
+            if (string.IsNullOrEmpty(FirstName))
+                FirstName = "";
+
+            if (string.IsNullOrEmpty(Email))
+                Email = "";
+
+            if (string.IsNullOrEmpty(Gender))
+                Gender = "";
+
+            if (string.IsNullOrEmpty(PhoneNum))
+                PhoneNum = "";
+
+            if (string.IsNullOrEmpty(Campus))
+                Campus = "";
+
+            if (string.IsNullOrEmpty(School))
+                School = "";
+
+            if (string.IsNullOrEmpty(Country))
+                Country = "";
+
+            if (string.IsNullOrEmpty(AboutMe))
+                AboutMe = "";
+
+            if (string.IsNullOrEmpty(AverageResponseTime))
+                AverageResponseTime = "";
+
+            return new KawanUser()
+            {
+                FirstName = FirstName.ToLower(),
+                Email = Email.ToLower(),
+                Gender = Gender.ToLower(),
+                PhoneNum = PhoneNum.ToLower(),
+                Campus = Campus.ToLower(),
+                School = School.ToLower(),
+                Country = Country.ToLower(),
+                AboutMe = AboutMe.ToLower(),
+                AverageResponseTime = AverageResponseTime.ToLower()
+            };
+        }
     }
 }

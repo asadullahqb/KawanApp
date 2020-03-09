@@ -13,13 +13,13 @@ namespace KawanApp.Views.Pages
     {
         protected override void OnAppearing()
         {
-            base.OnAppearing();
             MessagingCenter.Send(this, "connectOnAppearing"); //Send to viewmodel
+            base.OnAppearing();
         } 
         protected override void OnDisappearing()
         {
-            base.OnDisappearing();
             MessagingCenter.Send(this, "disconnectOnDisappearing"); //Send to viewmodel
+            base.OnDisappearing();
         }
 
         public ChatPage(string receivingUserStudentId)

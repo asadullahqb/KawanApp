@@ -10,6 +10,7 @@ namespace KawanApp.Services
     {
         public static ObservableCollection<KawanUser> AllUsers { get; set; }
         public static KawanUser KawanUser { get; set; }
+        public static KawanUser FilterFields { get; set; }
         public static string Country { get; set; }
         public static ObservableCollection<KawanUser> GetSearchResults(string queryString)
         {
@@ -17,6 +18,33 @@ namespace KawanApp.Services
             if (string.IsNullOrEmpty(normalizedQuery))
                 return AllUsers;
             ObservableCollection<KawanUser> SearchResults = new ObservableCollection<KawanUser>(AllUsers.Where(f => f.Country.ToLowerInvariant().Contains(normalizedQuery)).ToList());
+            return SearchResults;
+        }
+
+        public static ObservableCollection<KawanUser> GetFilteredResults(KawanUser filterFields)
+        {
+            var normalizedFields = filterFields.NormaliseFilterFields();
+            ObservableCollection<KawanUser> SearchResults;
+            if (normalizedFields.IsFilterFieldsNull)
+            {
+                if (Country != null)
+                    SearchResults = GetSearchResults(Country);
+                else
+                    SearchResults = AllUsers;
+            }
+            else
+            {
+                //Filter by all the filter fields
+                SearchResults = new ObservableCollection<KawanUser>(AllUsers.Where(f => f.FullName.ToLowerInvariant().Contains(normalizedFields.FirstName)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.Email.ToLowerInvariant().Contains(normalizedFields.Email)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.Gender.ToLowerInvariant().Contains(normalizedFields.Gender)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.PhoneNum.ToLowerInvariant().Contains(normalizedFields.PhoneNum)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.Campus.ToLowerInvariant().Contains(normalizedFields.Campus)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.School.ToLowerInvariant().Contains(normalizedFields.School)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.Country.ToLowerInvariant().Contains(normalizedFields.Country)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.AboutMe.ToLowerInvariant().Contains(normalizedFields.AboutMe)).ToList());
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.AverageResponseTime.ToLowerInvariant().Contains(normalizedFields.AverageResponseTime)).ToList());
+            }
             return SearchResults;
         }
     }

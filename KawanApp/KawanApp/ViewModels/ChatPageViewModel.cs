@@ -16,6 +16,8 @@ namespace KawanApp.ViewModels
 {
     public class ChatPageViewModel : BaseViewModel
     {   
+        private int connectTries = 0;
+        private int disconnectTries = 0;
         private string _sendingUser = App.CurrentUser;
         private string _receivingUser;
         private bool _showScrollTap = false;
@@ -163,8 +165,8 @@ namespace KawanApp.ViewModels
 
             OnSendCommand = new Command(async () => { await SendPersonalMessage(ReceivingUser, TextToSend); });
 
-            MessagingCenter.Subscribe<ChatPage>(this, "connectOnAppearing", (sender) => { Connect(App.CurrentUser); });
-            MessagingCenter.Subscribe<ChatPage>(this, "disconnectOnDisappearing", (sender) => { Disconnect(App.CurrentUser); });
+            MessagingCenter.Subscribe<ChatPage>(this, "connectOnAppearing", async(sender) => { await Connect(App.CurrentUser); });
+            MessagingCenter.Subscribe<ChatPage>(this, "disconnectOnDisappearing", async(sender) => { await Disconnect(App.CurrentUser); });
 
             MessageAppearingCommand = new Command<ChatMessage>(OnMessageAppearing);
             MessageDisappearingCommand = new Command<ChatMessage>(OnMessageDisappearing);
@@ -177,7 +179,7 @@ namespace KawanApp.ViewModels
             }
             catch
             {
-                App.Current.MainPage.DisplayAlert("Error", "Problem while building connection. Please try again later.", "Ok");
+                //App.Current.MainPage.DisplayAlert("Error", "Problem while building connection. Please try again later.", "Ok");
             }
 
             #region Hub functions
@@ -194,10 +196,7 @@ namespace KawanApp.ViewModels
             {
                 Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + systemmessage });
                 //App.Current.MainPage.DisplayAlert("Chathub Message", systemmessage, "Ok");
-                if (systemmessage.Contains("#101"))
-                {
-                    Disconnect(App.CurrentUser);
-                }
+                
             });
 
             #endregion
@@ -222,18 +221,26 @@ namespace KawanApp.ViewModels
 
         }
 
-        async Task Connect(string user)
+        async Task Connect(string sendingUser)
         {
-            try
+            string receivingUser = ReceivingUser;
+            if(connectTries < 1)
             {
-                //await hubConnection.StartAsync();
-                //await hubConnection.InvokeAsync("OnConnected", user);
-                IsConnected = true;
+                connectTries++;
+                try
+                {
+                    await hubConnection.StartAsync();
+                    await hubConnection.InvokeAsync("OnConnected", sendingUser, receivingUser);
+                    IsConnected = true;
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                    //await App.Current.MainPage.DisplayAlert("Error", "Problem while connecting to server. Please try again later.", "Ok");
+                }
+                connectTries--;
             }
-            catch
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Problem while connecting to server. Please try again later.", "Ok");
-            }
+            
         }
 
         async Task SendPersonalMessage(string receivingUser, string message)
@@ -242,7 +249,7 @@ namespace KawanApp.ViewModels
             {
                 //Log message, clear the entry and scroll to bottom.
                 ChatMessage cm = new ChatMessage() { Text = TextToSend, SendingUser = SendingUser, ReceivingUser = receivingUser, TimeStamp = DateTime.Now};
-                if (!(message=="!users"))
+                if (message!="!users" && message!="!groups" && message != "!errors")
                     Messages.Insert(0, cm); //Log the message only if it's not "!users"
                 TextToSend = string.Empty;
                 MessagingCenter.Send(this, "scrolltobottom"); //Send to view.
@@ -252,14 +259,16 @@ namespace KawanApp.ViewModels
                 {
                     try
                     {
-                        //await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
-                        if (message=="!users")
-                            return; //Don't store the message in any databases
+                        await hubConnection.InvokeAsync("SendPersonalMessage", receivingUser, message);
                     }
                     catch (Exception ex)
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+                        System.Console.WriteLine(ex.Message);
                     }
+
+                    if (message == "!users" || message == "!groups" || message == "!errors")
+                        return; //Don't store the message in any databases
+
                     //Store message in SQLite database.
                     //Not implemented yet.
 
@@ -286,16 +295,21 @@ namespace KawanApp.ViewModels
         }
         async Task Disconnect(string user)
         {
-            try
+            if(disconnectTries < 1)
             {
-                //await hubConnection.InvokeAsync("OnDisconnected", user);
-                //await hubConnection.StopAsync();
+                disconnectTries++;
+                try
+                {
+                    await hubConnection.InvokeAsync("OnDisconnected", user);
+                    await hubConnection.StopAsync();
+                }
+                catch
+                {
+                    //await App.Current.MainPage.DisplayAlert("Error", "Problem while disconnecting from server. Please try again later.", "Ok");
+                }
                 IsConnected = false;
                 Messages.Insert(0, new ChatMessage() { SendingUser = "SYSTEM", Text = "CHATHUB\n\n" + "You have been disconnected from the chat." });
-            }
-            catch
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Problem while disconnecting from server. Please try again later.", "Ok");
+                disconnectTries--;
             }
         }
 

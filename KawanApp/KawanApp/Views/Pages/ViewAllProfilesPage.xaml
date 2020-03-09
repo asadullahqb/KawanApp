@@ -20,22 +20,15 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
+            
             <Label 
-                Text="Kawan"
+                Text="{Binding Title}"
                 HorizontalOptions="Center"
                 FontSize="Large"
                 FontAttributes="Bold"
                 TextColor="#393536"
-                Margin="0,15"
-                IsVisible="{Binding IsKawanTitleVisible}"/>
-            <Label 
-                Text="International Students"
-                HorizontalOptions="Center"
-                FontSize="Large"
-                FontAttributes="Bold"
-                TextColor="#393536"
-                Margin="0,15"
-                IsVisible="{Binding IsInternationalStudentsTitleVisible}"/>
+                Margin="0,15"/>
+            
             <BoxView 
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand"
@@ -46,38 +39,57 @@
                 Orientation="Horizontal" 
                 Margin="20,5"
                 VerticalOptions="Center">
-                <Image
-                    Source="location.png"
-                    WidthRequest="20"
-                    HeightRequest="20">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding OnCountryTappedCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-                <Label>
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding OnCountryTappedCommand}" />
-                    </Label.GestureRecognizers>
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <Span Text="Country" TextColor="#393536"/>
-                            <Span Text="{Binding IsSearchedCountry}" TextColor="#393536"/>
-                            <Span Text="{Binding SearchedCountry}" TextColor="#B0B0B0"/>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
+                <Grid>
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <Image
+                            Source="location.png"
+                            WidthRequest="20"
+                            HeightRequest="20"/>
+                        <Label>
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Country" TextColor="#393536"/>
+                                    <Span Text="{Binding IsSearchedCountry}" TextColor="#393536"/>
+                                    <Span Text="{Binding SearchedCountry}" TextColor="#B0B0B0"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </StackLayout>
+                    <Button 
+                        HeightRequest="10"
+                        HorizontalOptions="FillAndExpand"
+                        CornerRadius="8"
+                        BackgroundColor="Transparent"
+                        Command="{Binding OnCountryTappedCommand}"/>
+                </Grid>
+                
+                
 
                 <!--Empty label included to have an unclickable fill between the location and refine constructs-->
                 <Label
                     HorizontalOptions="FillAndExpand"/>
-                
-                <Image
-                    Source="refine.png"
-                    WidthRequest="20"
-                    HeightRequest="20"/>
-                <Label
-                    Text="Refine"
-                    TextColor="#393536"/>
+
+                <Grid>
+                    <StackLayout
+                        HorizontalOptions="End"
+                        Orientation="Horizontal">
+                        <Image
+                            Source="refine.png"
+                            WidthRequest="20"
+                            HeightRequest="20"/>
+                        <Label
+                            Text="Refine"
+                            TextColor="#393536"/>
+                    </StackLayout>
+                    <Button 
+                        WidthRequest="70"
+                        HeightRequest="10"
+                        CornerRadius="8"
+                        BackgroundColor="Transparent"
+                        Command="{Binding OnRefineTappedCommand}"/>
+                </Grid>
+
             </StackLayout>
             <BoxView 
                 HeightRequest="1"

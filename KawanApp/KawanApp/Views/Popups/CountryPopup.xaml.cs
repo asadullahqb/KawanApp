@@ -2,6 +2,7 @@
 using KawanApp.Services;
 using KawanApp.ViewModels.Popups;
 using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -43,6 +44,10 @@ namespace KawanApp.Views.Popups
             DataService.Country = e.NewTextValue;
             ObservableCollection<KawanUser> SearchResults = DataService.GetSearchResults(e.NewTextValue);
             MessagingCenter.Send(this, "updateList", SearchResults); //Send to ViewAllProfilesPageViewModel to filter the list
+        }
+        private void Ok_Tapped(object sender, EventArgs e)
+        {
+            PopupNavigation.Instance.PopAsync();
         }
     }
 }

@@ -24,9 +24,11 @@ namespace KawanApp.ViewModels
         private string _thirdMonth = "Mar";
         private string _predictedMonth = "Apr";
         private bool _isKawan;
+        private bool _kawanStatsIsLoading = true;
         private int[] _arrayOfOnlineFrequencies = new int[24];
         private int _highestNumberOfUsers;
         private string _listOfPeakTimes = "";
+        private KawanStats _kawanStats = new KawanStats() { TimeSpent = "--", StudentsHelped = 0, ActivitiesLogged = 0, ListOfRanks = new ListOfRanks() { FirstMonth = 4, SecondMonth = 4, ThirdMonth = 4, PredictedMonth = 4 } };
 
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
 
@@ -75,6 +77,16 @@ namespace KawanApp.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool KawanStatsIsLoading
+        {
+            get { return _kawanStatsIsLoading; }
+            set
+            {
+                _kawanStatsIsLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsKawan
         {
             get { return _isKawan; }
@@ -125,13 +137,23 @@ namespace KawanApp.ViewModels
             }
         }
 
+        public KawanStats KawanStats
+        {
+            get { return _kawanStats; }
+            set
+            {
+                _kawanStats = value;
+                OnPropertyChanged();
+            }
+        }
+
         public AnalyticsPageViewModel(string kawanuserstudentid)
         {
             IsKawan = App.CurrentUserType.Equals("Kawan");
 
             if (App.NetworkStatus)
             {
-                //Fetch and set user ranks
+                FetchAndSetKawanStats();
                 FetchAndSetUserOnlineTimeFrequencies();
             }
             else
@@ -139,8 +161,21 @@ namespace KawanApp.ViewModels
                 App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
                 return;
             }
+        }
 
-            #region Setup Contribution Graph
+        private async void FetchAndSetKawanStats()
+        {
+            User u = new User() { StudentId = App.CurrentUser } ;
+            if (IsKawan)
+            {
+                KawanStats = await ServerApi.FetchKawanStats(u);
+                await SetContributionGraph();
+            }
+            await Task.Run(() => { KawanStatsIsLoading = false; });
+        }
+
+        private async Task SetContributionGraph()
+        {
             //Set first, second, third and predicted month names.
             DateTime currentDate = DateTime.Now;
             DateTime firstMonthDate = currentDate.AddMonths(-3);
@@ -175,9 +210,9 @@ namespace KawanApp.ViewModels
             blank.Points.Add(new DataPoint(0, 5));
 
             //Set these values from the server
-            double firstMonthRank = 1;
-            double secondMonthRank = 2;
-            double thirdMonthRank = 4;
+            double firstMonthRank = KawanStats.ListOfRanks.FirstMonth;
+            double secondMonthRank = KawanStats.ListOfRanks.SecondMonth;
+            double thirdMonthRank = KawanStats.ListOfRanks.ThirdMonth;
 
             var existingRanksLine = new LineSeries
             {
@@ -190,7 +225,7 @@ namespace KawanApp.ViewModels
             existingRanksLine.Points.Add(new DataPoint(1, secondMonthRank));
             existingRanksLine.Points.Add(new DataPoint(2, thirdMonthRank));
 
-            double predictedRank = 3; //Set from server
+            double predictedRank = KawanStats.ListOfRanks.PredictedMonth; //Set from server
 
             OxyColor predictedcolor;
             if (predictedRank >= thirdMonthRank)
@@ -213,7 +248,6 @@ namespace KawanApp.ViewModels
             RankModel.Series.Add(predictedRankLine);
             RankModel.Axes.Add(xAxisRankModel);
             RankModel.Axes.Add(yAxisRankModel);
-            #endregion
         }
 
         private async void FetchAndSetUserOnlineTimeFrequencies()

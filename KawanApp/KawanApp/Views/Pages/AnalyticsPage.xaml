@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:KawanApp.Converters"
              xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.AnalyticsPage"
@@ -27,7 +28,13 @@
                 TextColor="#393536"/>
         </StackLayout>
     </NavigationPage.TitleView>
-    
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         
         <StackLayout
@@ -65,142 +72,173 @@
                             HeightRequest="1"
                             HorizontalOptions="FillAndExpand"
                             Color="LightGray"/>
-                        <Grid
-                            Margin="35,10"
-                            IsVisible="True">
+                        <Grid>
+                            
+                            <StackLayout
+                                IsVisible="{Binding KawanStatsIsLoading, Converter={StaticResource InverseBool}}">
+                                
+                                <Grid
+                                    Margin="35,10"
+                                    IsVisible="True">
+                                    <oxy:PlotView
+                                        Model="{Binding RankModel}" 
+                                        HorizontalOptions="Center" 
+                                        WidthRequest="290"
+                                        HeightRequest="315"
+                                        IsEnabled="False"/>
 
-                            <oxy:PlotView
-                                Model="{Binding RankModel}" 
-                                HorizontalOptions="Center" 
-                                WidthRequest="290"
-                                HeightRequest="315"
-                                IsEnabled="False"/>
+                                    <!--#region X-Axis Labels-->
+                                    <Label 
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="End"
+                                        BackgroundColor="White"
+                                        TranslationY="-5"
+                                        TranslationX="-120"
+                                        FontSize="13"
+                                        Text="{Binding FirstMonth}"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="End"
+                                        BackgroundColor="White"
+                                        TranslationY="-5"
+                                        TranslationX="-34"
+                                        FontSize="13"
+                                        Text="{Binding SecondMonth}"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="End"
+                                        BackgroundColor="White"
+                                        TranslationY="-5"
+                                        TranslationX="51"
+                                        FontSize="13"
+                                        Text="{Binding ThirdMonth}"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="End"
+                                        BackgroundColor="White"
+                                        TranslationY="-5"
+                                        TranslationX="136"
+                                        FontSize="13"
+                                        Text="{Binding PredictedMonth}"
+                                        TextColor="#393536"/>
+                                    <!--#endregion-->
 
-                            <!--#region X-Axis Labels-->
-                            <Label 
-                                HorizontalOptions="Center"
-                                VerticalOptions="End"
-                                BackgroundColor="White"
-                                TranslationY="-5"
-                                TranslationX="-120"
-                                FontSize="13"
-                                Text="{Binding FirstMonth}"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Center"
-                                VerticalOptions="End"
-                                BackgroundColor="White"
-                                TranslationY="-5"
-                                TranslationX="-34"
-                                FontSize="13"
-                                Text="{Binding SecondMonth}"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Center"
-                                VerticalOptions="End"
-                                BackgroundColor="White"
-                                TranslationY="-5"
-                                TranslationX="51"
-                                FontSize="13"
-                                Text="{Binding ThirdMonth}"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Center"
-                                VerticalOptions="End"
-                                BackgroundColor="White"
-                                TranslationY="-5"
-                                TranslationX="136"
-                                FontSize="13"
-                                Text="{Binding PredictedMonth}"
-                                TextColor="#393536"/>
-                            <!--#endregion-->
+                                    <!--#region Y-Axis Labels-->
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="-147"
+                                        TranslationX="-12"
+                                        FontSize="13"
+                                        Text="        "/>
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="-94"
+                                        TranslationX="-11"
+                                        FontSize="13"
+                                        Text="Best"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="-40"
+                                        TranslationX="-15"
+                                        FontSize="13"
+                                        Text="Good"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="15"
+                                        TranslationX="-14"
+                                        FontSize="13"
+                                        Text="Okay"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="70"
+                                        TranslationX="-8"
+                                        FontSize="13"
+                                        Text="Bad"
+                                        TextColor="#393536"/>
+                                    <Label 
+                                        HorizontalOptions="Start"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="White"
+                                        TranslationY="124"
+                                        TranslationX="-12"
+                                        FontSize="13"
+                                        Text="        "/>
+                                    <!--#endregion-->
+                                    
+                                </Grid>
+                                
+                                <Label
+                                    Margin="60,0"
+                                    HorizontalTextAlignment="Start"
+                                    Text="So far in this month,"
+                                    TextColor="#393536"/>
 
-                            <!--#region Y-Axis Labels-->
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="-147"
-                                TranslationX="-12"
-                                FontSize="13"
-                                Text="        "/>
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="-94"
-                                TranslationX="-11"
-                                FontSize="13"
-                                Text="Best"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="-40"
-                                TranslationX="-15"
-                                FontSize="13"
-                                Text="Good"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="15"
-                                TranslationX="-14"
-                                FontSize="13"
-                                Text="Okay"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="70"
-                                TranslationX="-8"
-                                FontSize="13"
-                                Text="Bad"
-                                TextColor="#393536"/>
-                            <Label 
-                                HorizontalOptions="Start"
-                                VerticalOptions="Center"
-                                BackgroundColor="White"
-                                TranslationY="124"
-                                TranslationX="-12"
-                                FontSize="13"
-                                Text="        "/>
-                            <!--#endregion-->
+                                <Label
+                                    Margin="60,0"
+                                    HorizontalTextAlignment="Start">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="• You spent " TextColor="#393536"/>
+                                            <Span Text="{Binding KawanStats.TimeSpent}" TextColor="#508019" FontAttributes="Bold"/>
+                                            <Span Text=" helping students." TextColor="#393536"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
 
+                                <Label
+                                    Margin="60,0"
+                                    HorizontalTextAlignment="Start">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="• You helped " TextColor="#393536"/>
+                                            <Span Text="{Binding KawanStats.StudentsHelped}" TextColor="#508019" FontAttributes="Bold"/>
+                                            <Span Text=" students" TextColor="#508019" FontAttributes="Bold"/>
+                                            <Span Text=" in total." TextColor="#393536"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                                <Label
+                                    Margin="60,0,60,10"
+                                    HorizontalTextAlignment="Start">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="• You logged " TextColor="#393536"/>
+                                            <Span Text="{Binding KawanStats.ActivitiesLogged}" TextColor="#508019" FontAttributes="Bold"/>
+                                            <Span Text=" activities." TextColor="#393536"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+
+                            </StackLayout>
+
+                            <ActivityIndicator
+                                Margin="0,205"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                HeightRequest="35"
+                                Color="#393536"
+                                IsRunning="True"
+                                IsVisible="{Binding KawanStatsIsLoading}"/>
+                        
                         </Grid>
-
-                        <Label
-                        Margin="60,0"
-                        HorizontalTextAlignment="Start"
-                        Text="So far in this month,"
-                        TextColor="#393536"/>
-                        <Label
-                        Margin="60,0"
-                        HorizontalTextAlignment="Start">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="• You helped " TextColor="#393536"/>
-                                    <Span Text="10" TextColor="#508019" FontAttributes="Bold"/>
-                                    <Span Text=" students" TextColor="#508019" FontAttributes="Bold"/>
-                                    <Span Text=" in total." TextColor="#393536"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-
-                        <Label
-                        Margin="60,0,60,10"
-                        HorizontalTextAlignment="Start">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="• You spent " TextColor="#393536"/>
-                                    <Span Text="10 hours" TextColor="#508019" FontAttributes="Bold"/>
-                                    <Span Text=" helping students." TextColor="#393536"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        
                     </StackLayout>
                     <!--#endregion-->
 
