@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:KawanApp.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             mc:Ignorable="d"
+             x:Class="KawanApp.Views.Pages.ProfileImagePage"
+             NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <ImageButton
+                CornerRadius="90"
+                WidthRequest="20"
+                HeightRequest="20"
+                Source="back.png"
+                Margin="0,0,15,0"
+                BackgroundColor="#f3f3f3"
+                Clicked="BackIcon_Tapped"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:ProfileTypeToDarkStyleConverter x:Key="ColourFormat" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout
+            x:Name="stack"
+            BackgroundColor="#f3f3f3">
+            <Frame
+                BackgroundColor="{Binding IsOwnProfile, Converter={StaticResource ColourFormat}}"
+                HorizontalOptions="Center"
+                Padding="0"
+                Margin="0,30,0,0"
+                WidthRequest="{Binding Width, Source={x:Reference stack}}"
+                HeightRequest="{Binding Width, Source={x:Reference stack}}"
+                IsClippedToBounds="True"
+                HasShadow="False">
+                <ffimageloading:CachedImage
+                    x:Name="profileImage"
+                    Source="{Binding Pic, Converter={StaticResource ImageFormat}}"
+                    ErrorPlaceholder="profileplaceholdergreen.png"
+                    IsEnabled="True"
+                    CacheType="Disk">
+                </ffimageloading:CachedImage>
+            </Frame>
+            <Button 
+                IsVisible="{Binding IsOwnProfile}"
+                Margin="135,50,135,0"
+                Text="Edit"
+                CornerRadius="8"
+                HeightRequest="40"
+                BorderColor="LightGray"
+                BorderWidth="1"
+                BackgroundColor="White"
+                Clicked="Edit_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

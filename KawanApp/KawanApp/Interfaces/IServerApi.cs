@@ -24,6 +24,9 @@ namespace KawanApp.Interfaces
 
         [Post("/kawanapis/functions/edit.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<ReplyMessage> Edit([Body] KawanUser ku);
+        
+        [Post("/kawanapis/functions/uploadPhoto.php")] //should be "Put" but server does not accept Put requests for some reason
+        Task<ReplyMessage> UploadPhoto([Body] PhotoUpload pu);
 
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
         Task<List<KawanUser>> FetchAllKawanUsers([Body] User u);

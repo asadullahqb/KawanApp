@@ -8,20 +8,23 @@ using Xamarin.Forms;
 
 namespace KawanApp.Converters
 {
-    public class ProfileImageConverter : IValueConverter
+    public class ProfilePlaceholderConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string Pic = "";
-            if (value is string)
+            bool IsOwnProfile;
+            var converter = new ImageSourceConverter();
+            if (value is bool)
             {
-                Pic = (string)value;
+                IsOwnProfile = (bool)value;
+
+                if (IsOwnProfile)
+                    return (ImageSource)converter.ConvertFromInvariantString("profileplaceholdergreen.png");
+                else
+                    return (ImageSource)converter.ConvertFromInvariantString("profileplaceholder.png");
             }
-            if (!Pic.Equals("n/a"))
-                //return App.Server + Pic;
-                return App.Server + Pic;
             else
-                return Pic;
+                return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

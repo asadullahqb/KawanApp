@@ -20,18 +20,15 @@ namespace KawanApp.Views.Pages
     {
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         private KawanUser KawanDataForView;
-        private bool IsOwnProfile;
         public ViewAProfilePage()
         {
             InitializeComponent();
-            IsOwnProfile = true;
             this.BindingContext = new ViewAProfilePageViewModel();
         }
         public ViewAProfilePage(KawanUser KawanData)
         {
             InitializeComponent();
             KawanDataForView = KawanData;
-            IsOwnProfile = false;
             this.BindingContext = new ViewAProfilePageViewModel(KawanDataForView);
         }
         protected override bool OnBackButtonPressed()
@@ -44,11 +41,6 @@ namespace KawanApp.Views.Pages
         {
             MessagingCenter.Send(this, "updateData"); //Send to View All Profiles Page View Model
             MessagingCenter.Send(this, "navigateBack"); //Send to App.xaml.cs
-        }
-
-        private void ProfileImage_Tapped(object sender, EventArgs e)
-        {
-
         }
 
         //Icon here refers to the triple purpose icon for add friend/un-add friend/send message

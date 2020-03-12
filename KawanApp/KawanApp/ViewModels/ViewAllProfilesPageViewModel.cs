@@ -121,7 +121,7 @@ namespace KawanApp.ViewModels
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { FetchData(); });
             MessagingCenter.Subscribe<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", (sender, SearchResults) => { AllUsers = SearchResults; SetCountryViewParameters(); });
             MessagingCenter.Subscribe<RefinePopupViewModel, ObservableCollection<KawanUser>>(this, "updateList", (sender, FilterResults) => { AllUsers = FilterResults; });
-            MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { if (!DataService.FilterFields.IsFilterFieldsNull) AllUsers = DataService.AllUsers; else AllUsers = DataService.GetFilteredResults(DataService.FilterFields); SetCountryViewParameters(); });
+            MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { if (DataService.FilterFields.IsAnyFilterFieldsNotNull) AllUsers = DataService.AllUsers; else AllUsers = DataService.GetFilteredResults(DataService.FilterFields); SetCountryViewParameters(); });
             MessagingCenter.Subscribe<RefinePopupViewModel>(this, "clearSearch", (sender) => { if(DataService.Country != null) AllUsers = DataService.GetSearchResults(DataService.Country); else AllUsers = DataService.AllUsers; });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "updateData", (sender) => 
             { 
@@ -222,7 +222,7 @@ namespace KawanApp.ViewModels
             }
             else if(App.CurrentUserType == "Kawan")
             {
-                Title = "International Student";
+                Title = "International Students";
                 List<User> AllInternationalStudentUsersFromDb;
                 User u = new KawanUser() { StudentId = App.CurrentUser };
 

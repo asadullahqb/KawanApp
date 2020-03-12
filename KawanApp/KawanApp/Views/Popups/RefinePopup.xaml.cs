@@ -25,8 +25,7 @@ namespace KawanApp.Views.Popups
 
         protected override void OnDisappearing()
         {
-            if (!DataService.FilterFields.IsFilterFieldsNull) //if any of the fields is not null
-                DataService.FilterFields = new KawanUser();
+            MessagingCenter.Send(this, "updateFilterFields"); //Send to View Model
             base.OnDisappearing();
         }
 
@@ -39,6 +38,11 @@ namespace KawanApp.Views.Popups
         {
             Entry entry = sender as Entry;
             entry.Text = null;
+        }
+
+        private void Clear_Tapped(object sender, EventArgs e)
+        {
+            slider.Value = 0;
         }
     }
 }

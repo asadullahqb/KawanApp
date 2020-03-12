@@ -133,10 +133,16 @@ namespace KawanApp.ViewModels
             {
                 ReplyMessage rm;
 
-                if (IsEdit)
-                    rm = await ServerApi.Edit(KawanUser);
+                if(App.NetworkStatus)
+                    if (IsEdit)
+                        rm = await ServerApi.Edit(KawanUser);
+                    else
+                        rm = await ServerApi.SignUp(KawanUser);
                 else
-                    rm = await ServerApi.SignUp(KawanUser);
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                    return;
+                }
                 
                 if(rm.Status)
                 {

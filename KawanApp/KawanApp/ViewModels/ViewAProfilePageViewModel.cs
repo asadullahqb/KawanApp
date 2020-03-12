@@ -2,6 +2,7 @@
 using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.Services;
+using KawanApp.Views.Pages;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -65,9 +66,11 @@ namespace KawanApp.ViewModels
         }
 
         public ICommand EditCommand { get; set; }
+        public ICommand ProfileImageCommand { get; set; }
         public ViewAProfilePageViewModel()
         {
-            EditCommand = new Command(() => { MessagingCenter.Send(this, "navigateToEditPage", KawanUser); });
+            EditCommand = new Command(() => { MessagingCenter.Send(this, "navigateToEditPage", KawanUser); }); //Send to App.xaml.cs
+            ProfileImageCommand = new Command(() => { MessagingCenter.Send(this, "navigateToProfileImagePage", new ProfileImageFields() { IsOwnProfile = true, Pic = KawanUser.Pic }); }); //Send to App.xaml.cs
             IsOwnProfile = true;
             FetchDataFromServer();
             MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => {
@@ -82,10 +85,12 @@ namespace KawanApp.ViewModels
                     "</html>"
                 };
             });
+            MessagingCenter.Subscribe<ProfileImagePage, string>(this, "updatePic", (sender, picture) => { KawanUser ku = KawanUser; ku.Pic = picture; KawanUser = ku; });
         }
 
         public ViewAProfilePageViewModel(KawanUser KawanData)
         {
+            ProfileImageCommand = new Command(() => { MessagingCenter.Send(this, "navigateToProfileImagePage", new ProfileImageFields() { IsOwnProfile = false, Pic = KawanUser.Pic }); }); //Send to App.xaml.cs   
             IsOwnProfile = false;
             IsLoading = false;
             KawanUser = KawanData;

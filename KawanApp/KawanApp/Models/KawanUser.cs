@@ -84,32 +84,37 @@ namespace KawanApp.Models
         public string AverageResponseTime { get; set; }
         public string AverageResponseTimeSeconds { get; set; }
 
-        public bool IsFilterFieldsNull
+        public bool IsAnyFilterFieldsNotNull
         {
             get
             {
-                //return false if any of the fields is not null or empty
-                //return true if all fields are null and/or empty
+                if(AverageResponseTime == null && AverageResponseTimeSeconds != null)
+                {
+                    //Convert AverageResponseTimeSeconds to AverageResponseTime
+
+                }
+                    
+
                 if (!string.IsNullOrEmpty(FirstName))
-                    return false;
-                else if (!string.IsNullOrEmpty(Email))
-                    return false;
-                else if (!string.IsNullOrEmpty(Gender))
-                    return false;
-                else if (!string.IsNullOrEmpty(PhoneNum))
-                    return false;
-                else if (!string.IsNullOrEmpty(Campus))
-                    return false;
-                else if (!string.IsNullOrEmpty(School))
-                    return false;
-                else if (!string.IsNullOrEmpty(Country))
-                    return false;
-                else if (!string.IsNullOrEmpty(AboutMe))
-                    return false;
-                else if (!string.IsNullOrEmpty(AverageResponseTime))
-                    return false;
-                else
                     return true;
+                else if (!string.IsNullOrEmpty(Email))
+                    return true;
+                else if (!string.IsNullOrEmpty(Gender))
+                    return true;
+                else if (!string.IsNullOrEmpty(PhoneNum))
+                    return true;
+                else if (!string.IsNullOrEmpty(Campus))
+                    return true;
+                else if (!string.IsNullOrEmpty(School))
+                    return true;
+                else if (!string.IsNullOrEmpty(Country))
+                    return true;
+                else if (!string.IsNullOrEmpty(AboutMe))
+                    return true;
+                else if (!string.IsNullOrEmpty(AverageResponseTime))
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -141,6 +146,8 @@ namespace KawanApp.Models
 
             if (string.IsNullOrEmpty(AverageResponseTime))
                 AverageResponseTime = "";
+
+            AverageResponseTime = AverageResponseTime.Replace(" ", string.Empty);
 
             return new KawanUser()
             {

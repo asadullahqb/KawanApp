@@ -34,6 +34,7 @@
             <converters:NetworkStatusAndProfileBoolConverter x:Key="NetworkAndProfileBool" />
             <converters:InverseBoolConverter x:Key="InverseBool" />
             <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:ProfilePlaceholderConverter x:Key="ProfilePlaceholderFormat" />
             <converters:BoolUserConverter x:Key="UserFormat" />
             <converters:InverseBoolUserConverter x:Key="InverseUserFormat" />
             <converters:IconConverter x:Key="IconFormat" />
@@ -64,14 +65,14 @@
                         <ffimageloading:CachedImage
                             TranslationY="14"
                             Source="{Binding KawanUser.Pic, Converter={StaticResource ImageFormat}}"
-                            ErrorPlaceholder="profileplaceholdergreen.png"
+                            ErrorPlaceholder="{Binding IsOwnProfile, Converter={StaticResource ProfilePlaceholderFormat}}"
                             IsEnabled="True"
                             CacheType="Disk">
                             <ffimageloading:CachedImage.Transformations>
                                 <fftransformations:CropTransformation CropWidthRatio="4.5" CropHeightRatio="3.75" />
                             </ffimageloading:CachedImage.Transformations>
                             <ffimageloading:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="ProfileImage_Tapped"/>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding ProfileImageCommand}"/>
                             </ffimageloading:CachedImage.GestureRecognizers>
                         </ffimageloading:CachedImage>
                     </Frame>

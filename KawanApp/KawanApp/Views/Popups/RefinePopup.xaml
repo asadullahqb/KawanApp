@@ -236,7 +236,7 @@
                     TextColor="#524E4F"
                     FontAttributes="Bold">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ClearCommand}"/>
+                        <TapGestureRecognizer Tapped="Clear_Tapped" Command="{Binding ClearCommand}"/>
                     </Label.GestureRecognizers>
                 </Label>
                 <Label
