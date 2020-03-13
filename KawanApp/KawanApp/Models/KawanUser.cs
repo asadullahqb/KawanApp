@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace KawanApp.Models
 {
@@ -82,19 +83,12 @@ namespace KawanApp.Models
             #endregion
         }
         public string AverageResponseTime { get; set; }
-        public string AverageResponseTimeSeconds { get; set; }
+        public double AverageResponseTimeSeconds { get; set; }
 
         public bool IsAnyFilterFieldsNotNull
         {
             get
             {
-                if(AverageResponseTime == null && AverageResponseTimeSeconds != null)
-                {
-                    //Convert AverageResponseTimeSeconds to AverageResponseTime
-
-                }
-                    
-
                 if (!string.IsNullOrEmpty(FirstName))
                     return true;
                 else if (!string.IsNullOrEmpty(Email))
@@ -112,6 +106,8 @@ namespace KawanApp.Models
                 else if (!string.IsNullOrEmpty(AboutMe))
                     return true;
                 else if (!string.IsNullOrEmpty(AverageResponseTime))
+                    return true;
+                else if (AverageResponseTimeSeconds>0)
                     return true;
                 else
                     return false;
@@ -144,9 +140,37 @@ namespace KawanApp.Models
             if (string.IsNullOrEmpty(AboutMe))
                 AboutMe = "";
 
-            if (string.IsNullOrEmpty(AverageResponseTime))
-                AverageResponseTime = "";
-
+            if((AverageResponseTimeSeconds==0))
+            {
+                if (string.IsNullOrEmpty(AverageResponseTime))
+                    AverageResponseTime = "";
+            }
+            else
+            {
+                //Convert AverageResponseTimeSeconds to AverageResponseTime
+                double Value = AverageResponseTimeSeconds;
+                if (Value == 0)
+                    AverageResponseTime = "";
+                else if (Value > 0 && Value < 1.4)
+                    AverageResponseTime = "--";
+                else if (Value > 1 && Value < 61)
+                {
+                    AverageResponseTime = TimeSpan.FromMinutes(Value - 1).ToString("%m'm'");
+                }
+                else if (Value > 60 && Value < 84)
+                {
+                    Value -= 60;
+                    AverageResponseTime = TimeSpan.FromHours(Value).ToString("%h'h'");
+                }
+                else if (Value > 83 && Value < 115)
+                {
+                    Value -= 83;
+                    AverageResponseTime = TimeSpan.FromDays(Value).ToString("%d'd'");
+                }
+                else
+                    AverageResponseTime = "";
+            }
+            
             AverageResponseTime = AverageResponseTime.Replace(" ", string.Empty);
 
             return new KawanUser()

@@ -78,11 +78,71 @@
                 
             </StackLayout>
             
-            <!--#region Search Fields-->
             <ScrollView
                 Margin="5,10">
                 <StackLayout
                     Margin="10,0">
+
+                    <!--#region Sorting-->
+                    <Grid>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            HorizontalTextAlignment="End"
+                            VerticalTextAlignment="Center"
+                            HeightRequest="22.5"
+                            FontSize="14.5"
+                            Text="Order By: "
+                            TextColor="#393536"/>
+                        <Picker
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            x:Name="orderByPicker"
+                            FontSize="Small"
+                            Title=""
+                            TitleColor="#393536"
+                            HorizontalOptions="FillAndExpand"
+                            SelectedItem="{Binding OrderBy}">
+                            <Picker.Items>
+                                <x:String>Default</x:String>
+                                <x:String>Name</x:String>
+                                <x:String>Email</x:String>
+                                <x:String>Gender</x:String>
+                                <x:String>Campus</x:String>
+                                <x:String>School</x:String>
+                                <x:String>Country</x:String>
+                            </Picker.Items>
+                        </Picker>
+                        <Label
+                            Margin="0,-10,0,0"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            HorizontalTextAlignment="End"
+                            VerticalTextAlignment="Center"
+                            HeightRequest="22.5"
+                            FontSize="14.5"
+                            Text="Sorting Order: "
+                            TextColor="#393536"/>
+                        <Picker
+                            Margin="0,-10,0,0"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            x:Name="sortingOrderPicker"
+                            FontSize="Small"
+                            Title=""
+                            TitleColor="#393536"
+                            HorizontalOptions="FillAndExpand"
+                            SelectedItem="{Binding SortingOrder}">
+                            <Picker.Items>
+                                <x:String>Ascending</x:String>
+                                <x:String>Descending</x:String>
+                            </Picker.Items>
+                        </Picker>
+
+                    </Grid>
+                    <!--#endregion-->
+
+                    <!--#region Search Fields-->
                     <Entry
                         ReturnType="Next"
                         HorizontalOptions="FillAndExpand"
@@ -191,7 +251,7 @@
                         MaxLength="300"
                         Placeholder="About Me"
                         Text="{Binding FilterFields.AboutMe}"/>
-                    <!--#region -->
+                    <!--#region Kawan filters-->
                     <Label
                         IsVisible="{Binding UserType, Converter={StaticResource InverseUserFormat}}"
                         Margin="5,8,0,-8"
@@ -221,10 +281,30 @@
                             HeightRequest="45"
                             WidthRequest="45"
                             Text="{Binding Source={x:Reference slider}, Path=Value, Mode=TwoWay, Converter={StaticResource ValueToResponseTime}}"/>
+                        
                     </StackLayout>
+                    <!--#endregion-->
+
+                    <StackLayout
+                        Orientation="Horizontal">
+                        <CheckBox
+                            VerticalOptions="Center"
+                            IsChecked="{Binding FriendsOnly}"/>
+                        <Label
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center"
+                            HeightRequest="22.5"
+                            FontSize="14.5"
+                            Text="Friends Only"
+                            TextColor="#393536"/>
+                    </StackLayout>
+                    
+
+
+                    <!--#endregion-->
+                    
                 </StackLayout>
             </ScrollView>
-            <!--#endregion-->
 
             <StackLayout
                 Orientation="Horizontal"

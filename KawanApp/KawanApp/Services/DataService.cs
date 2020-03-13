@@ -11,6 +11,9 @@ namespace KawanApp.Services
         public static ObservableCollection<KawanUser> AllUsers { get; set; }
         public static KawanUser KawanUser { get; set; }
         public static KawanUser FilterFields { get; set; }
+        public static string OrderBy { get; set; } = "Default";
+        public static string SortingOrder { get; set; } = "Ascending";
+        public static bool FriendsOnly { get; set; } = false;
         public static string Country { get; set; }
         public static ObservableCollection<KawanUser> GetSearchResults(string queryString)
         {
@@ -55,7 +58,7 @@ namespace KawanApp.Services
                     for(int i=0; i< SearchResults.Count; i++)
                         if (SearchResults[i].FriendStatus != 3)
                         {
-                            SearchResults.RemoveAt(i); //Filter out phone numbers filtered if they are not friends
+                            SearchResults.RemoveAt(i); //Filter out phone numbers if they are not friends
                             i--;
                         } 
                 SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.Campus.ToLowerInvariant().Contains(normalizedFields.Campus)).ToList());
@@ -64,6 +67,45 @@ namespace KawanApp.Services
                 SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.AboutMe.ToLowerInvariant().Contains(normalizedFields.AboutMe)).ToList());
                 SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.AverageResponseTime.ToLowerInvariant().Contains(normalizedFields.AverageResponseTime)).ToList());
             }
+
+            if (FriendsOnly)
+                SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.FriendStatus.Equals(3)).ToList());
+
+            if (SortingOrder == "Ascending")
+            {
+                if (OrderBy == "Default")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Index).ToList());
+                else if (OrderBy == "Name")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.FullName).ToList());
+                else if (OrderBy == "Email")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Email).ToList());
+                else if (OrderBy == "Gender")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Gender).ToList());
+                else if (OrderBy == "Campus")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Campus).ToList());
+                else if (OrderBy == "School")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.School).ToList());
+                else if (OrderBy == "Country")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Country).ToList());
+            }
+            else
+            {
+                if (OrderBy == "Default")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Index).ToList());
+                else if (OrderBy == "Name")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.FullName).ToList());
+                else if (OrderBy == "Email")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Email).ToList());
+                else if (OrderBy == "Gender")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Gender).ToList());
+                else if (OrderBy == "Campus")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Campus).ToList());
+                else if (OrderBy == "School")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.School).ToList());
+                else if (OrderBy == "Country")
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Country).ToList());
+            }
+
             return SearchResults;
         }
     }

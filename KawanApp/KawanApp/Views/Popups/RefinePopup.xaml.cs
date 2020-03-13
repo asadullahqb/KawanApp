@@ -25,7 +25,7 @@ namespace KawanApp.Views.Popups
 
         protected override void OnDisappearing()
         {
-            MessagingCenter.Send(this, "updateFilterFields"); //Send to View Model
+            MessagingCenter.Send(this, "updateRefine"); //Send to View Model
             base.OnDisappearing();
         }
 

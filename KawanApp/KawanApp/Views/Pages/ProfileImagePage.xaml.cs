@@ -19,12 +19,23 @@ namespace KawanApp.Views.Pages
     public partial class ProfileImagePage : ContentPage
     {
         private string Pic;
+        private bool IsOwnProfile = false;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public ProfileImagePage(bool isownprofile, string pic)
         {
             InitializeComponent();
             Pic = pic;
+            IsOwnProfile = isownprofile;
+            ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.FromHex("#f3f3f3");
+            
             this.BindingContext = new ProfileImagePageViewModel(isownprofile, pic);
+        }
+
+        protected override void OnDisappearing()
+        {
+            if(!IsOwnProfile)
+                ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.White;
+            base.OnDisappearing();
         }
 
         protected override bool OnBackButtonPressed()

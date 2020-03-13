@@ -54,7 +54,16 @@ namespace KawanApp.Converters
                     if (AverageResponseTime.Contains("d"))
                     {
                         AverageResponseTime = Regex.Replace(AverageResponseTime, "(.*)d", "$1");
-                        double Value = Int32.Parse(AverageResponseTime);
+                        double Value;
+                        try
+                        {
+                            Value = Int32.Parse(AverageResponseTime);
+                        }
+                        catch (Exception ex)
+                        {
+                            App.Current.MainPage.DisplayAlert("Error", ex.Message, "Ok");
+                            return 0;
+                        }
                         if (Value == 0)
                             return 0;
                         else if (Value > 0 && Value < 32)

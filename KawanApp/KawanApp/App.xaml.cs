@@ -72,14 +72,14 @@ namespace KawanApp
             MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
             MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopModalAsync(); else MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAProfilePageViewModel, ProfileImageFields>(this, "navigateToProfileImagePage", (sender, ProfileImageFields) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#f3f3f3") }; MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); });
-            MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { MainPage = appshell; MainPage.Navigation.PopAsync(); });
+            MessagingCenter.Subscribe<ViewAProfilePageViewModel, ProfileImageFields>(this, "navigateToProfileImagePage", (sender, ProfileImageFields) => { if (ProfileImageFields.IsOwnProfile) { MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#f3f3f3") }; MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Own Profile"; } else { MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Other's Profile";  } });
+            MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { if (OriginPage == "Own Profile") MainPage = appshell; else MainPage.Navigation.PopAsync(); });
             MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToAnalyticsPage", (sender, KawanUserStudentId) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new AnalyticsPage(KawanUserStudentId)); });
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAProfilePageViewModel, KawanUser>(this, "navigateToEditPage", (sender, KawanData) => { MainPage.Navigation.PushModalAsync(new SignUpPage(KawanData)); });
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<AllMessagesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
-            MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell();  MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); LogOutSession(); });
+            MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { appshell = new AppShell(); MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); LogOutSession(); });
             //
         }
 

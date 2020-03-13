@@ -16,6 +16,9 @@ namespace KawanApp.ViewModels.Popups
     {
         private ObservableCollection<KawanUser> _allUsers;
         private KawanUser _filterFields = new KawanUser();
+        private string _orderBy = "Default";
+        private string _sortingOrder = "Ascending";
+        private bool _friendsOnly = false;
         private string _userType;
 
         public ObservableCollection<KawanUser> AllUsers
@@ -37,6 +40,36 @@ namespace KawanApp.ViewModels.Popups
             }
         }
         
+        public string OrderBy
+        {
+            get => _orderBy;
+            set
+            {
+                _orderBy = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public string SortingOrder
+        {
+            get => _sortingOrder;
+            set
+            {
+                _sortingOrder = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool FriendsOnly
+        {
+            get => _friendsOnly;
+            set
+            {
+                _friendsOnly = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string UserType
         {
             get => _userType;
@@ -52,14 +85,20 @@ namespace KawanApp.ViewModels.Popups
 
         public RefinePopupViewModel(ObservableCollection<KawanUser> allusers)
         {
-            MessagingCenter.Subscribe<RefinePopup>(this, "updateFilterFields", (sender) => { if (DataService.FilterFields.IsAnyFilterFieldsNotNull) FilterFields = DataService.FilterFields; });
+            MessagingCenter.Subscribe<RefinePopup>(this, "updateRefine", (sender) => { if (FilterFields.IsAnyFilterFieldsNotNull) DataService.FilterFields = FilterFields; DataService.OrderBy = OrderBy; DataService.SortingOrder = SortingOrder; FriendsOnly = false; });
             AllUsers = allusers;
             UserType = App.CurrentUserType;
+            OrderBy = DataService.OrderBy;
+            SortingOrder = DataService.SortingOrder;
+            FriendsOnly = DataService.FriendsOnly;
             SearchCommand = new Command(() => 
             {
                 if (FilterFields != null) //The object has at least been initialised
                 {
                     DataService.FilterFields = FilterFields;
+                    DataService.OrderBy = OrderBy;
+                    DataService.SortingOrder = SortingOrder;
+                    DataService.FriendsOnly = FriendsOnly;
                     MessagingCenter.Send(this, "updateList", DataService.GetFilteredResults(FilterFields)); //Send to ViewAllProfilesPageViewModel to filter the list 
                 }
                 else
@@ -70,6 +109,12 @@ namespace KawanApp.ViewModels.Popups
             {
                 DataService.FilterFields = new KawanUser();
                 FilterFields = new KawanUser();
+                OrderBy = "Default";
+                SortingOrder = "Ascending";
+                FriendsOnly = false;
+                DataService.OrderBy = OrderBy;
+                DataService.SortingOrder = SortingOrder;
+                DataService.FriendsOnly = FriendsOnly;
                 MessagingCenter.Send(this, "clearSearch"); //Send to ViewAllProfilesPageViewModel to filter the list 
             });
 
