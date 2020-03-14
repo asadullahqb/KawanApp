@@ -25,6 +25,12 @@ namespace KawanApp.Views.Pages
             this.BindingContext = new ViewAllProfilesPageViewModel();
         }
 
+        protected override void OnAppearing()
+        {
+            MessagingCenter.Send(this, "currentPage"); //Send to AppShell View Model
+            base.OnAppearing();
+        }
+
         private void List_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             // don't do anything if we just de-selected the row.

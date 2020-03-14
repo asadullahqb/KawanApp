@@ -94,6 +94,13 @@ namespace KawanApp.ViewModels
 
         private async void Login()
         {
+            if (string.IsNullOrEmpty(Password) || Password.Length < 6 || Password.Length > 20 )
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Password must be 6 to 20 characters long!", "Ok");
+                return; //This is done to ensure that the return key of the keyboard doesn't bypass
+                        //the fluent validator.
+            }
+
             try
             {
                 IsLoadingVisible = true;
@@ -114,7 +121,7 @@ namespace KawanApp.ViewModels
                 {
                     CurrentUserType = message.UserType;
                     UpdateStateData();
-                    MessagingCenter.Send(this, "loadUserData"); //Send to ViewAllProfilesPageViewModel.cs
+                    MessagingCenter.Send(this, "loadUserData"); //Send to AppShell View Model
                 }
                 else
                     await App.Current.MainPage.DisplayAlert("Error", "Wrong username or password.", "Ok");

@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              mc:Ignorable="d"
-             x:Class="KawanApp.Views.Pages.SettingsPage"
+             x:Class="KawanApp.Views.Pages.ActivitiesPage"
              NavigationPage.HasNavigationBar="True"
              NavigationPage.HasBackButton="False">
     <NavigationPage.TitleView>
@@ -24,25 +25,19 @@
     <ContentPage.Content>
         <StackLayout
             BackgroundColor="White">
-            <Button 
-                Text="Change Password"
-                CornerRadius="8"
-                HeightRequest="40"
-                Margin="110,180,110,15"
-                BorderColor="LightGray"
-                BorderWidth="1"
-                BackgroundColor="White"
-                Clicked="Password_Clicked"/>
-            <Button 
-                Text="Logout"
-                CornerRadius="8"
-                HeightRequest="40"
-                Margin="110,0"
-                BorderColor="LightGray"
-                BorderWidth="1"
-                BackgroundColor="White"
-                Clicked="Logout_Clicked"/>
-            
+            <Label 
+                HorizontalTextAlignment="Center"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" >
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="• Activities Feature •" />
+                        <Span Text="{x:Static system:Environment.NewLine}" />
+                        <Span Text="{x:Static system:Environment.NewLine}" />
+                        <Span Text="Coming Soon!" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

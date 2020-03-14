@@ -62,6 +62,8 @@
                     </ffimageloading:CachedImage.Transformations>
                 </ffimageloading:CachedImage>
                 <Entry 
+                    ReturnType="Done"
+                    ReturnCommand="{Binding OnLoginCommand}"
                     x:Name="PasswordEntry"
                     VerticalOptions="Center"
                     Placeholder="Password"
@@ -84,8 +86,7 @@
                 TextColor="#393536"
                 CornerRadius="8"
                 HeightRequest="40"
-                Command="{Binding OnLoginCommand}"
-                IsEnabled="{Binding IsValid}" />
+                Command="{Binding OnLoginCommand}" />
             <!--#endregion-->
 
             <!--#region StayLoggedIn-->

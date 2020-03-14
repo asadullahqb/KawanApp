@@ -4,42 +4,135 @@
        xmlns:d="http://xamarin.com/schemas/2014/forms/design"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        mc:Ignorable="d"
+       
        xmlns:local="clr-namespace:KawanApp.Views.Pages"
+       xmlns:converters="clr-namespace:KawanApp.Converters"
+       xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+       xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" 
        Title="Kawan"
        x:Class="KawanApp.AppShell"
        Shell.TabBarBackgroundColor="White"
        Shell.TitleColor="White"
        Shell.TabBarUnselectedColor="#393536"
-       Shell.TabBarTitleColor="#f68712"
-       Shell.FlyoutBehavior="Disabled"
-       Shell.NavBarIsVisible="False">
+       Shell.TabBarTitleColor="{Binding TitleColour}"
+       Shell.NavBarIsVisible="False"
+       FlyoutVerticalScrollMode="Disabled">
 
-    <TabBar Route="bottomtab">
+    <Shell.Resources>
+        <ResourceDictionary>
+            <converters:ProfileImageConverter x:Key="ImageFormat"/> 
+            <converters:InverseBoolConverter x:Key="InverseBool"/> 
+            <converters:UserTypeToPageIconConverter x:Key="PageIcon"/> 
+            <converters:UserTypeToPageNameConverter x:Key="PageName"/> 
+        </ResourceDictionary>
+    </Shell.Resources>
+    
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid>
+                <StackLayout
+                    BackgroundColor="White"
+                    HorizontalOptions="FillAndExpand">
+                    <StackLayout
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"
+                        BackgroundColor="White"
+                        HorizontalOptions="FillAndExpand">
+                        <Frame 
+                            Margin="0,25,0,0"
+                            CornerRadius="90" 
+                            Padding="0"
+                            IsClippedToBounds="True"
+                            BackgroundColor="#D77610"
+                            WidthRequest="78"
+                            HeightRequest="78"
+                            HorizontalOptions="Center">
+                            <ffimageloading:CachedImage 
+                                Source="{Binding KawanUser.Pic, Converter={StaticResource ImageFormat}}"
+                                ErrorPlaceholder="profileplaceholderorange.png"
+                                CacheType="Disk">
+                                <ffimageloading:CachedImage.Transformations>
+                                    <fftransformations:CropTransformation />
+                                </ffimageloading:CachedImage.Transformations>
+                            </ffimageloading:CachedImage>
+                        </Frame>
+                        <Label 
+                            HorizontalOptions="Center"
+                            Margin="0,10,0,25"
+                            FontSize="14.5"
+                            TextColor="#393536"
+                            Text="{Binding KawanUser.FullName}"/>
+                    </StackLayout>
+                </StackLayout>
 
-        <Tab Route="home"
-             Title="Home"
-             Icon="home.png">
+                <ImageButton 
+                    BackgroundColor="Transparent"
+                    Clicked="Profile_Clicked"/>
+
+                <ActivityIndicator
+                    Margin="0,62.75,0,62.75"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    HeightRequest="35"
+                    Color="#393536"
+                    IsRunning="True"
+                    IsVisible="{Binding IsLoading}"/>
+            </Grid>
+            
+            
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
+
+    <MenuItem 
+        Icon="profile.png"
+        Text="Profile"
+        Clicked="Profile_Clicked"/>
+    <MenuItem 
+        IconImageSource="{Binding CurrentUserType, Converter={StaticResource PageIcon}}"
+        Text="{Binding CurrentUserType, Converter={StaticResource PageName}}"
+        Clicked="ActivitiesSatisfactoryForms_Clicked"/>
+    <MenuItem 
+        Icon="settings.png"
+        Text="Settings"
+        Clicked="Settings_Clicked"/>
+    <MenuItem/>
+    <MenuItem/>
+    <MenuItem/>
+    <MenuItem/>
+    <MenuItem/>
+
+    <FlyoutItem
+        Route="bottomtab">
+
+        <Tab
+            Route="home"
+            Icon="home.png">
+            <ShellContent ContentTemplate="{DataTemplate local:NewsFeedPage}" />
+        </Tab>
+
+        <Tab 
+            Route="profiles"
+            Icon="profiles.png">
             <ShellContent ContentTemplate="{DataTemplate local:ViewAllProfilesPage}" />
         </Tab>
 
-        <Tab Route="profile"
-             Title="Profile"
-             Icon="profile.png">
-            <ShellContent ContentTemplate="{DataTemplate local:ViewAProfilePage}" />
+        <Tab 
+            Route="notifications"
+            Icon="notifications.png">
+            <ShellContent ContentTemplate="{DataTemplate local:NotificationsPage}" />
         </Tab>
 
-        <Tab Route="chat"
-             Title="Messages"
-             Icon="allMessages.png">
+        <Tab 
+            Route="allmessages"
+            Icon="allMessages.png">
             <ShellContent ContentTemplate="{DataTemplate local:AllMessagesPage}" />
         </Tab>
 
-        <Tab Route="settings"
-             Title="Settings"
-             Icon="settings.png">
-            <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
+        <Tab 
+            Route="marketplace"
+            Icon="marketplace.png">
+            <ShellContent ContentTemplate="{DataTemplate local:MarketPlacePage}" />
         </Tab>
 
-    </TabBar>
+    </FlyoutItem>
 
 </Shell>

@@ -258,4 +258,25 @@
   <ItemGroup>
     <BundleResource Include="Resources\profileplaceholderblue.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\marketplace.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\notifications.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\profiles.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\activities.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\satisfactoryForms.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\starFilled-green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\profileplaceholderorange.png" />
+  </ItemGroup>
 </Project>

@@ -69,10 +69,10 @@ namespace KawanApp.ViewModels
         public ICommand ProfileImageCommand { get; set; }
         public ViewAProfilePageViewModel()
         {
+            KawanUser = App.CurrentKawanUser;
+            IsOwnProfile = true;
             EditCommand = new Command(() => { MessagingCenter.Send(this, "navigateToEditPage", KawanUser); }); //Send to App.xaml.cs
             ProfileImageCommand = new Command(() => { MessagingCenter.Send(this, "navigateToProfileImagePage", new ProfileImageFields() { IsOwnProfile = true, Pic = KawanUser.Pic }); }); //Send to App.xaml.cs
-            IsOwnProfile = true;
-            FetchDataFromServer();
             MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => {
                 KawanUser = new KawanUser();
                 KawanUser = DataService.KawanUser;
@@ -86,6 +86,15 @@ namespace KawanApp.ViewModels
                 };
             });
             MessagingCenter.Subscribe<ProfileImagePage, string>(this, "updatePic", (sender, picture) => { KawanUser ku = KawanUser; ku.Pic = picture; KawanUser = ku; });
+            AboutMeSource = new HtmlWebViewSource
+            {
+                Html = "<html>" +
+                    "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
+                    String.Format("<p>{0}</p>", KawanUser.AboutMe) +
+                    "</body>" +
+                    "</html>"
+            };
+            IsLoading = false;
         }
 
         public ViewAProfilePageViewModel(KawanUser KawanData)
@@ -103,30 +112,5 @@ namespace KawanApp.ViewModels
                     "</html>"
             };
         }
-
-        private async void FetchDataFromServer()
-        {
-            User u = new User() { StudentId = App.CurrentUser, Type = App.CurrentUserType };
-            if(App.NetworkStatus)
-                KawanUser = await ServerApi.FetchCurrentKawanUser(u);
-            else 
-            {
-                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
-                return;
-            }
-            await Task.Run(() =>
-            {
-                AboutMeSource = new HtmlWebViewSource
-                {
-                    Html = "<html>" +
-                    "<body  style=\"font-size:14px; color:#9C9A9B; text-align: justify;\">" +
-                    String.Format("<p>{0}</p>", KawanUser.AboutMe) +
-                    "</body>" +
-                    "</html>"
-                };
-            });
-            await Task.Run(() => { IsLoading = false; });
-        }
-
     }
 }

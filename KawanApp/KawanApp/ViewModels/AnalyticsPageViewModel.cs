@@ -25,6 +25,7 @@ namespace KawanApp.ViewModels
         private string _predictedMonth = "Apr";
         private bool _isKawan;
         private bool _kawanStatsIsLoading = true;
+        private bool _userOnlineTimeIsLoading = true;
         private int[] _arrayOfOnlineFrequencies = new int[24];
         private int _highestNumberOfUsers;
         private string _listOfPeakTimes = "";
@@ -83,6 +84,16 @@ namespace KawanApp.ViewModels
             set
             {
                 _kawanStatsIsLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool UserOnlineTimeIsLoading
+        {
+            get { return _userOnlineTimeIsLoading; }
+            set
+            {
+                _userOnlineTimeIsLoading = value;
                 OnPropertyChanged();
             }
         }
@@ -165,13 +176,14 @@ namespace KawanApp.ViewModels
 
         private async void FetchAndSetKawanStats()
         {
+            KawanStatsIsLoading = true;
             User u = new User() { StudentId = App.CurrentUser } ;
             if (IsKawan)
             {
                 KawanStats = await ServerApi.FetchKawanStats(u);
                 await SetContributionGraph();
             }
-            await Task.Run(() => { KawanStatsIsLoading = false; });
+            KawanStatsIsLoading = false;
         }
 
         private async Task SetContributionGraph()
@@ -252,9 +264,11 @@ namespace KawanApp.ViewModels
 
         private async void FetchAndSetUserOnlineTimeFrequencies()
         {
+            UserOnlineTimeIsLoading = true;
             FriendRequest fr = new FriendRequest();
             ArrayOfOnlineFrequencies = await ServerApi.FetchUserOnlineTimeFrequencies(fr);
             await SetUserOnlineTimeFrequenciesChart();
+            UserOnlineTimeIsLoading = false;
         }
 
         private async Task SetUserOnlineTimeFrequenciesChart() 

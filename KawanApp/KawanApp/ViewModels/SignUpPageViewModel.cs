@@ -151,6 +151,8 @@ namespace KawanApp.ViewModels
                         await App.Current.MainPage.DisplayAlert("Success", "User updated", "Ok");
                         DataService.KawanUser = KawanUser;
                         MessagingCenter.Send(this, "updateAfterEdit"); //Send to view a profile page
+                        if(App.Current.MainPage.Navigation.NavigationStack.Count == 1) 
+                            await App.Current.MainPage.Navigation.PopModalAsync();
                         return;
                     }
                     if (KawanUser.Type.Equals("Kawan"))

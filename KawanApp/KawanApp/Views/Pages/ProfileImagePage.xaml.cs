@@ -26,15 +26,18 @@ namespace KawanApp.Views.Pages
             InitializeComponent();
             Pic = pic;
             IsOwnProfile = isownprofile;
-            ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.FromHex("#f3f3f3");
-            
             this.BindingContext = new ProfileImagePageViewModel(isownprofile, pic);
+        }
+
+        protected override void OnAppearing()
+        {
+            ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.FromHex("#f3f3f3");
+            base.OnAppearing();
         }
 
         protected override void OnDisappearing()
         {
-            if(!IsOwnProfile)
-                ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.White;
+            ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.White;
             base.OnDisappearing();
         }
 
@@ -64,12 +67,18 @@ namespace KawanApp.Views.Pages
                         return;
                     }
 
+                    string newfilename;
+                    if (Pic == "n/a")
+                        newfilename = "uploads/" + App.CurrentUser + ".jpg";
+                    else
+                        newfilename = Pic.Replace(".jpg", "1.jpg");
+
                     var file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
                     {
                         DefaultCamera = Plugin.Media.Abstractions.CameraDevice.Front,
                         PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
                         Directory = "User Images",
-                        Name = App.CurrentUser + ".jpg"
+                        Name = newfilename
                     });
 
                     if (file == null)
@@ -97,7 +106,7 @@ namespace KawanApp.Views.Pages
                                 var stream = file.GetStream();
                                 return stream;
                             });
-                            await Task.Run(() => { MessagingCenter.Send(this, "updatePic", Pic.Replace(".jpg", "1.jpg")); }); //Send to view a profile page and profile image page view model
+                            MessagingCenter.Send(this, "updatePic", newfilename); //Send to view a profile page and profile image page view model
                             await DisplayAlert("Success", "Image uploaded.", "Ok");
                         }
                         else
@@ -116,6 +125,12 @@ namespace KawanApp.Views.Pages
                         await DisplayAlert("Error", "Permission not granted to photos!", "Ok");
                         return;
                     }
+
+                    string newfilename;
+                    if (Pic == "n/a")
+                        newfilename = "uploads/" + App.CurrentUser + ".jpg";
+                    else
+                        newfilename = Pic.Replace(".jpg", "1.jpg");
 
                     var file = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
                     {
@@ -148,7 +163,7 @@ namespace KawanApp.Views.Pages
                                 var stream = file.GetStream();
                                 return stream;
                             });
-                            await Task.Run(() => { MessagingCenter.Send(this, "updatePic", Pic.Replace(".jpg", "1.jpg")); }); //Send to view a profile page and profile image page view model
+                            await Task.Run(() => { MessagingCenter.Send(this, "updatePic", newfilename); }); //Send to view a profile page and profile image page view model
                             await DisplayAlert("Success", "Image uploaded.", "Ok");
                         }
                         else

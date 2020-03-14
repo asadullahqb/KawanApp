@@ -45,7 +45,8 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid>
+        <Grid
+            BackgroundColor="White">
             <ScrollView
                 IsVisible="{Binding IsLoading, Converter={StaticResource InverseBool}}"
                 VerticalOptions="Start"

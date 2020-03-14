@@ -7,7 +7,8 @@
              xmlns:oxy="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.AnalyticsPage"
-             NavigationPage.HasNavigationBar="True">
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
     
     <NavigationPage.TitleView>
         <StackLayout 
@@ -263,61 +264,76 @@
                         HorizontalOptions="FillAndExpand"
                         Color="LightGray"/>
                     <Grid>
-                        <oxy:PlotView
-                            Margin="25,10"
-                            Model="{Binding AverageUsageTimeModel}" 
-                            HorizontalOptions="Center" 
-                            WidthRequest="310"
-                            HeightRequest="257.5"
-                            IsEnabled="False"/>
+                        <StackLayout
+                            IsVisible="{Binding UserOnlineTimeIsLoading, Converter={StaticResource InverseBool}}">
+                            <Grid>
+                                <oxy:PlotView
+                                    Margin="25,10"
+                                    Model="{Binding AverageUsageTimeModel}" 
+                                    HorizontalOptions="Center" 
+                                    WidthRequest="310"
+                                    HeightRequest="257.5"
+                                    IsEnabled="False"/>
 
-                        <BoxView 
-                            WidthRequest="1"
-                            HeightRequest="7"
-                            TranslationX="-100.5"
-                            TranslationY="-34.75"
+                                <BoxView 
+                                    WidthRequest="1"
+                                    HeightRequest="7"
+                                    TranslationX="-100.5"
+                                    TranslationY="-34.75"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End"
+                                    Color="#393536"/>
+                                <BoxView 
+                                    WidthRequest="1"
+                                    HeightRequest="7"
+                                    TranslationX="12.5"
+                                    TranslationY="-34.75"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End"
+                                    Color="#393536"/>
+                                <BoxView 
+                                    WidthRequest="1"
+                                    HeightRequest="7"
+                                    TranslationX="124.5"
+                                    TranslationY="-34.75"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End"
+                                    Color="#393536"/>
+                            </Grid>
+
+                            <Label
+                                Margin="35,-10"
+                                HorizontalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="• The largest number of users using the app at a time was " TextColor="#393536"/>
+                                        <Span Text="{Binding HighestNumberOfUsers}" TextColor="#508019" FontAttributes="Bold"/>
+                                        <Span Text=" users" TextColor="#508019" FontAttributes="Bold"/>
+                                        <Span Text="." TextColor="#393536"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+
+                            <Label
+                                Margin="35,15"
+                                Text="The peak times are as follows:" TextColor="#393536"/>
+                            <Label 
+                                Margin="40,-15,40,0"
+                                Text="{Binding ListOfPeakTimes}"
+                                TextColor="#508019"
+                                FontAttributes="Bold"/>
+                        </StackLayout>
+
+                        <ActivityIndicator
+                            Margin="0,205"
                             HorizontalOptions="Center"
-                            VerticalOptions="End"
-                            Color="#393536"/>
-                        <BoxView 
-                            WidthRequest="1"
-                            HeightRequest="7"
-                            TranslationX="12.5"
-                            TranslationY="-34.75"
-                            HorizontalOptions="Center"
-                            VerticalOptions="End"
-                            Color="#393536"/>
-                        <BoxView 
-                            WidthRequest="1"
-                            HeightRequest="7"
-                            TranslationX="124.5"
-                            TranslationY="-34.75"
-                            HorizontalOptions="Center"
-                            VerticalOptions="End"
-                            Color="#393536"/>
+                            VerticalOptions="Center"
+                            HeightRequest="35"
+                            Color="#393536"
+                            IsRunning="True"
+                            IsVisible="{Binding UserOnlineTimeIsLoading}"/>
                     </Grid>
-
-                    <Label
-                        Margin="35,-10"
-                        HorizontalOptions="Center">
-                        <Label.FormattedText>
-                            <FormattedString>
-                                <Span Text="• The largest number of users using the app at a time was " TextColor="#393536"/>
-                                <Span Text="{Binding HighestNumberOfUsers}" TextColor="#508019" FontAttributes="Bold"/>
-                                <Span Text=" users" TextColor="#508019" FontAttributes="Bold"/>
-                                <Span Text="." TextColor="#393536"/>
-                            </FormattedString>
-                        </Label.FormattedText>
-                    </Label>
-
-                    <Label
-                        Margin="35,15"
-                        Text="The peak times are as follows:" TextColor="#393536"/>
-                    <Label 
-                        Margin="40,-15,40,0"
-                        Text="{Binding ListOfPeakTimes}"
-                        TextColor="#508019"
-                        FontAttributes="Bold"/>
+                    
                     <!--#endregion-->
 
                 </StackLayout>
