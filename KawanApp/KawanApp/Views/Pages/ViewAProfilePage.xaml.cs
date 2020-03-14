@@ -118,7 +118,7 @@ namespace KawanApp.Views.Pages
                         }
                     }
                 case "File: sendMessage.png":
-                    MessagingCenter.Send(this, "navigateToChatPage", KawanDataForView.StudentId); //Send to App.xaml.cs
+                    MessagingCenter.Send(this, "navigateToChatPage", KawanDataForView); //Send to App.xaml.cs
                     break;
             }
         }

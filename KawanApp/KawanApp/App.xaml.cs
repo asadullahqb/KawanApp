@@ -61,34 +61,51 @@ namespace KawanApp
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
-            MessagingCenter.Subscribe<string>(this, "AppLoggedIn", (sender) => { LogInSession(); });
-
-            //Navigation to views outside of the app shell and back:
-            //
+            
             //Messaging center is used for view navigation so that the same app shell 
-            //(with its state conserved) is used.
+            //(with its state conserved) is used. 
+            //
+            //App.xaml.cs also manages some other operations.
+            //
+            #region Navigate To Page
+            //From AppShell
             MessagingCenter.Subscribe<AppShell>(this, "navigateToViewAProfilePage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage()); OriginPage = "App Shell"; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToActivitiesPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ActivitiesPage()); });
-            MessagingCenter.Subscribe<ActivitiesPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSatisfactoryFormsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SatisfactoryFormsPage()); });
-            MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSettingsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SettingsPage()); });
-            MessagingCenter.Subscribe<SettingsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
-            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { appshell = new AppShell(); MainPage = appshell; });
+            
+            //To ChatPage
+            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
+            MessagingCenter.Subscribe<ViewAProfilePage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
+            MessagingCenter.Subscribe<AllMessagesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
+
+
+            //Other
             MessagingCenter.Subscribe<LoginPage>(this, "navigateToSignUp", (sender) => { MainPage.Navigation.PushModalAsync(new SignUpPage()); });
-            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White  }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); OriginPage = "View All Profiles Page"; });
-            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAllProfilesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
-            MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
-            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopModalAsync(); else MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAProfilePageViewModel, ProfileImageFields>(this, "navigateToProfileImagePage", (sender, ProfileImageFields) => { if (ProfileImageFields.IsOwnProfile) { MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Own Profile"; } else { MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Other's Profile";  } });
-            MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
-            MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToAnalyticsPage", (sender, KawanUserStudentId) => { MainPage.Navigation.PushAsync(new AnalyticsPage(KawanUserStudentId)); });
-            MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
+            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); OriginPage = "View All Profiles Page"; });
+            MessagingCenter.Subscribe<ViewAProfilePageViewModel, ProfileImageFields>(this, "navigateToProfileImagePage", (sender, ProfileImageFields) => { if (ProfileImageFields.IsOwnProfile) { MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Own Profile"; } else { MainPage.Navigation.PushAsync(new ProfileImagePage(ProfileImageFields.IsOwnProfile, ProfileImageFields.Pic)); OriginPage = "Other's Profile"; } });
             MessagingCenter.Subscribe<ViewAProfilePageViewModel, KawanUser>(this, "navigateToEditPage", (sender, KawanData) => { MainPage.Navigation.PushModalAsync(new SignUpPage(KawanData)); });
-            MessagingCenter.Subscribe<AllMessagesPage, string>(this, "navigateToChatPage", (sender, ReceivingUserStudentId) => { OriginPage = null; MainPage = new NavigationPage(); MainPage.Navigation.PushModalAsync(new ChatPage(ReceivingUserStudentId)); });
+            MessagingCenter.Subscribe<ViewAProfilePage, string>(this, "navigateToAnalyticsPage", (sender, KawanUserStudentId) => { MainPage.Navigation.PushAsync(new AnalyticsPage(KawanUserStudentId)); });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateToLoginPage", (sender) => { CurrentKawanUser = new KawanUser(); CurrentUser = ""; CurrentUserType = ""; appshell = new AppShell(); MainPage = appshell; MainPage.Navigation.PushModalAsync(new LoginPage()); LogOutSession(); });
-            //
+
+
+            #endregion
+
+            #region Navigate Back
+            MessagingCenter.Subscribe<ActivitiesPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<SettingsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else MainPage = appshell; });
+            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopAsync(); else MainPage = appshell; });
+            MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
+            MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
+            #endregion
+
+            #region Other
+            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { appshell = new AppShell(); MainPage = appshell; });
+            MessagingCenter.Subscribe<string>(this, "AppLoggedIn", (sender) => { LogInSession(); });
+            #endregion
+
         }
 
         static public async Task CheckConnectivity()

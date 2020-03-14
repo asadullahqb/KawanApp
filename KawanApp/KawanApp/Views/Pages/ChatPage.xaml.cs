@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using KawanApp.Models;
 using KawanApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,19 +14,22 @@ namespace KawanApp.Views.Pages
     {
         protected override void OnAppearing()
         {
+            ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.FromHex("#234779");
             MessagingCenter.Send(this, "connectOnAppearing"); //Send to viewmodel
             base.OnAppearing();
         } 
         protected override void OnDisappearing()
         {
+            if(App.Current.MainPage.Navigation.NavigationStack.Count > 1) //Only change the colour back if theres previously a navigation page in the stack
+                ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.White;
             MessagingCenter.Send(this, "disconnectOnDisappearing"); //Send to viewmodel
             base.OnDisappearing();
         }
 
-        public ChatPage(string receivingUserStudentId)
+        public ChatPage(KawanUser ku)
         {
             InitializeComponent();
-            this.BindingContext = new ChatPageViewModel(receivingUserStudentId);
+            this.BindingContext = new ChatPageViewModel(ku);
             //Subscribing from viewmodel:
             MessagingCenter.Subscribe<ChatPageViewModel>(this, "scrolltobottom", (sender) => {
                 ChatList?.ScrollToFirst();
@@ -35,6 +39,11 @@ namespace KawanApp.Views.Pages
         {
             MessagingCenter.Send(this, "navigateBack"); //Send to App.xaml.cs
             return true;
+        }
+
+        private void BackIcon_Tapped(object sender, EventArgs e)
+        {
+            MessagingCenter.Send(this, "navigateBack"); //Send to App.xaml.cs
         }
 
         public void ScrollTap(object sender, System.EventArgs e)

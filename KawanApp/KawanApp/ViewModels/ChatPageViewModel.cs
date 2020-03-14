@@ -20,6 +20,8 @@ namespace KawanApp.ViewModels
         private int disconnectTries = 0;
         private string _sendingUser = App.CurrentUser;
         private string _receivingUser;
+        private string _firstName;
+        private string _pic;
         private bool _showScrollTap = false;
         private bool _lastMessageVisible = true;
         private int _pendingMessageCount = 0;
@@ -52,6 +54,30 @@ namespace KawanApp.ViewModels
             set
             {
                 _receivingUser = value;
+                OnPropertyChanged();
+            }
+        }
+        public string FirstName
+        {
+            get
+            {
+                return _firstName;
+            }
+            set
+            {
+                _firstName = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Pic
+        {
+            get
+            {
+                return _pic;
+            }
+            set
+            {
+                _pic = value;
                 OnPropertyChanged();
             }
         }
@@ -157,9 +183,11 @@ namespace KawanApp.ViewModels
         public ICommand MessageAppearingCommand { get; set; }
         public ICommand MessageDisappearingCommand { get; set; }
 
-        public ChatPageViewModel(string receivingUserStudentId)
+        public ChatPageViewModel(KawanUser receivingUserDetails)
         {
-            ReceivingUser = receivingUserStudentId;
+            ReceivingUser = receivingUserDetails.StudentId;
+            FirstName = receivingUserDetails.FirstName;
+            Pic = receivingUserDetails.Pic;
 
             FetchMessages();
 

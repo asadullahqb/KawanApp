@@ -36,7 +36,9 @@ namespace KawanApp.Views.Pages
             ChatMessageItem cmi;
             cmi = (ChatMessageItem)e.Item;
 
-            MessagingCenter.Send(this, "navigateToChatPage", cmi.StudentId); //Send to App.xaml.cs
+            KawanUser ku = new KawanUser() { StudentId = cmi.StudentId, Pic = cmi.Pic, FirstName = cmi.FirstName };
+
+            MessagingCenter.Send(this, "navigateToChatPage", ku); //Send to App.xaml.cs
         }
     }
 }

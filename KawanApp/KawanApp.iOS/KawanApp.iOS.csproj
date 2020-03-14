@@ -279,4 +279,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\profileplaceholderorange.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\backwhite.png" />
+  </ItemGroup>
 </Project>

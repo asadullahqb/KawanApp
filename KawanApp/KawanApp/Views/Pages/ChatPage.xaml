@@ -8,12 +8,60 @@
              xmlns:local="clr-namespace:KawanApp.Helpers"
              xmlns:controls="clr-namespace:KawanApp.Controls"
              xmlns:partials="clr-namespace:KawanApp.Views.Partials"
-             NavigationPage.HasNavigationBar="False">
+              xmlns:converters="clr-namespace:KawanApp.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:ChatTemplateSelector x:Key="MessageTemplateSelector"/>
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
         </ResourceDictionary>
     </ContentPage.Resources>
+    <NavigationPage.TitleView>
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <ImageButton
+                CornerRadius="90"
+                WidthRequest="20"
+                HeightRequest="20"
+                Source="backwhite.png"
+                Margin="0,0,15,0"
+                BackgroundColor="#234779"
+                Clicked="BackIcon_Tapped"/>
+            <Frame
+                Padding="0"
+                CornerRadius="90" 
+                Margin="-10,3,3,3"
+                WidthRequest="40"
+                HeightRequest="40"
+                IsClippedToBounds="True"
+                HasShadow="False"
+                BackgroundColor="#3871c1">
+                <ffimageloading:CachedImage
+                    Source="{Binding Pic, Converter={StaticResource ImageFormat}}"
+                    ErrorPlaceholder="profileplaceholderblue.png"
+                    IsEnabled="True"
+                    CacheType="Disk">
+                    <ffimageloading:CachedImage.Transformations>
+                        <fftransformations:CropTransformation />
+                    </ffimageloading:CachedImage.Transformations>
+                    <ffimageloading:CachedImage.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="BackIcon_Tapped"/>
+                    </ffimageloading:CachedImage.GestureRecognizers>
+                </ffimageloading:CachedImage>
+            </Frame>
+            <Label 
+                Margin="3,0,0,0"
+                VerticalOptions="Center"
+                Text="{Binding FirstName}"
+                FontSize="15.5"
+                TextColor="White"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
     <Grid
         RowSpacing="0" 
         ColumnSpacing="0"
