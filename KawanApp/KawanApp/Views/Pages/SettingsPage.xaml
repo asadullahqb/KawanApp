@@ -16,9 +16,14 @@
                 CornerRadius="90"
                 WidthRequest="20"
                 HeightRequest="20"
+                Margin="0,0,15,0"
                 Source="back.png"
                 BackgroundColor="White"
                 Clicked="BackIcon_Tapped"/>
+            <Label 
+                Text="Settings" 
+                FontSize="Medium"
+                TextColor="#393536"/>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>

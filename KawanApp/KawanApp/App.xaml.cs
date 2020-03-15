@@ -12,6 +12,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using KawanApp.ViewModels;
 using Plugin.Toast;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace KawanApp
 {
@@ -42,8 +43,12 @@ namespace KawanApp
         public static bool CheckingConnectivity { get; set; } = false;
 
         public static bool StayLoggedIn { get; set; }
+        public static HubConnection HubConnection { get; set; }
+
+        private static string CurrentPage { get; set; } = null;
         private static string OriginPage { get; set; } = null;
         private static string CurrentSessionId { get; set; }
+        private INotificationManager NotificationManager;
 
         private IServerApi ServerApi => RestService.For<IServerApi>(Server);
 
@@ -51,9 +56,27 @@ namespace KawanApp
         {
             InitializeComponent();
             GetPreferences();
-
+            
+            //For internet connection:
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
+            //For notifications:
+            NotificationManager = DependencyService.Get<INotificationManager>();
+            NotificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+            };
+
+            HubConnection = new HubConnectionBuilder()
+                .WithUrl($"https://kawantest.azurewebsites.net/chathub")
+                .Build();
+            HubConnection.On<string, string>("ReceiveNotification", (sendingUser, message) =>
+            {
+                if(CurrentPage != "Chat Page" && CurrentPage != "All Messages Page")
+                    NotificationManager.ScheduleNotification(sendingUser, message);
+                MessagingCenter.Send("App", "updateAllMessages");
+            });
+                       
             var appshell = new AppShell(); //Reuse the same app shell once it's loaded
 
             MainPage = appshell;
@@ -75,10 +98,9 @@ namespace KawanApp
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSettingsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SettingsPage()); });
             
             //To ChatPage
-            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
-            MessagingCenter.Subscribe<ViewAProfilePage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
-            MessagingCenter.Subscribe<AllMessagesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); });
-
+            MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); CurrentPage = "Chat Page"; });
+            MessagingCenter.Subscribe<ViewAProfilePage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = "View A Profile Page"; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); CurrentPage = "Chat Page"; });
+            MessagingCenter.Subscribe<AllMessagesPage, KawanUser>(this, "navigateToChatPage", (sender, ReceivingUserDetails) => { OriginPage = null; MainPage = new NavigationPage() { BarBackgroundColor = Color.FromHex("#234779") }; MainPage.Navigation.PushAsync(new ChatPage(ReceivingUserDetails)); CurrentPage = "Chat Page"; });
 
             //Other
             MessagingCenter.Subscribe<LoginPage>(this, "navigateToSignUp", (sender) => { MainPage.Navigation.PushModalAsync(new SignUpPage()); });
@@ -96,12 +118,17 @@ namespace KawanApp
             MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else MainPage = appshell; });
-            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopAsync(); else MainPage = appshell; });
+            MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopAsync(); else MainPage = appshell; CurrentPage = null; });
             MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
             #endregion
 
             #region Other
+            MessagingCenter.Subscribe<AllMessagesPage>(this, "currentPageApp", (sender) => { CurrentPage = "All Messages Page"; });
+            MessagingCenter.Subscribe<NewsFeedPage>(this, "currentPage", (sender) => { CurrentPage = null; });
+            MessagingCenter.Subscribe<ViewAllProfilesPage>(this, "currentPage", (sender) => { CurrentPage = null; });
+            MessagingCenter.Subscribe<NotificationsPage>(this, "currentPage", (sender) => { CurrentPage = null; });
+            MessagingCenter.Subscribe<MarketPlacePage>(this, "currentPage", (sender) => { CurrentPage = null; });
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { appshell = new AppShell(); MainPage = appshell; });
             MessagingCenter.Subscribe<string>(this, "AppLoggedIn", (sender) => { LogInSession(); });
             #endregion
@@ -174,33 +201,41 @@ namespace KawanApp
         protected override async void OnStart()
         {
             // Handle when your app starts
-            /* if (IsUserLoggedIn || StayLoggedIn)
-                 LogInSession();*/
+            
             AppClosed = false;
-            await Task.Delay(3000);
             if(!CheckingConnectivity && !NetworkStatus)
                 await CheckConnectivity();
+            if (IsUserLoggedIn || StayLoggedIn)
+                 await LogInSession();
+
+            await HubConnection.StartAsync();
+            await HubConnection.InvokeAsync("OnConnected", CurrentUser);
         }
 
-        protected override void OnSleep()
+        protected override async void OnSleep()
         {
             // Handle when your app sleeps
-            //LogOutSession();
+            await LogOutSession();
             AppClosed = true;
+
+            await HubConnection.InvokeAsync("OnDisconnected", CurrentUser);
+            await HubConnection.StopAsync();
         }
 
         protected override async void OnResume()
         {
             // Handle when your app resumes
-            /*if (IsUserLoggedIn || StayLoggedIn)
-                LogInSession();
-            */
             AppClosed = false;
             if (!CheckingConnectivity && !NetworkStatus)
                 await CheckConnectivity();
+            if (IsUserLoggedIn || StayLoggedIn)
+                await LogInSession();
+
+            await HubConnection.StartAsync();
+            await HubConnection.InvokeAsync("OnConnected", CurrentUser);
         }
 
-        async void LogInSession() 
+        async Task LogInSession() 
         {
             if (string.IsNullOrEmpty(CurrentSessionId))
             {
@@ -218,7 +253,7 @@ namespace KawanApp
             }
         }
 
-        async void LogOutSession()
+        async Task LogOutSession()
         {
             if (!string.IsNullOrEmpty(CurrentSessionId))
             {

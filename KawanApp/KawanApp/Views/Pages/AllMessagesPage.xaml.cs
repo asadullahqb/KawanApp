@@ -22,7 +22,14 @@ namespace KawanApp.Views.Pages
         protected override void OnAppearing()
         {
             MessagingCenter.Send(this, "currentPage"); //Send to AppShell View Model
+            MessagingCenter.Send(this, "currentPageApp"); //Send to App.xaml.cs
             base.OnAppearing();
+        }
+
+        protected override void OnDisappearing()
+        {
+            MessagingCenter.Send(this, "clearCurrentPage");
+            base.OnDisappearing();
         }
 
         private void List_ItemTapped(object sender, ItemTappedEventArgs e)

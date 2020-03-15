@@ -201,9 +201,7 @@ namespace KawanApp.ViewModels
 
             try
             {
-                hubConnection = new HubConnectionBuilder()
-                .WithUrl($"https://kawantest.azurewebsites.net/chathub")
-                .Build();
+                hubConnection = App.HubConnection;
             }
             catch
             {
@@ -258,7 +256,7 @@ namespace KawanApp.ViewModels
                 try
                 {
                     await hubConnection.StartAsync();
-                    await hubConnection.InvokeAsync("OnConnected", sendingUser, receivingUser);
+                    await hubConnection.InvokeAsync("JoinGroup", sendingUser, receivingUser);
                     IsConnected = true;
                 }
                 catch (Exception ex)
@@ -297,6 +295,8 @@ namespace KawanApp.ViewModels
                     if (message == "!users" || message == "!groups" || message == "!errors")
                         return; //Don't store the message in any databases
 
+                    MessagingCenter.Send("App", "updateAllMessages");
+
                     //Store message in SQLite database.
                     //Not implemented yet.
 
@@ -328,8 +328,7 @@ namespace KawanApp.ViewModels
                 disconnectTries++;
                 try
                 {
-                    await hubConnection.InvokeAsync("OnDisconnected", user);
-                    await hubConnection.StopAsync();
+                    await hubConnection.InvokeAsync("LeaveGroup", user);
                 }
                 catch
                 {

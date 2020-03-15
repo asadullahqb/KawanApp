@@ -63,9 +63,10 @@ namespace KawanApp.ViewModels
         public AllMessagesPageViewModel()
         {
             FetchAllMessages();
+            MessagingCenter.Subscribe<string>(this, "updateAllMessages", async(sender) => { await Task.Delay(1000); await FetchAllMessages(); });
         }
 
-        private async void FetchAllMessages()
+        private async Task FetchAllMessages()
         {
             List<ChatMessageItem> AllChatMessagesFromDb;
             ChatMessageRequest cmr = new ChatMessageRequest() { SendingUser = App.CurrentUser , CurrentUserType = App.CurrentUserType};

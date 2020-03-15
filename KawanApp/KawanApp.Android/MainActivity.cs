@@ -7,12 +7,20 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Plugin.CurrentActivity;
+using Android.Content;
+using Xamarin.Forms;
+using KawanApp.Interfaces;
+using KawanApp.Droid.Interfaces;
+using KawanApp.Droid.Services;
+using System.Timers;
+using System.Threading.Tasks;
 
 namespace KawanApp.Droid
 {
-    [Activity(Label = "Kawan", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Kawan", Icon = "@mipmap/ic_launcher", Theme = "@style/MainTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        Timer Timer = new Timer(5000); //5000 milisecs - 5 secs
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -29,6 +37,40 @@ namespace KawanApp.Droid
             FFImageLoading.Forms.Platform.CachedImageRenderer.Init(enableFastRenderer: true);
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             LoadApplication(new App());
+            CreateNotificationFromIntent(base.Intent);
+            var intent = new Intent(this, typeof(NotificationService));
+            //StartService(intent);
+            
+            Timer.Elapsed += timer_Elapsed;
+            //Timer.Start();
+        }
+
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
+        }
+
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            INotificationManager NotificationManager;
+            NotificationManager = DependencyService.Get<INotificationManager>();
+            NotificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+            };
+            NotificationManager.ScheduleNotification("Hello", "Your notification is working!");
+            Timer.Start(); //Restart timer
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
+                string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
         }
 
         public override void OnBackPressed()
