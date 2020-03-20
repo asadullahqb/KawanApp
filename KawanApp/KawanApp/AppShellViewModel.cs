@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace KawanApp
@@ -19,6 +20,7 @@ namespace KawanApp
         private KawanUser _kawanUser;
         private Color _titleColour = Color.FromHex("#f68712");
         private string _currentUserType;
+        private Color _onlineColor = Color.Red;
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
         public bool IsLoading
         {
@@ -59,8 +61,24 @@ namespace KawanApp
             }
         }
 
+        public Color OnlineColor
+        {
+            get => _onlineColor;
+            set
+            {
+                _onlineColor = value;
+                OnPropertyChanged();
+            }
+        }
+        public ICommand OnProfileCommand { get; set; }
+
         public AppShellViewModel()
         {
+            OnProfileCommand = new Command(() => { if (!IsLoading) { Shell.Current.FlyoutIsPresented = false; MessagingCenter.Send(this, "navigateToViewAProfilePage"); } }); // Send to App.xaml.cs
+
+            MessagingCenter.Subscribe<string>(this, "updateConnection", async(sender) => { await Task.Delay(1000); if (App.NetworkStatus) OnlineColor = Color.Green; else OnlineColor = Color.Red; });
+            MessagingCenter.Subscribe<ProfileImagePage, string>(this, "updatePic", (sender, picture) => { KawanUser ku = KawanUser; ku.Pic = picture; KawanUser = ku; App.CurrentPic = picture; Preferences.Set("CurrentPic", picture); });
+            MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => { CurrentUserType = App.CurrentUserType; KawanUser ku = KawanUser; ku.FirstName = App.CurrentFirstName; KawanUser = ku; });
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { CurrentUserType = App.CurrentUserType; FetchDataFromServer(); });
             //Set the title colour to the current page
             MessagingCenter.Subscribe<NewsFeedPage>(this, "currentPage", (sender) => { TitleColour = Color.FromHex("#f68712"); }); //Orange
@@ -86,8 +104,9 @@ namespace KawanApp
                 await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
                 return;
             }
-            await Task.Run(() => { IsLoading = false; });
-            App.CurrentKawanUser = KawanUser;
+            await Task.Run(() => App.CurrentKawanUser = KawanUser);
+            await Task.Run(() => IsLoading = false);
+            //await Task.Run(() => MessagingCenter.Send(this, "connect"));
         }
     }
 }

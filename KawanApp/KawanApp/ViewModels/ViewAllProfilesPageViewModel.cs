@@ -118,6 +118,7 @@ namespace KawanApp.ViewModels
         {
             OnCountryTappedCommand = new Command(()=> { if(PopupNavigation.Instance.PopupStack.Count < 1 ) PopupNavigation.Instance.PushAsync(new CountryPopup(ListOfCountryData)); });
             OnRefineTappedCommand = new Command(()=> { if (PopupNavigation.Instance.PopupStack.Count < 1) PopupNavigation.Instance.PushAsync(new RefinePopup(AllUsers)); });
+            MessagingCenter.Subscribe<string>(this, "updateProfiles", async(sender) => { await Task.Delay(1000); await FetchAllUsers(); });
             MessagingCenter.Subscribe<CountryPopup, ObservableCollection<KawanUser>>(this, "updateList", (sender, SearchResults) => { AllUsers = SearchResults; SetCountryViewParameters(); });
             MessagingCenter.Subscribe<RefinePopupViewModel, ObservableCollection<KawanUser>>(this, "updateList", (sender, FilterResults) => { AllUsers = FilterResults; });
             MessagingCenter.Subscribe<CountryPopup>(this, "clearSearch", (sender) => { if (DataService.FilterFields.IsAnyFilterFieldsNotNull) AllUsers = DataService.AllUsers; else AllUsers = DataService.GetFilteredResults(DataService.FilterFields); SetCountryViewParameters(); });

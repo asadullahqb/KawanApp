@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace KawanApp.ViewModels
@@ -150,7 +151,9 @@ namespace KawanApp.ViewModels
                     {
                         await App.Current.MainPage.DisplayAlert("Success", "User updated", "Ok");
                         DataService.KawanUser = KawanUser;
-                        MessagingCenter.Send(this, "updateAfterEdit"); //Send to view a profile page
+                        App.CurrentFirstName = KawanUser.FirstName;
+                        Preferences.Set("CurrentFirstName", KawanUser.FirstName);
+                        MessagingCenter.Send(this, "updateAfterEdit"); //Send to view a profile page and app shell view model
                         if(App.Current.MainPage.Navigation.NavigationStack.Count == 1) 
                             await App.Current.MainPage.Navigation.PopModalAsync();
                         return;

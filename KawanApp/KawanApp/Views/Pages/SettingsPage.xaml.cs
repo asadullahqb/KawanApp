@@ -1,6 +1,7 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.Views.Popups;
+using Microsoft.AspNetCore.SignalR.Client;
 using Refit;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -31,8 +32,9 @@ namespace KawanApp.Views.Pages
             MessagingCenter.Send(this, "navigateBack"); //Send to App.xaml.cs
         }
 
-        private void Logout_Clicked(object sender, EventArgs e)
+        private async void Logout_Clicked(object sender, EventArgs e)
         {
+            await App.HubConnection.InvokeAsync("OnDisconnected", App.CurrentUser);
             MessagingCenter.Send(this, "navigateToLoginPage"); //Send to App.xaml.cs
         }
 

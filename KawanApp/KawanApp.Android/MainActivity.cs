@@ -14,6 +14,8 @@ using KawanApp.Droid.Interfaces;
 using KawanApp.Droid.Services;
 using System.Timers;
 using System.Threading.Tasks;
+using Android.Util;
+using Plugin.Toast;
 
 namespace KawanApp.Droid
 {
@@ -21,6 +23,7 @@ namespace KawanApp.Droid
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         Timer Timer = new Timer(5000); //5000 milisecs - 5 secs
+        private INotificationManager NotificationManager;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -40,7 +43,13 @@ namespace KawanApp.Droid
             CreateNotificationFromIntent(base.Intent);
             var intent = new Intent(this, typeof(NotificationService));
             //StartService(intent);
-            
+
+            NotificationManager = DependencyService.Get<INotificationManager>();
+            NotificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+            };
+
             Timer.Elapsed += timer_Elapsed;
             //Timer.Start();
         }
@@ -53,13 +62,8 @@ namespace KawanApp.Droid
 
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            INotificationManager NotificationManager;
-            NotificationManager = DependencyService.Get<INotificationManager>();
-            NotificationManager.NotificationReceived += (sender, eventArgs) =>
-            {
-                var evtData = (NotificationEventArgs)eventArgs;
-            };
-            NotificationManager.ScheduleNotification("Hello", "Your notification is working!");
+            //Toast.MakeText(this, "Hello", ToastLength.Short).Show();
+            NotificationManager.ScheduleMessageNotification("Hello", "Your notification is working!");
             Timer.Start(); //Restart timer
         }
 

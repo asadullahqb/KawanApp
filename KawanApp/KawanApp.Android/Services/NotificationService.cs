@@ -36,7 +36,7 @@ namespace KawanApp.Droid.Services
                 };
                 while (true)
                 {
-                    await Task.Run(() => NotificationManager.ScheduleNotification("Hello", "Your notification is working!"));
+                    await Task.Run(() => NotificationManager.ScheduleMessageNotification("Hello", "Your notification is working!"));
                     await Task.Delay(5000);
                     //await Task.Run(() => StopSelf());
                 }

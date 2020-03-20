@@ -111,6 +111,7 @@ namespace KawanApp.ViewModels
                     "</body>" +
                     "</html>"
             };
+            MessagingCenter.Subscribe<string>(this, "updateProfiles", async(sender) => { await Task.Delay(1000); await Task.Run(() => KawanUser = DataService.AllUsers[KawanUser.Index]); });
         }
     }
 }

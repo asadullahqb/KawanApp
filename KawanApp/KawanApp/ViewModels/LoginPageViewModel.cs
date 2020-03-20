@@ -2,6 +2,7 @@
 using KawanApp.Helpers;
 using KawanApp.Interfaces;
 using KawanApp.Models;
+using Microsoft.AspNetCore.SignalR.Client;
 using Refit;
 using System;
 using System.Windows.Input;
@@ -14,6 +15,8 @@ namespace KawanApp.ViewModels
     {
         private string _studentId;
         private string _currentUserType;
+        private string _currentFirstName;
+        private string _currentPic;
         private string _password;
         private bool _stayLoggedIn = true; //Set as true by default so that user only has to toggle stay logged in to be off
         private bool _isLoadingVisible;
@@ -36,6 +39,25 @@ namespace KawanApp.ViewModels
             set
             {
                 _currentUserType = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public string CurrentFirstName
+        {
+            get => _currentFirstName;
+            set
+            {
+                _currentFirstName = value;
+                OnPropertyChanged();
+            }
+        }
+        public string CurrentPic
+        {
+            get => _currentPic;
+            set
+            {
+                _currentPic = value;
                 OnPropertyChanged();
             }
         }
@@ -88,6 +110,9 @@ namespace KawanApp.ViewModels
 
         public LoginPageViewModel()
         {
+            App.HubConnection.InvokeAsync("OnDisconnected", App.CurrentUser, App.CurrentFirstName);
+            App.CurrentUser = null;
+            App.CurrentFirstName = null;
             Preferences.Clear();
             OnLoginCommand = new Command(() => { Login(); });
         }
@@ -120,6 +145,7 @@ namespace KawanApp.ViewModels
                 if (message.Status)
                 {
                     CurrentUserType = message.UserType;
+                    CurrentFirstName = message.CurrentFirstName;
                     UpdateStateData();
                     MessagingCenter.Send(this, "loadUserData"); //Send to AppShell View Model
                 }
@@ -140,9 +166,13 @@ namespace KawanApp.ViewModels
         private void UpdateStateData()
         {
             App.CurrentUser = StudentId;
+            App.CurrentFirstName = CurrentFirstName;
+            App.CurrentPic = CurrentPic;
             App.CurrentUserType = CurrentUserType;
             App.IsUserLoggedIn = true;
             Preferences.Set("CurrentUser", StudentId);
+            Preferences.Set("CurrentFirstName", CurrentFirstName);
+            Preferences.Set("CurrentPic", CurrentPic);
             Preferences.Set("CurrentUserType", CurrentUserType);
             Preferences.Set("IsUserLoggedIn", true);
             Preferences.Set("StayLoggedIn", StayLoggedIn);

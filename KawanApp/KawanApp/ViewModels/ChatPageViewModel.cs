@@ -193,6 +193,7 @@ namespace KawanApp.ViewModels
 
             OnSendCommand = new Command(async () => { await SendPersonalMessage(ReceivingUser, TextToSend); });
 
+            MessagingCenter.Subscribe<string>(this, "connectToGroup", async(sender) => { await Task.Delay(1000); await Connect(App.CurrentUser); });
             MessagingCenter.Subscribe<ChatPage>(this, "connectOnAppearing", async(sender) => { await Connect(App.CurrentUser); });
             MessagingCenter.Subscribe<ChatPage>(this, "disconnectOnDisappearing", async(sender) => { await Disconnect(App.CurrentUser); });
 

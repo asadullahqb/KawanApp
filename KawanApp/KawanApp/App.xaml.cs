@@ -37,18 +37,22 @@ namespace KawanApp
         }
         public static KawanUser CurrentKawanUser { get; set; }
         public static string CurrentUser { get; set; }
+        public static string CurrentFirstName { get; set; }
+        public static string CurrentPic { get; set; }
         public static string CurrentUserType { get; set; }
         public static bool NetworkStatus { get; set; } = false;
+        public static bool ForceReconnectOnce { get; set; } = false;
         public static bool AppClosed { get; set; } = false;
         public static bool CheckingConnectivity { get; set; } = false;
 
         public static bool StayLoggedIn { get; set; }
         public static HubConnection HubConnection { get; set; }
+        public static string PreviousNotificationId { get; set; } = null;
+        public static INotificationManager NotificationManager { get; set; }
 
         private static string CurrentPage { get; set; } = null;
         private static string OriginPage { get; set; } = null;
         private static string CurrentSessionId { get; set; }
-        private INotificationManager NotificationManager;
 
         private IServerApi ServerApi => RestService.For<IServerApi>(Server);
 
@@ -67,16 +71,65 @@ namespace KawanApp
                 var evtData = (NotificationEventArgs)eventArgs;
             };
 
+            #region Chat Hub
             HubConnection = new HubConnectionBuilder()
                 .WithUrl($"https://kawantest.azurewebsites.net/chathub")
                 .Build();
-            HubConnection.On<string, string>("ReceiveNotification", (sendingUser, message) =>
+            HubConnection.On<string, string, string>("ReceiveMessageNotification", (notificationid, sendingUser, message) =>
             {
-                if(CurrentPage != "Chat Page" && CurrentPage != "All Messages Page")
-                    NotificationManager.ScheduleNotification(sendingUser, message);
-                MessagingCenter.Send("App", "updateAllMessages");
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if(CurrentPage != "Chat Page" && CurrentPage != "All Messages Page" && CurrentPage != "Notifications Page")
+                    NotificationManager.ScheduleMessageNotification(sendingUser, message);
+                MessagingCenter.Send("App", "updateAllMessages"); //Send to all message page
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page
+                PreviousNotificationId = notificationid;
             });
-                       
+            HubConnection.On<string, string, string>("ReceiveFriendNotification", (notificationid, sendingUser, message) =>
+            {
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if (message.Contains("unsent"))
+                {
+                    NotificationManager.RemoveNotification(1, sendingUser);
+                }
+                else if (CurrentPage != "Notifications Page")
+                    NotificationManager.ScheduleFriendNotification(sendingUser, message);
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page
+                MessagingCenter.Send("App", "updateProfiles"); //Send to view all profiles page view model and view a profile page view model
+                PreviousNotificationId = notificationid;
+            });
+            HubConnection.On<string>("ReceiveReply", async(message) =>
+            {
+                //This function is used as a handshake between server and app.
+                switch(message)
+                {
+                    case "Connect success!":
+                        NetworkStatus = true;
+                        MessagingCenter.Send("App", "updateConnection");
+                        break;
+                    case "Connect success but need to login.":
+                        NetworkStatus = true;
+                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
+                        await Task.Delay(1000);
+                        await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
+                        break;
+                    case "Connect failure!":
+                        ForceReconnectOnce = true; //Force the reconnecting
+                        NetworkStatus = false;
+                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
+                        await Task.Delay(1000);
+                        await CheckConnectivity();
+                        break;
+                    case "Join group success!":
+                        break;
+                    case "Join group failure!":
+                        MessagingCenter.Send("App", "connectToGroup"); //Retry connecting to the group
+                        break;
+                }
+            });
+            #endregion
+
             var appshell = new AppShell(); //Reuse the same app shell once it's loaded
 
             MainPage = appshell;
@@ -92,7 +145,7 @@ namespace KawanApp
             //
             #region Navigate To Page
             //From AppShell
-            MessagingCenter.Subscribe<AppShell>(this, "navigateToViewAProfilePage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage()); OriginPage = "App Shell"; });
+            MessagingCenter.Subscribe<AppShellViewModel>(this, "navigateToViewAProfilePage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage()); OriginPage = "App Shell"; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToActivitiesPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ActivitiesPage()); });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSatisfactoryFormsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SatisfactoryFormsPage()); });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSettingsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SettingsPage()); });
@@ -124,13 +177,13 @@ namespace KawanApp
             #endregion
 
             #region Other
+            MessagingCenter.Subscribe<NotificationsPage>(this, "currentPageApp", (sender) => { CurrentPage = "Notifications Page"; });
+            MessagingCenter.Subscribe<NotificationsPage>(this, "clearCurrentPage", (sender) => { CurrentPage = null; });
             MessagingCenter.Subscribe<AllMessagesPage>(this, "currentPageApp", (sender) => { CurrentPage = "All Messages Page"; });
-            MessagingCenter.Subscribe<NewsFeedPage>(this, "currentPage", (sender) => { CurrentPage = null; });
-            MessagingCenter.Subscribe<ViewAllProfilesPage>(this, "currentPage", (sender) => { CurrentPage = null; });
-            MessagingCenter.Subscribe<NotificationsPage>(this, "currentPage", (sender) => { CurrentPage = null; });
-            MessagingCenter.Subscribe<MarketPlacePage>(this, "currentPage", (sender) => { CurrentPage = null; });
-            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { appshell = new AppShell(); MainPage = appshell; });
-            MessagingCenter.Subscribe<string>(this, "AppLoggedIn", (sender) => { LogInSession(); });
+            MessagingCenter.Subscribe<AllMessagesPage>(this, "clearCurrentPage", (sender) => { if(CurrentPage != "Chat Page") CurrentPage = null; });
+            MessagingCenter.Subscribe<ChatPage>(this, "clearCurrentPage", (sender) => { CurrentPage = null; });
+            MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", async(sender) => { appshell = new AppShell(); MainPage = appshell; await CheckConnectivity(); });
+            MessagingCenter.Subscribe<string>(this, "AppLoggedIn", async(sender) => { await LogInSession(); });
             #endregion
 
         }
@@ -139,39 +192,46 @@ namespace KawanApp
         {
             CheckingConnectivity = true;
 
-            await AccessNetwork();
-
-            await Task.Delay(2000);
+            if(!ForceReconnectOnce) //If not forced to reconnect once, access the network
+                await AccessNetwork();
 
             //Do a recursive try of connecting and break only if the connection is established
             while (!AppClosed && !NetworkStatus)
             {
-                CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 5 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                if (AppClosed) { CheckingConnectivity = false; return; }
-                await Task.Delay(1000);
-                CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 4 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                if (AppClosed) { CheckingConnectivity = false; return; }
-                await Task.Delay(1000);
-                CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 3 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                if (AppClosed) { CheckingConnectivity = false; return; }
-                await Task.Delay(1000);
-                CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 2 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                if (AppClosed) { CheckingConnectivity = false; return; }
-                await Task.Delay(1000);
-                CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 1 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                if (AppClosed) { CheckingConnectivity = false; return; }
-                await AccessNetwork();
-                await Task.Delay(1000);
-                CheckingConnectivity = false;
-                if (!NetworkStatus)
-                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                else if (AppClosed)
-                    return;
-                else if(NetworkStatus)
+                try
                 {
-                    CrossToastPopUp.Current.ShowCustomToast("Connected!", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
-                    return;
+                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 5 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    if (AppClosed) { CheckingConnectivity = false; return; }
+                    await Task.Delay(1000);
+                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 4 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    if (AppClosed) { CheckingConnectivity = false; return; }
+                    await Task.Delay(1000);
+                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 3 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    if (AppClosed) { CheckingConnectivity = false; return; }
+                    await Task.Delay(1000);
+                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 2 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    if (AppClosed) { CheckingConnectivity = false; return; }
+                    await Task.Delay(1000);
+                    CrossToastPopUp.Current.ShowCustomToast("Reconnecting in 1 secs...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    if (AppClosed) { CheckingConnectivity = false; return; }
+                    await AccessNetwork();
+                    await Task.Delay(1000);
+                    CheckingConnectivity = false;
+                    if (!NetworkStatus)
+                        CrossToastPopUp.Current.ShowCustomToast("Reconnecting...", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                    else if (AppClosed)
+                        return;
+                    else if (NetworkStatus)
+                    {
+                        CrossToastPopUp.Current.ShowCustomToast("Connected!", "#838181", "#FFFFFF", Plugin.Toast.Abstractions.ToastLength.Short);
+                        return;
+                    }
                 }
+                catch(Exception ex)
+                {
+                    await Task.Delay(1000); //Await looper prepare to complete
+                }
+                ForceReconnectOnce = false; //Reconnect now only everytime the network is still false
             }
         }
 
@@ -180,16 +240,33 @@ namespace KawanApp
             var current = Connectivity.NetworkAccess;
             if (current == NetworkAccess.Internet)
             {
+                /*
                 var ping = new Ping();
-                var isconnected = await ping.SendPingAsync("google.com");
+                var isconnected = await ping.SendPingAsync("google.com", 5000);
                 if (isconnected.Status == IPStatus.Success)
+                {
                     NetworkStatus = true;
+                    if (IsUserLoggedIn || StayLoggedIn)
+                    {
+                        await HubConnection.StartAsync();
+                        await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
+                    }
+                }
                 else
+                {
+                    await HubConnection.StopAsync();
                     NetworkStatus = false;
-                NetworkStatus = true;
+                }*/
+                //NetworkStatus = true;
+                await HubConnection.StartAsync();
+                await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
             }
             else
+            {
+                await HubConnection.StopAsync();
                 NetworkStatus = false;
+                MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
+            }
         }
 
         private async void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
@@ -208,8 +285,8 @@ namespace KawanApp
             if (IsUserLoggedIn || StayLoggedIn)
                  await LogInSession();
 
-            await HubConnection.StartAsync();
-            await HubConnection.InvokeAsync("OnConnected", CurrentUser);
+            //await HubConnection.StartAsync();
+            //MessagingCenter.Subscribe<AppShellViewModel>(this, "connect", async(sender) => await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentKawanUser.FirstName)); //Only connect once the current user details are done loading
         }
 
         protected override async void OnSleep()
@@ -217,9 +294,6 @@ namespace KawanApp
             // Handle when your app sleeps
             await LogOutSession();
             AppClosed = true;
-
-            await HubConnection.InvokeAsync("OnDisconnected", CurrentUser);
-            await HubConnection.StopAsync();
         }
 
         protected override async void OnResume()
@@ -230,9 +304,6 @@ namespace KawanApp
                 await CheckConnectivity();
             if (IsUserLoggedIn || StayLoggedIn)
                 await LogInSession();
-
-            await HubConnection.StartAsync();
-            await HubConnection.InvokeAsync("OnConnected", CurrentUser);
         }
 
         async Task LogInSession() 
@@ -257,6 +328,11 @@ namespace KawanApp
         {
             if (!string.IsNullOrEmpty(CurrentSessionId))
             {
+                if (CurrentSessionId == "0")
+                {
+                    System.Console.WriteLine("Not finished logging in session yet!");
+                    return;
+                }
                 Session s = new Session() { SessionId = CurrentSessionId, StartOrEnd = DateTime.Now };
                 ReplyMessage rm;
                 if (NetworkStatus)
@@ -271,7 +347,7 @@ namespace KawanApp
             }
         }
 
-        static void GetPreferences()
+        static async Task GetPreferences()
         {
             StayLoggedIn = Preferences.Get("StayLoggedIn", false);
 
@@ -280,17 +356,22 @@ namespace KawanApp
                 : Preferences.Get("IsUserLoggedIn", false);
 
             CurrentUser = Preferences.Get("CurrentUser", null);
+            CurrentFirstName = Preferences.Get("CurrentFirstName", null);
+            CurrentPic = Preferences.Get("CurrentPic", null);
             CurrentUserType = Preferences.Get("CurrentUserType", null);
             MessagingCenter.Send("App", "setCurrentUserType"); //Send to App Shell View Model
+            return;
         }
 
-        static void ShowLoginPage(bool isUserLoggedIn)
+        static async void ShowLoginPage(bool isUserLoggedIn)
         {
             if (!isUserLoggedIn)
             {
                 App.Current.MainPage?.Navigation.PushModalAsync(new LoginPage());
                 Preferences.Set("IsUserLoggedIn", false);
                 Preferences.Set("StayLoggedIn", false);
+                await HubConnection.StopAsync();
+                await CheckConnectivity();
             }
             else
             {

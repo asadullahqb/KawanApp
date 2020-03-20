@@ -22,7 +22,8 @@ namespace KawanApp.Views.Pages
         {
             if(App.Current.MainPage.Navigation.NavigationStack.Count > 1) //Only change the colour back if theres previously a navigation page in the stack
                 ((NavigationPage)Application.Current.MainPage).BarBackgroundColor = Color.White;
-            MessagingCenter.Send(this, "disconnectOnDisappearing"); //Send to viewmodel
+            MessagingCenter.Send(this, "clearCurrentPage"); //Send to App.xaml.cs
+            //MessagingCenter.Send(this, "disconnectOnDisappearing"); //Send to viewmodel
             base.OnDisappearing();
         }
 

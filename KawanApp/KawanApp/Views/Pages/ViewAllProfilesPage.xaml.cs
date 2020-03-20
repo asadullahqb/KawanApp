@@ -13,6 +13,7 @@ using System.Reflection;
 using KawanApp.Interfaces;
 using Refit;
 using KawanApp.Services;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace KawanApp.Views.Pages
 {
@@ -65,7 +66,10 @@ namespace KawanApp.Views.Pages
             {
                 case "File: addFriend.png":
                     if (App.NetworkStatus)
+                    {
                         await ServerApi.SendFriendRequest(fr);
+                        await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " sent you a friend request.", "Friend");
+                    }
                     else
                     {
                         await DisplayAlert("Error", "Please turn on internet.", "Ok");
@@ -76,7 +80,10 @@ namespace KawanApp.Views.Pages
                     break;
                 case "File: friendRequestSent.png":
                     if (App.NetworkStatus)
+                    {
                         await ServerApi.UnsendFriendRequest(fr);
+                        await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " unsent you their friend request.", "Friend");
+                    }
                     else
                     {
                         await DisplayAlert("Error", "Please turn on internet.", "Ok");
@@ -90,7 +97,10 @@ namespace KawanApp.Views.Pages
                     if (accepted)
                     {
                         if (App.NetworkStatus)
+                        {
                             await ServerApi.AcceptFriendRequest(fr);
+                            await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " accepted your friend request.", "Friend");
+                        }
                         else
                         {
                             await DisplayAlert("Error", "Please turn on internet.", "Ok");
