@@ -9,7 +9,7 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class LoginPageViewModel : BaseViewModel
     {

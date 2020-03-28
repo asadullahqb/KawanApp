@@ -26,6 +26,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:ProfilePlaceholderConverter x:Key="PlaceholderFormat" />
             <converters:ProfileTypeToDarkStyleConverter x:Key="ColourFormat" />
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -45,7 +46,7 @@
                 <ffimageloading:CachedImage
                     x:Name="profileImage"
                     Source="{Binding Pic, Converter={StaticResource ImageFormat}}"
-                    ErrorPlaceholder="profileplaceholdergreen.png"
+                    ErrorPlaceholder="{Binding IsOwnProfile, Converter={StaticResource PlaceholderFormat}}"
                     IsEnabled="True"
                     CacheType="Disk">
                 </ffimageloading:CachedImage>

@@ -14,6 +14,7 @@ using KawanApp.Interfaces;
 using Refit;
 using KawanApp.Services;
 using Microsoft.AspNetCore.SignalR.Client;
+using KawanApp.ViewModels.Pages;
 
 namespace KawanApp.Views.Pages
 {
@@ -68,6 +69,7 @@ namespace KawanApp.Views.Pages
                     if (App.NetworkStatus)
                     {
                         await ServerApi.SendFriendRequest(fr);
+                        await ServerApi.StoreNotification(new Notification() { ReceivingUser = fr.ReceivingStudentId, SendingUser = App.CurrentUser, Title = "Friend", Message = "sent you a friend request.", Timestamp = DateTime.Now });
                         await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " sent you a friend request.", "Friend");
                     }
                     else
@@ -82,6 +84,7 @@ namespace KawanApp.Views.Pages
                     if (App.NetworkStatus)
                     {
                         await ServerApi.UnsendFriendRequest(fr);
+                        await ServerApi.DeleteNotification(new Notification() { ReceivingUser = fr.ReceivingStudentId, SendingUser = App.CurrentUser, Title = "Friend", Message = "sent you a friend request." });
                         await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " unsent you their friend request.", "Friend");
                     }
                     else
@@ -99,6 +102,7 @@ namespace KawanApp.Views.Pages
                         if (App.NetworkStatus)
                         {
                             await ServerApi.AcceptFriendRequest(fr);
+                            await ServerApi.StoreNotification(new Notification() { ReceivingUser = fr.ReceivingStudentId, SendingUser = App.CurrentUser, Title = "Friend", Message = "accepted your friend request.", Timestamp = DateTime.Now });
                             await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " accepted your friend request.", "Friend");
                         }
                         else
@@ -117,7 +121,10 @@ namespace KawanApp.Views.Pages
                         if(accepted2)
                         {
                             if (App.NetworkStatus)
+                            {
                                 await ServerApi.RejectFriendRequest(fr);
+                                await App.HubConnection.InvokeAsync("SendNotification", fr.ReceivingStudentId, App.CurrentFirstName + " rejected your friend request.", "Friend");
+                            }
                             else
                             {
                                 await DisplayAlert("Error", "Please turn on internet.", "Ok");

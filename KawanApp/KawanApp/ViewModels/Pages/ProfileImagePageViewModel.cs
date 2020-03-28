@@ -6,7 +6,7 @@ using System.Text;
 
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class ProfileImagePageViewModel : BaseViewModel
     {

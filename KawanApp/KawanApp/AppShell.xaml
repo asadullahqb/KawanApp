@@ -97,6 +97,10 @@
         Text="Profile"
         Command="{Binding OnProfileCommand}"/>
     <MenuItem 
+        Icon="analyticsblack.png"
+        Text="Analytics"
+        Command="{Binding OnAnalyticsCommand}"/>
+    <MenuItem 
         IconImageSource="{Binding CurrentUserType, Converter={StaticResource PageIcon}}"
         Text="{Binding CurrentUserType, Converter={StaticResource PageName}}"
         Clicked="ActivitiesSatisfactoryForms_Clicked"/>
@@ -108,39 +112,48 @@
     <MenuItem/>
     <MenuItem/>
     <MenuItem/>
-    <MenuItem/>
 
     <FlyoutItem
-        Route="bottomtab">
+        Route="corepages">
 
         <Tab
             Route="home"
             Icon="home.png">
-            <ShellContent ContentTemplate="{DataTemplate local:NewsFeedPage}" />
+            <ShellContent 
+                ContentTemplate="{DataTemplate local:NewsFeedPage}"
+                Route="home"/>
         </Tab>
 
         <Tab 
             Route="profiles"
             Icon="profiles.png">
-            <ShellContent ContentTemplate="{DataTemplate local:ViewAllProfilesPage}" />
+            <ShellContent 
+                ContentTemplate="{DataTemplate local:ViewAllProfilesPage}"
+                Route="profiles"/>
         </Tab>
 
         <Tab 
             Route="notifications"
             Icon="notifications.png">
-            <ShellContent ContentTemplate="{DataTemplate local:NotificationsPage}" />
+            <ShellContent 
+                ContentTemplate="{DataTemplate local:NotificationsPage}"
+                Route="notifications"/>
         </Tab>
 
         <Tab 
             Route="allmessages"
             Icon="allMessages.png">
-            <ShellContent ContentTemplate="{DataTemplate local:AllMessagesPage}" />
+            <ShellContent 
+                ContentTemplate="{DataTemplate local:AllMessagesPage}" 
+                Route="allmessages"/>
         </Tab>
 
         <Tab 
             Route="marketplace"
             Icon="marketplace.png">
-            <ShellContent ContentTemplate="{DataTemplate local:MarketPlacePage}" />
+            <ShellContent 
+                ContentTemplate="{DataTemplate local:MarketPlacePage}"
+                Route="marketplace"/>
         </Tab>
 
     </FlyoutItem>

@@ -9,7 +9,6 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SatisfactoryFormsPage : ContentPage
     {
         public SatisfactoryFormsPage()

@@ -23,7 +23,7 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class ViewAllProfilesPageViewModel : BaseViewModel
     {
@@ -137,6 +137,14 @@ namespace KawanApp.ViewModels
                     SetCountryViewParameters();
                 } 
             });
+            MessagingCenter.Subscribe<NotificationsPage, string>(this, "initiateNavigateToViewAProfilePage", async (sender, SendingUser) =>
+            {
+                while (AllUsers == null)
+                    await Task.Delay(100); //Let the data load first
+                await Task.Delay(400);
+                KawanUser ku = AllUsers.Where(i => i.StudentId == SendingUser).FirstOrDefault();
+                MessagingCenter.Send(this, "navigateToViewAProfilePage", ku); //Send to App.xaml.cs
+            });
             FetchData();
             DataService.FilterFields = new KawanUser();
             SetCountryViewParameters();
@@ -160,7 +168,11 @@ namespace KawanApp.ViewModels
 
         private async void FetchData()
         {
-            
+            if (!App.NetworkStatus)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
+                return;
+            }
             await FetchCountriesList();
             await FetchAllUsers();
             App.CheckingConnectivity = false;

@@ -1,5 +1,6 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
+using KawanApp.Views.Pages;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class AllMessagesPageViewModel : BaseViewModel
     {
@@ -63,7 +64,16 @@ namespace KawanApp.ViewModels
         public AllMessagesPageViewModel()
         {
             FetchAllMessages();
-            MessagingCenter.Subscribe<string>(this, "updateAllMessages", async(sender) => { await Task.Delay(1000); await FetchAllMessages(); });
+            MessagingCenter.Subscribe<string>(this, "updateAllMessages", async (sender) => { await Task.Delay(1000); await FetchAllMessages(); });
+            MessagingCenter.Subscribe<NotificationsPage, string>(this, "initiateNavigateToChatPage", async (sender, SendingUser) =>
+            {
+                while(AllChatMessages == null)
+                    await Task.Delay(100); //Let the data load first
+                await Task.Delay(400);
+                ChatMessageItem cmi = AllChatMessages.Where(i => i.StudentId == SendingUser).FirstOrDefault();
+                KawanUser ku = new KawanUser() { StudentId = cmi.StudentId, Pic = cmi.Pic, FirstName = cmi.FirstName };
+                MessagingCenter.Send(this, "navigateToChatPage", ku); //Send to App.xaml.cs
+            });
         }
 
         private async Task FetchAllMessages()

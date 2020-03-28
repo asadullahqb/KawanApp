@@ -78,7 +78,10 @@ namespace KawanApp.Services
                 else if (OrderBy == "Name")
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.FullName).ToList());
                 else if (OrderBy == "Email")
+                {
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Email).ToList());
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.FriendStatus.Equals(3)).ToList());
+                }
                 else if (OrderBy == "Gender")
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderBy(x => x.Gender).ToList());
                 else if (OrderBy == "Campus")
@@ -95,7 +98,10 @@ namespace KawanApp.Services
                 else if (OrderBy == "Name")
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.FullName).ToList());
                 else if (OrderBy == "Email")
+                {
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Email).ToList());
+                    SearchResults = new ObservableCollection<KawanUser>(SearchResults.Where(f => f.FriendStatus.Equals(3)).ToList());
+                }
                 else if (OrderBy == "Gender")
                     SearchResults = new ObservableCollection<KawanUser>(SearchResults.OrderByDescending(x => x.Gender).ToList());
                 else if (OrderBy == "Campus")

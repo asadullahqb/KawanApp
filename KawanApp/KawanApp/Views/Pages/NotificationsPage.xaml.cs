@@ -1,4 +1,7 @@
-﻿using System;
+﻿using KawanApp.Models;
+using KawanApp.Services;
+using KawanApp.ViewModels.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +12,12 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NotificationsPage : ContentPage
     {
         public NotificationsPage()
         {
             InitializeComponent();
+            this.BindingContext = new NotificationsPageViewModel();
         }
         protected override void OnAppearing()
         {
@@ -26,6 +29,34 @@ namespace KawanApp.Views.Pages
         {
             MessagingCenter.Send(this, "clearCurrentPage"); //Send to App.xaml.cs
             base.OnAppearing();
+        }
+
+        private async void List_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            // don't do anything if we just de-selected the row.
+            if (e.Item == null) return;
+
+            // Deselect the item.
+            if (sender is ListView lv) lv.SelectedItem = null;
+
+            Notification n;
+            n = (Notification)e.Item;
+
+            MessagingCenter.Send(this, "notificationRead", n.NotificationId); //Send to view model
+
+            switch (n.Title)
+            {
+                case "Friend":
+                    await Shell.Current.GoToAsync($"//corepages/profiles/profiles", true);
+                    await Task.Delay(500); //Let the page construct first
+                    MessagingCenter.Send(this, "initiateNavigateToViewAProfilePage", n.SendingUser); //Send to View All Profiles View Model
+                    break;
+                case "Message":
+                    await Shell.Current.GoToAsync($"//corepages/allmessages/allmessages", true);
+                    await Task.Delay(500); //Let the page construct first
+                    MessagingCenter.Send(this, "initiateNavigateToChatPage", n.SendingUser); //Send to All Messages View Model
+                    break;
+            }
         }
     }
 }

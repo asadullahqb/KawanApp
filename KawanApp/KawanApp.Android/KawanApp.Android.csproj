@@ -299,5 +299,11 @@
   <ItemGroup>
     <AndroidResource Include="Resources\mipmap-xxxhdpi\iconNotifications.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\profileplaceholderpink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\analyticsblack.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

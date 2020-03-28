@@ -1,6 +1,7 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.ViewModels;
+using KawanApp.ViewModels.Pages;
 using KawanApp.Views.Pages;
 using Refit;
 using System;
@@ -71,10 +72,12 @@ namespace KawanApp
             }
         }
         public ICommand OnProfileCommand { get; set; }
+        public ICommand OnAnalyticsCommand { get; set; }
 
         public AppShellViewModel()
         {
             OnProfileCommand = new Command(() => { if (!IsLoading) { Shell.Current.FlyoutIsPresented = false; MessagingCenter.Send(this, "navigateToViewAProfilePage"); } }); // Send to App.xaml.cs
+            OnAnalyticsCommand = new Command(() => { if (!IsLoading) { Shell.Current.FlyoutIsPresented = false; MessagingCenter.Send(this, "navigateToAnalyticsPage"); } }); // Send to App.xaml.cs
 
             MessagingCenter.Subscribe<string>(this, "updateConnection", async(sender) => { await Task.Delay(1000); if (App.NetworkStatus) OnlineColor = Color.Green; else OnlineColor = Color.Red; });
             MessagingCenter.Subscribe<ProfileImagePage, string>(this, "updatePic", (sender, picture) => { KawanUser ku = KawanUser; ku.Pic = picture; KawanUser = ku; App.CurrentPic = picture; Preferences.Set("CurrentPic", picture); });

@@ -13,7 +13,7 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     //This page is reused for edit a profile
     public class SignUpPageViewModel : BaseViewModel

@@ -1,21 +1,21 @@
 ﻿using Refit;
 using KawanApp.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 
 namespace KawanApp.Interfaces
 {
     public interface IServerApi
     {
+        #region Sessions
         [Post("/kawanapis/functions/sessionStart.php")]
         Task<SessionReply> StartSession([Body] Session s);
 
         [Post("/kawanapis/functions/sessionEnd.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<SessionReply> EndSession([Body] Session s);
+        #endregion
 
+        #region Login, SignUp, and Edit
         [Get("/kawanapis/functions/login.php")]
         Task<LoginReply> Login([Body] UserAuthentication ua);
         
@@ -24,10 +24,12 @@ namespace KawanApp.Interfaces
 
         [Post("/kawanapis/functions/edit.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<ReplyMessage> Edit([Body] KawanUser ku);
-        
+
         [Post("/kawanapis/functions/uploadPhoto.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<ReplyMessage> UploadPhoto([Body] PhotoUpload pu);
+        #endregion
 
+        #region Fetch Profile and Country Information
         [Get("/kawanapis/functions/fetchAllKawanUsers.php")]
         Task<List<KawanUser>> FetchAllKawanUsers([Body] User u);
 
@@ -39,16 +41,17 @@ namespace KawanApp.Interfaces
 
         [Get("/kawanapis/functions/fetchListOfCountries.php")]
         Task<List<Country>> FetchListOfCountries([Body] User u);
+        #endregion
 
-        [Get("/kawanapis/functions/fetchAllMessages.php")]
-        Task<List<ChatMessageItem>> FetchAllMessages([Body] ChatMessageRequest cmr);
+        #region Analytics
+        [Get("/kawanapis/functions/fetchKawanStats.php")]
+        Task<KawanStats> FetchKawanStats([Body] User u);
 
-        [Get("/kawanapis/functions/fetchMessages.php")]
-        Task<List<ChatMessage>> FetchMessages([Body] ChatMessage cm);
-        
-        [Post("/kawanapis/functions/storeMessage.php")]
-        Task<ReplyMessage> StoreMessage([Body] ChatMessage cm);
+        [Get("/kawanapis/functions/fetchUserOnlineTimeFrequencies.php")]
+        Task<int[]> FetchUserOnlineTimeFrequencies([Body] FriendRequest fr);
+        #endregion
 
+        #region Friend Requests
         [Post("/kawanapis/functions/sendFriendRequest.php")]
         Task<ReplyMessage> SendFriendRequest([Body] FriendRequest fr);
 
@@ -60,14 +63,36 @@ namespace KawanApp.Interfaces
 
         [Post("/kawanapis/functions/rejectFriendRequest.php")]
         Task<ReplyMessage> RejectFriendRequest([Body] FriendRequest fr);
+        #endregion
 
-        [Get("/kawanapis/functions/fetchKawanStats.php")]
-        Task<KawanStats> FetchKawanStats([Body] User u);
+        #region Messages
+        [Get("/kawanapis/functions/fetchAllMessages.php")]
+        Task<List<ChatMessageItem>> FetchAllMessages([Body] ChatMessageRequest cmr);
 
-        [Get("/kawanapis/functions/fetchUserOnlineTimeFrequencies.php")]
-        Task<int[]> FetchUserOnlineTimeFrequencies([Body] FriendRequest fr);
+        [Get("/kawanapis/functions/fetchMessages.php")]
+        Task<List<ChatMessage>> FetchMessages([Body] ChatMessage cm);
 
+        [Post("/kawanapis/functions/storeMessage.php")]
+        Task<ReplyMessage> StoreMessage([Body] ChatMessage cm);
+        #endregion
+
+        #region Notifications
+        [Get("/kawanapis/functions/fetchNotifications.php")]
+        Task<List<Notification>> FetchNotifications([Body] User u);
+        
+        [Post("/kawanapis/functions/readNotification.php")] //should be "Put" but server does not accept Put requests for some reason
+        Task<ReplyMessage> ReadNotification([Body] Notification n);
+        
+        [Post("/kawanapis/functions/storeNotification.php")] 
+        Task<ReplyMessage> StoreNotification([Body] Notification n);
+        
+        [Post("/kawanapis/functions/deleteNotification.php")] //should be "Delete" but server does not accept Delete requests for some reason
+        Task<ReplyMessage> DeleteNotification([Body] Notification n);
+        #endregion
+
+        #region Other
         [Post("/kawanapis/functions/updatePassword.php")] //should be "Put" but server does not accept Put requests for some reason
         Task<ReplyMessage> UpdatePassword([Body] KawanUser ku);
+        #endregion
     }
 }

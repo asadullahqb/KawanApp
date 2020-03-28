@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using KawanApp.ViewModels;
+using KawanApp.ViewModels.Pages;
 using Xamarin.Forms;
 
 namespace KawanApp.Views.Partials

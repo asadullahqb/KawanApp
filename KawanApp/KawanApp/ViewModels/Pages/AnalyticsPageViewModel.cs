@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class AnalyticsPageViewModel : BaseViewModel
     {

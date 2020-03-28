@@ -24,6 +24,7 @@ namespace KawanApp
             Shell.Current.FlyoutIsPresented = false;
             MessagingCenter.Send(this, "navigateToViewAProfilePage"); // Send to App.xaml.cs
         }*/
+
         private void ActivitiesSatisfactoryForms_Clicked(object sender, EventArgs e)
         {
             MenuItem mi = sender as MenuItem;
@@ -37,6 +38,11 @@ namespace KawanApp
         {
             Shell.Current.FlyoutIsPresented = false;
             MessagingCenter.Send(this, "navigateToSettingsPage"); //Send to App.xaml.cs
+        }
+
+        private void MenuItem_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }

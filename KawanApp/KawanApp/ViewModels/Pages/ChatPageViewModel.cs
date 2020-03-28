@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Refit;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class ChatPageViewModel : BaseViewModel
     {   
@@ -302,18 +302,26 @@ namespace KawanApp.ViewModels
                     //Not implemented yet.
 
                     //Store message in MySQL database.
-                    ReplyMessage rm;
+                    ReplyMessage rm1;
+                    ReplyMessage rm2;
 
                     if (App.NetworkStatus)
-                        rm = await ServerApi.StoreMessage(cm);
+                    {
+                        rm1 = await ServerApi.StoreMessage(cm);
+                        rm2 = await ServerApi.StoreNotification(new Notification() { ReceivingUser = ReceivingUser, SendingUser = App.CurrentUser, Title = "Message", Message = TextToSend, Timestamp = DateTime.Now });
+                    }
                     else
                     {
                         await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
                         return;
                     }
-                    //Just for debugging:
-                    if (!rm.Status)
-                        await App.Current.MainPage.DisplayAlert("Failure!", rm.Message, "Ok");
+
+                    #if DEBUG
+                    if (!rm1.Status)
+                        await App.Current.MainPage.DisplayAlert("Failure!", rm1.Message, "Ok");
+                    if (!rm2.Status)
+                        await App.Current.MainPage.DisplayAlert("Failure!", rm2.Message, "Ok");
+                    #endif
                 }
                 else
                 {

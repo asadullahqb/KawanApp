@@ -16,7 +16,7 @@ using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace KawanApp.ViewModels
+namespace KawanApp.ViewModels.Pages
 {
     public class ViewAProfilePageViewModel : BaseViewModel
     {
@@ -111,7 +111,7 @@ namespace KawanApp.ViewModels
                     "</body>" +
                     "</html>"
             };
-            MessagingCenter.Subscribe<string>(this, "updateProfiles", async(sender) => { await Task.Delay(1000); await Task.Run(() => KawanUser = DataService.AllUsers[KawanUser.Index]); });
+            MessagingCenter.Subscribe<string>(this, "updateProfiles", async(sender) => { await Task.Delay(1500); KawanUser = DataService.AllUsers[KawanUser.Index]; });
         }
     }
 }

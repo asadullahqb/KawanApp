@@ -1,6 +1,7 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.ViewModels;
+using KawanApp.ViewModels.Pages;
 using Plugin.Media;
 using Refit;
 using System;
@@ -15,7 +16,6 @@ using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ProfileImagePage : ContentPage
     {
         private string Pic;
@@ -57,8 +57,12 @@ namespace KawanApp.Views.Pages
             var accepted = await DisplayAlert("Note","Would you like to edit your profile picture?", "Yes", "No");
             if (accepted)
             {
-                var takephoto = await DisplayAlert("Note", "Would you like to take a photo or select from gallery?", "Take Photo", "Gallery");
-                if(takephoto) //Take photo
+                var option = await DisplayActionSheet(null, "Cancel", null, "Take Photo", "Gallery", "Remove");
+
+                if (string.IsNullOrEmpty(option))
+                    return;
+                
+                if (option.Equals("Take Photo")) //Take photo
                 {
                     //Take photo
                     if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -117,7 +121,7 @@ namespace KawanApp.Views.Pages
 
                     file.Dispose();
                 }
-                else //Select from gallery
+                else if(option.Equals("Gallery")) //Select from gallery
                 {
                     //Open gallery
                     if (!CrossMedia.Current.IsPickPhotoSupported)
@@ -174,6 +178,12 @@ namespace KawanApp.Views.Pages
 
                     file.Dispose();
                 }
+                else if (option.Equals("Remove")) //Remove photo
+                {
+                    await DisplayAlert("Success", "Your photo has been removed.", "Ok");
+                    //Remove photo
+                }
+
             }
             else
                 return;
