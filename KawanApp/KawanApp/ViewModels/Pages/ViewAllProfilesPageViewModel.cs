@@ -214,7 +214,7 @@ namespace KawanApp.ViewModels.Pages
         {
             if (App.CurrentUserType == "International Student")
             {
-                Title = "Kawan";
+                Title = "Kawan Members";
                 List<KawanUser> AllKawanUsersFromDb;
                 User u = new User() { StudentId = App.CurrentUser };
 

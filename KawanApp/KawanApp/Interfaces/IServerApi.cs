@@ -76,6 +76,22 @@ namespace KawanApp.Interfaces
         Task<ReplyMessage> StoreMessage([Body] ChatMessage cm);
         #endregion
 
+        #region Activities
+        [Get("/kawanapis/functions/fetchAllActivities.php")]
+        Task<List<Activity>> FetchAllActivities([Body] User u);
+
+        [Post("/kawanapis/functions/storeActivities.php")]
+        Task<ReplyMessage> StoreActivities([Body] ActivitiesForServer a);
+        #endregion
+
+        #region Satisfactory Forms
+        [Get("/kawanapis/functions/fetchAllSatisfactoryForms.php")]
+        Task<List<SatisfactoryForm>> FetchAllSatisfactoryForms([Body] User u);
+
+        [Post("/kawanapis/functions/updateSatisfactoryForm.php")]
+        Task<ReplyMessage> UpdateSatisfactoryForm([Body] SatisfactoryForm a);
+        #endregion
+
         #region Notifications
         [Get("/kawanapis/functions/fetchNotifications.php")]
         Task<List<Notification>> FetchNotifications([Body] User u);

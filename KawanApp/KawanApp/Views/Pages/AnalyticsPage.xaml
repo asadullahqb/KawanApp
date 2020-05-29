@@ -85,7 +85,7 @@
                                         Model="{Binding RankModel}" 
                                         HorizontalOptions="Center" 
                                         WidthRequest="290"
-                                        HeightRequest="315"
+                                        HeightRequest="210"
                                         IsEnabled="False"/>
 
                                     <!--#region X-Axis Labels-->
@@ -132,25 +132,17 @@
                                         HorizontalOptions="Start"
                                         VerticalOptions="Center"
                                         BackgroundColor="White"
-                                        TranslationY="-147"
+                                        TranslationY="-64"
                                         TranslationX="-12"
                                         FontSize="13"
-                                        Text="        "/>
-                                    <Label 
-                                        HorizontalOptions="Start"
-                                        VerticalOptions="Center"
-                                        BackgroundColor="White"
-                                        TranslationY="-94"
-                                        TranslationX="-11"
-                                        FontSize="13"
-                                        Text="Best"
+                                        Text="Best  "
                                         TextColor="#393536"/>
                                     <Label 
                                         HorizontalOptions="Start"
                                         VerticalOptions="Center"
                                         BackgroundColor="White"
-                                        TranslationY="-40"
-                                        TranslationX="-15"
+                                        TranslationY="-30"
+                                        TranslationX="-16"
                                         FontSize="13"
                                         Text="Good"
                                         TextColor="#393536"/>
@@ -158,16 +150,16 @@
                                         HorizontalOptions="Start"
                                         VerticalOptions="Center"
                                         BackgroundColor="White"
-                                        TranslationY="15"
+                                        TranslationY="3"
                                         TranslationX="-14"
                                         FontSize="13"
-                                        Text="Okay"
+                                        Text="Okay  "
                                         TextColor="#393536"/>
                                     <Label 
                                         HorizontalOptions="Start"
                                         VerticalOptions="Center"
                                         BackgroundColor="White"
-                                        TranslationY="70"
+                                        TranslationY="37"
                                         TranslationX="-8"
                                         FontSize="13"
                                         Text="Bad"
@@ -176,7 +168,7 @@
                                         HorizontalOptions="Start"
                                         VerticalOptions="Center"
                                         BackgroundColor="White"
-                                        TranslationY="124"
+                                        TranslationY="73"
                                         TranslationX="-12"
                                         FontSize="13"
                                         Text="        "/>

@@ -91,8 +91,6 @@ namespace KawanApp.ViewModels.Pages
 
         }
 
-        
-
         public SignUpPageViewModel(KawanUser ku)
         {
             IsEdit = true;

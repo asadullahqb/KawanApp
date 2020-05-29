@@ -7,7 +7,7 @@ using Xamarin.Forms;
 
 namespace KawanApp.Converters
 {
-    public class MessageFormatConverter : IValueConverter
+    public class NameFormatConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -17,8 +17,10 @@ namespace KawanApp.Converters
                 FormattedName = (string)value;
             }
 
-            if (FormattedName.Length > 20)
-                return FormattedName.Substring(0, 20) + "..."; //Cut off the message at 20 characters
+            string ending = (GetParameter(parameter).Equals("satForm")) ? ".." : "...";
+
+            if (FormattedName.Length > 6)
+                return FormattedName.Substring(0, 6) + ending; //Cut off the name at 6 characters
             else
                 return FormattedName;
         }
@@ -26,6 +28,14 @@ namespace KawanApp.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
+        }
+
+        string GetParameter(object parameter)
+        {
+            if (parameter is string)
+                return (string)parameter;
+
+            return "";
         }
     }
 }

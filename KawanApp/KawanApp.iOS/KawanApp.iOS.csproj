@@ -288,4 +288,10 @@
   <ItemGroup>
     <BundleResource Include="Resources\analyticsblack.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\edit.png" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KawanApp.ViewModels.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace KawanApp.Views.Pages
         public ActivitiesPage()
         {
             InitializeComponent();
+            this.BindingContext = new ActivitiesPageViewModel();
         }
 
         protected override bool OnBackButtonPressed()

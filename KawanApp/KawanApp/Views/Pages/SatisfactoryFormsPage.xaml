@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:converters="clr-namespace:KawanApp.Converters"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.SatisfactoryFormsPage"
              NavigationPage.HasNavigationBar="True"
@@ -18,26 +18,93 @@
                 WidthRequest="20"
                 HeightRequest="20"
                 Source="back.png"
+                Margin="0,0,15,0"
                 BackgroundColor="White"
                 Clicked="BackIcon_Tapped"/>
+            <Label 
+                Text="Satisfactory Forms" 
+                FontSize="18"
+                TextColor="#393536"/>
         </StackLayout>
     </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NameFormatConverter x:Key="NameFormat" />
+            <converters:MessageFormatConverter x:Key="MessageFormat" />
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout
             BackgroundColor="White">
-            <Label 
-                HorizontalTextAlignment="Center"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" >
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="• Satisfactory Forms Feature •" />
-                        <Span Text="{x:Static system:Environment.NewLine}" />
-                        <Span Text="{x:Static system:Environment.NewLine}" />
-                        <Span Text="Coming Soon!" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+            <!--#region List of Profiles-->
+            <ListView 
+                ItemsSource="{Binding AllSatisfactoryForms}" 
+                RowHeight="110"
+                IsPullToRefreshEnabled="True"
+                RefreshCommand="{Binding RefreshCommand}"
+                IsRefreshing="{Binding IsRefreshing}"
+                ItemTapped="List_ItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout 
+                                Orientation="Horizontal" 
+                                VerticalOptions="Center" 
+                                HorizontalOptions="FillAndExpand" 
+                                Margin="20,0">
+                                <Frame 
+                                    CornerRadius="90" 
+                                    Padding="0"
+                                    Margin="5,3,3,3"
+                                    IsClippedToBounds="True"
+                                    BackgroundColor="#940B4E"
+                                    WidthRequest="78"
+                                    HeightRequest="78">
+                                    <ffimageloading:CachedImage 
+                                        Source="{Binding KawanPic, Converter={StaticResource ImageFormat}}"
+                                        ErrorPlaceholder="profileplaceholderpink.png"
+                                        CacheType="Disk">
+                                        <ffimageloading:CachedImage.Transformations>
+                                            <fftransformations:CropTransformation />
+                                        </ffimageloading:CachedImage.Transformations>
+                                    </ffimageloading:CachedImage>
+                                </Frame>
+                                <StackLayout 
+                                    Orientation="Vertical"
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="10,15">
+                                    <Label 
+                                        HorizontalOptions="FillAndExpand"
+                                        Margin="0,0,0,5" 
+                                        VerticalTextAlignment="Center"
+                                        FontAttributes="Bold"
+                                        TextColor="#393536">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding KawanFullName, Converter={StaticResource NameFormat}, ConverterParameter='satForm'}" TextColor="#393536" FontSize="12"/>
+                                                <Span Text="  •  " TextColor="#9C9A9B" FontSize="12"/>
+                                                <Span Text="{Binding ActivityInfo.DateRange}" TextColor="#9C9A9B" FontSize="9"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="FillAndExpand"
+                                        FontSize="10"
+                                        Text="{Binding ActivityInfo.Name, Converter={StaticResource MessageFormat}, ConverterParameter='satForm'}" 
+                                        TextColor="#393536"/>
+                                </StackLayout>
+                                <CheckBox
+                                    Color="#ed127c"
+                                    VerticalOptions="Center"
+                                    IsEnabled="False"
+                                    IsChecked="{Binding IsFilled}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

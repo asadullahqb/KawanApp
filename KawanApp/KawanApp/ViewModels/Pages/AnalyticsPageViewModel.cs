@@ -29,7 +29,7 @@ namespace KawanApp.ViewModels.Pages
         private int[] _arrayOfOnlineFrequencies = new int[24];
         private int _highestNumberOfUsers;
         private string _listOfPeakTimes = "";
-        private KawanStats _kawanStats = new KawanStats() { TimeSpent = "--", StudentsHelped = 0, ActivitiesLogged = 0, ListOfRanks = new ListOfRanks() { FirstMonth = 4, SecondMonth = 4, ThirdMonth = 4, PredictedMonth = 4 } };
+        private KawanStats _kawanStats = new KawanStats() { TimeSpent = "--", StudentsHelped = 0, ActivitiesLogged = 0, ListOfRanks = new ListOfRanks() { FirstMonth = 1, SecondMonth = 1, ThirdMonth = 1, PredictedMonth = 1 } };
 
         private IServerApi ServerApi => RestService.For<IServerApi>(App.Server);
 
@@ -226,6 +226,15 @@ namespace KawanApp.ViewModels.Pages
             double secondMonthRank = KawanStats.ListOfRanks.SecondMonth;
             double thirdMonthRank = KawanStats.ListOfRanks.ThirdMonth;
 
+            if (firstMonthRank == 0)
+                firstMonthRank++;
+
+            if (secondMonthRank == 0)
+                secondMonthRank++;
+
+            if (thirdMonthRank == 0)
+                thirdMonthRank++;
+
             var existingRanksLine = new LineSeries
             {
                 StrokeThickness = 1.0,
@@ -238,6 +247,9 @@ namespace KawanApp.ViewModels.Pages
             existingRanksLine.Points.Add(new DataPoint(2, thirdMonthRank));
 
             double predictedRank = KawanStats.ListOfRanks.PredictedMonth; //Set from server
+
+            if (predictedRank == 0)
+                predictedRank++;
 
             OxyColor predictedcolor;
             if (predictedRank >= thirdMonthRank)
@@ -267,6 +279,8 @@ namespace KawanApp.ViewModels.Pages
             UserOnlineTimeIsLoading = true;
             FriendRequest fr = new FriendRequest();
             ArrayOfOnlineFrequencies = await ServerApi.FetchUserOnlineTimeFrequencies(fr);
+            if (ArrayOfOnlineFrequencies.Length == 0)
+                ArrayOfOnlineFrequencies = new int[24];
             await SetUserOnlineTimeFrequenciesChart();
             UserOnlineTimeIsLoading = false;
         }
@@ -282,6 +296,13 @@ namespace KawanApp.ViewModels.Pages
                 PlotAreaBorderColor = OxyColor.FromRgb(57, 53, 54), //Hex = 393536
                 AxisTierDistance = 1.0,
             };
+
+            /*
+            //For testing:
+            Random r = new Random();
+            for (int i = 0; i < 24; i++)
+                ArrayOfOnlineFrequencies[i] = r.Next(0,8);
+            */
 
             //Find index of highest value
             HighestNumberOfUsers = ArrayOfOnlineFrequencies.Max();

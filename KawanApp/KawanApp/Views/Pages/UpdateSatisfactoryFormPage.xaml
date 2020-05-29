@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="clr-namespace:KawanApp.Converters" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:behaviours="clr-namespace:KawanApp.Behaviours"
+             mc:Ignorable="d"
+             x:Class="KawanApp.Views.Pages.UpdateSatisfactoryFormPage"
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
+    <ContentPage.Resources>
+    <ResourceDictionary>
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:CriticismTitleConverter x:Key="CriticismTitle" />
+            <converters:FeedbackListConverter x:Key="FeedbackList" />
+    </ResourceDictionary>
+    </ContentPage.Resources>
+    <NavigationPage.TitleView>
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <ImageButton
+                CornerRadius="90"
+                WidthRequest="20"
+                HeightRequest="20"
+                Margin="0,0,15,0"
+                Source="back.png"
+                BackgroundColor="White"
+                Clicked="BackIcon_Tapped"/>
+            <Label 
+                IsVisible="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                Text="Rate Service" 
+                FontSize="18"
+                TextColor="#393536"/>
+            <Label 
+                HorizontalOptions="FillAndExpand"
+                IsVisible="{Binding SatForm.IsFilled}"
+                Text="You Rated" 
+                FontSize="18"
+                TextColor="#393536"/>
+            <Label 
+                Margin="0,0,15,0"
+                VerticalOptions="Center"
+                IsVisible="{Binding SatForm.IsFilled}"
+                Text="{Binding SatForm.Date}" 
+                FontSize="12"
+                TextColor="#393536"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout 
+            BackgroundColor="White">
+
+                <!--#region Activity Information-->
+                <Frame
+                    HeightRequest="220"
+                    Margin="15"
+                    BorderColor="LightGray"
+                    Padding="0">
+                    <StackLayout 
+                        HorizontalOptions="FillAndExpand"
+                        Margin="20"
+                        Orientation="Horizontal">
+                        <StackLayout
+                            HorizontalOptions="FillAndExpand"
+                            Margin="0,0,15,0"
+                            Orientation="Vertical">
+                            <Frame
+                                CornerRadius="8"
+                                HorizontalOptions="FillAndExpand"
+                                Padding="0"
+                                WidthRequest="100"
+                                HeightRequest="100"
+                                IsClippedToBounds="True"
+                                HasShadow="False"
+                                BackgroundColor="#940B4E">
+                                <ffimageloading:CachedImage
+                                Source="{Binding SatForm.KawanPic, Converter={StaticResource ImageFormat}}"
+                                ErrorPlaceholder="profileplaceholderpink.png"
+                                IsEnabled="True"
+                                CacheType="Disk">
+                                    <ffimageloading:CachedImage.Transformations>
+                                        <fftransformations:CropTransformation />
+                                    </ffimageloading:CachedImage.Transformations>
+                                </ffimageloading:CachedImage>
+                            </Frame>
+                            <Button
+                                Clicked="ViewProfile_Clicked"
+                                HorizontalOptions="Center"
+                                WidthRequest="100"
+                                HeightRequest="35"
+                                Margin="0,25,0,5"
+                                TextColor="White"
+                                Text="View Profile"
+                                BackgroundColor="#ed127c"
+                                CornerRadius="8"/>
+                        </StackLayout>
+                        <StackLayout 
+                            VerticalOptions="FillAndExpand"
+                            Orientation="Vertical">
+                            <Label 
+                                TextColor="#393536"
+                                Margin="0,10,0,0"
+                                FontAttributes="Bold"
+                                FontSize="15"
+                                Text="{Binding SatForm.KawanFullName}"/>
+                            <Label 
+                                TextColor="#393536"
+                                FontSize="12"
+                                Margin="0,15,0,0"
+                                Text="{Binding SatForm.ActivityInfo.Name}"/>
+                            <Label
+                                Margin="0,10,0,0"
+                                TextColor="#393536"
+                                FontSize="11"
+                                Text="{Binding SatForm.ActivityInfo.Description}"/>
+                            <Label
+                                Margin="0,10,0,0"
+                                TextColor="#393536"
+                                VerticalOptions="End"
+                                FontSize="10">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Activity was done "/>
+                                        <Span Text="{Binding SatForm.ActivityInfo.DateRange}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+                <!--#endregion-->
+
+                <!--#region Rating-->
+                <StackLayout
+                    x:Name="ratingStack"
+                    IsEnabled="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                    Orientation="Horizontal"
+                    HorizontalOptions="Center">
+                    <Grid
+                        VerticalOptions="FillAndExpand"
+                        HorizontalOptions="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.Behaviors>
+                            <behaviours:StarBehaviour x:Name="starOne" GroupName="myStar"/>
+                        </Grid.Behaviors>
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            x:Name="starBlankOne"
+                            Source="starEmpty.png"
+                            Grid.Row ="0">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starSelectedOne"
+                            Source="starFilled.png"
+                            IsVisible="{Binding Source={x:Reference starOne},
+                                                 Path=IsStarred}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+                    <Grid >
+                        <Grid.Behaviors>
+                            <behaviours:StarBehaviour x:Name="starTwo" GroupName="myStar"/>
+                        </Grid.Behaviors>
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starBlankTwo"
+                            Source="starEmpty.png" >
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starSelectedTwo"
+                            Source="starFilled.png"
+                            IsVisible="{Binding Source={x:Reference starTwo},
+                                                Path=IsStarred}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+                    <Grid >
+                        <Grid.Behaviors>
+                            <behaviours:StarBehaviour x:Name="starThree" GroupName="myStar"/>
+                        </Grid.Behaviors>
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starBlankThree"
+                            Source="starEmpty.png" >
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starSelectedThree"
+                            Source="starFilled.png"
+                            IsVisible="{Binding Source={x:Reference starThree},
+                                                Path=IsStarred}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+                    <Grid >
+                        <Grid.Behaviors>
+                            <behaviours:StarBehaviour x:Name="starFour" GroupName="myStar"/>
+                        </Grid.Behaviors>
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50" 
+                            Grid.Row ="0"
+                            x:Name="starBlankFour"
+                            Source="starEmpty.png" >
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starSelectedFour"
+                            Source="starFilled.png"
+                            IsVisible="{Binding Source={x:Reference starFour},
+                                        Path=IsStarred}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+                    <Grid >
+                        <Grid.Behaviors>
+                            <behaviours:StarBehaviour x:Name="starFive" GroupName="myStar"/>
+                        </Grid.Behaviors>
+                        <ffimageloading:CachedImage
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starBlankFive"
+                            Source="starEmpty.png" >
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+
+                        <ffimageloading:CachedImage
+                            IsEnabled="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                            Margin="0,0,-10,0"
+                            HeightRequest="50"
+                            WidthRequest="50"
+                            Grid.Row ="0"
+                            x:Name="starSelectedFive"
+                            Source="starFilled.png"
+                            IsVisible="{Binding Source={x:Reference starFive},
+                                                Path=IsStarred}">
+                            <ffimageloading:CachedImage.Transformations>
+                                <fftransformations:TintTransformation HexColor="ed127c" EnableSolidColor="True"/>
+                            </ffimageloading:CachedImage.Transformations>
+                        </ffimageloading:CachedImage>
+                    </Grid>
+
+                </StackLayout>
+                <!--#endregion-->
+
+                <!--#region Provide / view feedback-->
+                <StackLayout
+                    IsEnabled="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}">
+                    <Label
+                        IsVisible="{Binding SatForm.IsFilled}"
+                        Margin="15,10"
+                        Text="{Binding Source={x:Reference starFive}, 
+                                        Path=Rating, 
+                                        Converter={StaticResource CriticismTitle},
+                                        ConverterParameter='IsFilled'}"
+                        TextColor="#393536"
+                        FontSize="14"/>
+                    <Label
+                        IsVisible="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                        Margin="15,10"
+                        Text="{Binding Source={x:Reference starFive}, 
+                                        Path=Rating, 
+                                        Converter={StaticResource CriticismTitle},
+                                        ConverterParameter='IsNotFilled'}"
+                        TextColor="#393536"
+                        FontSize="14"/>
+                    <ListView 
+                        RowHeight="65"
+                        ItemsSource="{Binding ListOfCompliments}"
+                        IsVisible="{Binding Source={x:Reference starFive}, 
+                                        Path=Rating, 
+                                        Converter={StaticResource FeedbackList},
+                                        ConverterParameter='compliment'}"
+                        ItemTapped="List_ItemTapped">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout 
+                                        VerticalOptions="FillAndExpand"
+                                        Orientation="Horizontal">
+                                        <CheckBox
+                                            IsChecked="{Binding IsChecked}"
+                                            Color="#393536"
+                                            Margin="20,5"
+                                            HorizontalOptions="Center"/>
+                                        <StackLayout
+                                            HorizontalOptions="FillAndExpand"
+                                            Orientation="Horizontal">
+                                            <Label 
+                                                TextColor="#393536"
+                                                FontAttributes="Bold"
+                                                Margin="-10,5"
+                                                VerticalOptions="Center"
+                                                Text="{Binding Feedback}"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView    
+                        RowHeight="65"
+                        ItemsSource="{Binding ListOfCriticisms}"
+                        IsVisible="{Binding Source={x:Reference starFive}, 
+                                        Path=Rating, 
+                                        Converter={StaticResource FeedbackList},
+                                        ConverterParameter='criticism'}"
+                        ItemTapped="List_ItemTapped">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout 
+                                        VerticalOptions="FillAndExpand"
+                                        Orientation="Horizontal">
+                                        <CheckBox
+                                            IsChecked="{Binding IsChecked}"
+                                            Color="#393536"
+                                            Margin="20,5"
+                                            HorizontalOptions="Center"/>
+                                        <StackLayout
+                                            HorizontalOptions="FillAndExpand"
+                                            Orientation="Horizontal">
+                                            <Label 
+                                                TextColor="#393536"
+                                                FontAttributes="Bold"
+                                                Margin="-10,5"
+                                                VerticalOptions="Center"
+                                                Text="{Binding Feedback}"/>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Frame
+                        IsVisible="{Binding SatForm.IsFilled}"
+                        HeightRequest="90"
+                        BorderColor="#393536"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="0"
+                        Margin="30,20,30,35">
+                        <Editor
+                            Placeholder="No comments"
+                            FontSize="15"
+                            HeightRequest="90"
+                            HorizontalOptions="FillAndExpand"
+                            TextColor="#393536"
+                            Text="{Binding SatForm.Comments}"/>
+                    </Frame>
+                    <Frame
+                        IsVisible="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                        HeightRequest="90"
+                        BorderColor="#393536"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="0"
+                        Margin="30,20,30,35">
+                        <Editor
+                            Placeholder="Comments (optional)"
+                            FontSize="15"
+                            HeightRequest="90"
+                            HorizontalOptions="FillAndExpand"
+                            TextColor="#393536"
+                            Text="{Binding SatForm.Comments}"/>
+                    </Frame>
+                    <Button
+                        IsVisible="{Binding SatForm.IsFilled, Converter={StaticResource InverseBool}}"
+                        Margin="105,0,105,40"
+                        CornerRadius="8"
+                        BorderWidth="1"
+                        BackgroundColor="White"
+                        BorderColor="#393536"
+                        Text="Submit"
+                        Command="{Binding SubmitCommand}"/>
+                </StackLayout>
+                <!--#endregion-->
+
+            </StackLayout>
+        </ScrollView>
+        
+    </ContentPage.Content>
+</ContentPage>
