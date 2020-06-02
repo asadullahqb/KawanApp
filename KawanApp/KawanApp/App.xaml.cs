@@ -108,6 +108,16 @@ namespace KawanApp
                 MessagingCenter.Send("App", "updateProfiles"); //Send to view all profiles page view model and view a profile page view model
                 PreviousNotificationId = notificationid;
             });
+            HubConnection.On<string, string>("ReceiveActivityNotification", (notificationid, sendingUserFirstName) =>
+            {
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if (CurrentPage != "Notifications Page" && CurrentPage != "Satisfactory Forms Page")
+                    NotificationManager.ScheduleActivityNotification(sendingUserFirstName);
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
+                MessagingCenter.Send("App", "updateAllSatisfactoryForms"); //Send to satisfactory forms page view model
+                PreviousNotificationId = notificationid;
+            });
             HubConnection.On<string>("ReceiveReply", async(message) =>
             {
                 //This function is used as a handshake between server and app.
@@ -158,7 +168,7 @@ namespace KawanApp
             MessagingCenter.Subscribe<AppShellViewModel>(this, "navigateToViewAProfilePage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage()); OriginPage = "App Shell"; CurrentPage = null; });
             MessagingCenter.Subscribe<AppShellViewModel>(this, "navigateToAnalyticsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new AnalyticsPage(CurrentUser)); OriginPage = "App Shell"; CurrentPage = null; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToActivitiesPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ActivitiesPage()); CurrentPage = null; });
-            MessagingCenter.Subscribe<AppShell>(this, "navigateToSatisfactoryFormsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SatisfactoryFormsPage()); CurrentPage = null; });
+            MessagingCenter.Subscribe<AppShell>(this, "navigateToSatisfactoryFormsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SatisfactoryFormsPage()); CurrentPage = "Satisfactory Forms Page"; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToSettingsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SettingsPage()); CurrentPage = null; });
             
             //To ChatPage

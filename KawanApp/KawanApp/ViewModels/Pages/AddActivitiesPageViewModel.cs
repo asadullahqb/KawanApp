@@ -2,6 +2,7 @@
 using KawanApp.Models;
 using KawanApp.ViewModels.Popups;
 using KawanApp.Views.Popups;
+using Microsoft.AspNetCore.SignalR.Client;
 using OxyPlot;
 using Refit;
 using Rg.Plugins.Popup.Services;
@@ -26,7 +27,7 @@ namespace KawanApp.ViewModels.Pages
         private ObservableCollection<StudentForActivity> _listOfStudents;
         private string _listOfStudentsString;
         private Activity _baseActivity = new Activity();
-
+        private HubConnection hubConnection;
         public bool IsSubmitting
         {
             get => _isSubmitting;
@@ -112,6 +113,7 @@ namespace KawanApp.ViewModels.Pages
                     numOfStudentListClicks++;
                 }
             });
+            hubConnection = App.HubConnection;
             FetchListOfStudents();
         }
 
@@ -206,7 +208,7 @@ namespace KawanApp.ViewModels.Pages
                 await App.Current.MainPage.Navigation.PopAsync();
                 foreach (StudentForActivity Student in ListOfStudents)
                 {
-                    //Send notification to each student
+                    hubConnection.InvokeAsync("SendNotification", Student.StudentInfo.StudentId, "", "Activity");
                 }
             }
             else
