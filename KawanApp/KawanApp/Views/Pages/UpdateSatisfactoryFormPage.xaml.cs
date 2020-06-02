@@ -79,9 +79,5 @@ namespace KawanApp.Views.Pages
             MessagingCenter.Send(this, "updateFeedback", fc); //Send to view
         }
 
-        private void ViewProfile_Clicked(object sender, EventArgs e)
-        {
-
-        }
     }
 }

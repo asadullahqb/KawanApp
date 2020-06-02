@@ -27,6 +27,11 @@ namespace KawanApp.Views.Pages
             InitializeComponent();
             this.BindingContext = new ViewAProfilePageViewModel();
         }
+        public ViewAProfilePage(string StudentId)
+        {
+            InitializeComponent();
+            this.BindingContext = new ViewAProfilePageViewModel(StudentId);
+        }
         public ViewAProfilePage(KawanUser KawanData)
         {
             InitializeComponent();

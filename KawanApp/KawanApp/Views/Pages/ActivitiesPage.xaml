@@ -3,11 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:system="clr-namespace:System;assembly=netstandard" xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:converters="clr-namespace:KawanApp.Converters"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.ActivitiesPage"
              NavigationPage.HasNavigationBar="True"
              NavigationPage.HasBackButton="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ProfileImageConverter x:Key="ImageFormat" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+            <converters:CriticismTitleConverter x:Key="CriticismTitle" />
+            <converters:FeedbackListConverter x:Key="FeedbackList" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <NavigationPage.TitleView>
         <StackLayout 
             Orientation="Horizontal"
@@ -17,27 +25,123 @@
                 CornerRadius="90"
                 WidthRequest="20"
                 HeightRequest="20"
+                Margin="0,0,15,0"
                 Source="back.png"
                 BackgroundColor="White"
                 Clicked="BackIcon_Tapped"/>
+            <Label 
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Text="Activities" 
+                FontSize="18"
+                TextColor="#393536"/>
+            <ImageButton 
+                Margin="0,0,15,0"
+                VerticalOptions="Center"
+                CornerRadius="90"
+                WidthRequest="30"
+                HeightRequest="30"
+                Source="addActivity.png"
+                BackgroundColor="White"
+                Clicked="AddActivity_Tapped"/>
         </StackLayout>
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <StackLayout
             BackgroundColor="White">
-            <Label 
-                HorizontalTextAlignment="Center"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" >
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="• Activities Feature •" />
-                        <Span Text="{x:Static system:Environment.NewLine}" />
-                        <Span Text="{x:Static system:Environment.NewLine}" />
-                        <Span Text="Coming Soon!" />
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+            <ListView
+                IsPullToRefreshEnabled="True"
+                IsRefreshing="{Binding IsRefreshing}"
+                RefreshCommand="{Binding RefreshCommand}"
+                ItemTapped="List_ItemTapped"
+                RowHeight="250"
+                ItemsSource="{Binding AllActivities}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame
+                                HeightRequest="220"
+                                Margin="15"
+                                BorderColor="LightGray"
+                                Padding="0">
+                                <StackLayout 
+                                    HorizontalOptions="FillAndExpand"
+                                    Margin="20"
+                                    Orientation="Horizontal">
+                                    <StackLayout
+                                        HorizontalOptions="FillAndExpand"
+                                        Margin="0,0,15,0"
+                                        Orientation="Vertical">
+                                        <Frame
+                                            CornerRadius="8"
+                                            HorizontalOptions="FillAndExpand"
+                                            Padding="0"
+                                            WidthRequest="100"
+                                            HeightRequest="100"
+                                            IsClippedToBounds="True"
+                                            HasShadow="False"
+                                            BackgroundColor="#940B4E">
+                                            <ffimageloading:CachedImage
+                                            Source="{Binding StudentPic, Converter={StaticResource ImageFormat}}"
+                                            ErrorPlaceholder="profileplaceholderpink.png"
+                                            IsEnabled="True"
+                                            CacheType="Disk">
+                                                <ffimageloading:CachedImage.Transformations>
+                                                    <fftransformations:CropTransformation />
+                                                </ffimageloading:CachedImage.Transformations>
+                                            </ffimageloading:CachedImage>
+                                        </Frame>
+                                        <Button
+                                            ClassId="{Binding StudentHelped}"
+                                            Clicked="ViewProfile"
+                                            HorizontalOptions="Center"
+                                            WidthRequest="100"
+                                            HeightRequest="35"
+                                            Margin="0,25,0,5"
+                                            TextColor="White"
+                                            Text="View Profile"
+                                            BackgroundColor="#ed127c"
+                                            CornerRadius="8"/>
+                                    </StackLayout>
+                                    <StackLayout 
+                                        VerticalOptions="FillAndExpand"
+                                        Orientation="Vertical">
+                                        <Label 
+                                            TextColor="#393536"
+                                            Margin="0,10,0,0"
+                                            FontAttributes="Bold"
+                                            FontSize="15"
+                                            Text="{Binding StudentFullName}"/>
+                                        <Label 
+                                            TextColor="#393536"
+                                            FontSize="12"
+                                            Margin="0,15,0,0"
+                                            Text="{Binding Name}"/>
+                                        <Label
+                                            Margin="0,10,0,0"
+                                            TextColor="#393536"
+                                            FontSize="11"
+                                            Text="{Binding Description}"/>
+                                        <Label
+                                            Margin="0,10,0,0"
+                                            TextColor="#393536"
+                                            VerticalOptions="End"
+                                            FontSize="10">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="Activity was done "/>
+                                                    <Span Text="{Binding DateRange}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+                    
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

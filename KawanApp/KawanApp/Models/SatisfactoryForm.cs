@@ -10,6 +10,7 @@ namespace KawanApp.Models
         public int Index { get; set; }
         public int ActivitiesId { get; set; }
         public string KawanPic { get; set; }
+        public string KawanStudentId { get; set; }
         public string KawanFirstName { get; set; }
         public string KawanLastName { get; set; }
         public string KawanFullName { get { return KawanFirstName + " " + KawanLastName; } }

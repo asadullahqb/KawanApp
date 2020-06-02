@@ -49,6 +49,16 @@ namespace KawanApp.ViewModels.Pages
 
         public ICommand SubmitCommand { get; set; }
 
+        public ICommand ViewProfileCommand
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    MessagingCenter.Send(this, "navigateToViewAProfilePage", SatForm.KawanStudentId); //Send to App.xaml.cs
+                });
+            }
+        }
 
         public ObservableCollection<FeedbackClass> ListOfCompliments
         {
@@ -86,17 +96,13 @@ namespace KawanApp.ViewModels.Pages
             {
                 if (SatForm.Rating == 5)
                 {
-                    var loc = ListOfCompliments;
-                    loc[FC.Index].IsChecked = FC.IsChecked;
-                    ListOfCompliments = new ObservableCollection<FeedbackClass>();
-                    ListOfCompliments = loc;
+                    ListOfCompliments[FC.Index] = new FeedbackClass();
+                    ListOfCompliments[FC.Index] = FC;
                 }
                 else
                 {
-                    var loc = ListOfCriticisms;
-                    loc[FC.Index].IsChecked = FC.IsChecked;
-                    ListOfCriticisms = new ObservableCollection<FeedbackClass>();
-                    ListOfCriticisms = loc;
+                    ListOfCriticisms[FC.Index] = new FeedbackClass();
+                    ListOfCriticisms[FC.Index] = FC;
                 }
             });
 

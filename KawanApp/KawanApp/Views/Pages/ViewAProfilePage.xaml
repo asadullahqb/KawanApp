@@ -9,7 +9,8 @@
              xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
              mc:Ignorable="d"
              x:Class="KawanApp.Views.Pages.ViewAProfilePage"
-             NavigationPage.HasNavigationBar="True">
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
     <NavigationPage.TitleView>
         <StackLayout 
             Orientation="Horizontal"

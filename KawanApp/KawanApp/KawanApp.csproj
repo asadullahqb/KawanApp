@@ -24,6 +24,12 @@
     <Compile Update="Views\Cells\OutgoingViewCell.xaml.cs">
       <DependentUpon>OutgoingViewCell.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\Pages\AddActivitiesPage.xaml.cs">
+      <DependentUpon>AddActivitiesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Popups\StudentsPopup.xaml.cs">
+      <DependentUpon>StudentsPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Popups\RefinePopup.xaml.cs">
       <DependentUpon>RefinePopup.xaml</DependentUpon>
     </Compile>

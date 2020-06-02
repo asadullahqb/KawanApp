@@ -88,7 +88,7 @@
                                 </ffimageloading:CachedImage>
                             </Frame>
                             <Button
-                                Clicked="ViewProfile_Clicked"
+                                Command="{Binding ViewProfileCommand}"
                                 HorizontalOptions="Center"
                                 WidthRequest="100"
                                 HeightRequest="35"
@@ -335,11 +335,15 @@
                                     <StackLayout 
                                         VerticalOptions="FillAndExpand"
                                         Orientation="Horizontal">
-                                        <CheckBox
-                                            IsChecked="{Binding IsChecked}"
-                                            Color="#393536"
-                                            Margin="20,5"
-                                            HorizontalOptions="Center"/>
+                                        <Grid 
+                                            InputTransparent="True">
+                                            <CheckBox
+                                                IsEnabled="False"
+                                                IsChecked="{Binding IsChecked}"
+                                                Color="#393536"
+                                                Margin="20,5"
+                                                HorizontalOptions="Center"/>
+                                        </Grid>
                                         <StackLayout
                                             HorizontalOptions="FillAndExpand"
                                             Orientation="Horizontal">
@@ -369,11 +373,15 @@
                                     <StackLayout 
                                         VerticalOptions="FillAndExpand"
                                         Orientation="Horizontal">
-                                        <CheckBox
-                                            IsChecked="{Binding IsChecked}"
-                                            Color="#393536"
-                                            Margin="20,5"
-                                            HorizontalOptions="Center"/>
+                                        <Grid 
+                                            InputTransparent="True">
+                                            <CheckBox
+                                                IsEnabled="False"
+                                                IsChecked="{Binding IsChecked}"
+                                                Color="#393536"
+                                                Margin="20,5"
+                                                HorizontalOptions="Center"/>
+                                        </Grid>
                                         <StackLayout
                                             HorizontalOptions="FillAndExpand"
                                             Orientation="Horizontal">

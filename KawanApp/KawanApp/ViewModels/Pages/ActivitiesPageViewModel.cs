@@ -72,7 +72,7 @@ namespace KawanApp.ViewModels.Pages
                 await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
                 return;
             }
-            ObservableCollection<Activity> temp = new ObservableCollection<Activity>(AllActivitiesFromDb);
+            var temp = new ObservableCollection<Activity>(AllActivitiesFromDb);
             AllActivities = temp; 
         }
     }

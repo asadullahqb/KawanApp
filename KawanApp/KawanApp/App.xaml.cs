@@ -153,6 +153,8 @@ namespace KawanApp
             //
             #region Navigate To Page
             //From AppShell
+            MessagingCenter.Subscribe<UpdateSatisfactoryFormPageViewModel, string>(this, "navigateToViewAProfilePage", (sender, StudentId) => { MainPage.Navigation.PushAsync(new ViewAProfilePage(StudentId)); OriginPage = "SatisfactoryForms"; CurrentPage = null; });
+            MessagingCenter.Subscribe<ActivitiesPage, string>(this, "navigateToViewAProfilePage", (sender, StudentId) => { MainPage.Navigation.PushAsync(new ViewAProfilePage(StudentId)); OriginPage = "Activities"; CurrentPage = null; });
             MessagingCenter.Subscribe<AppShellViewModel>(this, "navigateToViewAProfilePage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage()); OriginPage = "App Shell"; CurrentPage = null; });
             MessagingCenter.Subscribe<AppShellViewModel>(this, "navigateToAnalyticsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new AnalyticsPage(CurrentUser)); OriginPage = "App Shell"; CurrentPage = null; });
             MessagingCenter.Subscribe<AppShell>(this, "navigateToActivitiesPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ActivitiesPage()); CurrentPage = null; });
@@ -182,7 +184,7 @@ namespace KawanApp
             MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<UpdateSatisfactoryFormPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); OriginPage = null; });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
-            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else MainPage = appshell; });
+            MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else if (OriginPage == "Activities" || OriginPage == "SatisfactoryForms") Current.MainPage.Navigation.PopAsync(); else MainPage = appshell; });
             MessagingCenter.Subscribe<ChatPage>(this, "navigateBack", (sender) => { if (OriginPage == "View A Profile Page") MainPage.Navigation.PopAsync(); else MainPage = appshell; CurrentPage = null; });
             MessagingCenter.Subscribe<ProfileImagePage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); });
             MessagingCenter.Subscribe<AnalyticsPage>(this, "navigateBack", (sender) => { if (OriginPage == "App Shell") { MainPage = appshell; OriginPage = null; } else MainPage.Navigation.PopAsync(); });

@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:system="clr-namespace:System;assembly=netstandard" 
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms" xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations" xmlns:converters="clr-namespace:KawanApp.Converters"
+             mc:Ignorable="d"
+             x:Class="KawanApp.Views.Pages.AddActivitiesPage"
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.HasBackButton="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:DescriptionToIsVisibleConverter x:Key="OtherIsVisible" />
+            <converters:InverseBoolConverter x:Key="InverseBool" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <NavigationPage.TitleView>
+        <StackLayout 
+            Orientation="Horizontal"
+            VerticalOptions="Center"
+            HorizontalOptions="FillAndExpand">
+            <ImageButton
+                CornerRadius="90"
+                WidthRequest="20"
+                HeightRequest="20"
+                Margin="0,0,15,0"
+                Source="back.png"
+                BackgroundColor="White"
+                Clicked="BackIcon_Tapped"/>
+            <Label 
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Text="Log Activity" 
+                FontSize="18"
+                TextColor="#393536"/>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid
+            BackgroundColor="White"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <StackLayout
+                IsVisible="{Binding IsSubmitting, Converter={StaticResource InverseBool}}">
+                <Label 
+                    Margin="25,15,25,5"
+                    FontSize="16"
+                    TextColor="#393536"
+                    Text="Activity Information:"/>
+                <Picker 
+                    Margin="20,0"
+                    Title="Activity Name"
+                    HeightRequest="45"
+                    FontSize="Small"
+                    HorizontalOptions="FillAndExpand"
+                    TextColor="#393536"
+                    SelectedItem="{Binding BaseActivity.Name}">
+                    <Picker.Items>
+                        <x:String>Assisted in securing admission offer.</x:String>
+                        <x:String>Provided guidance on visa applications.</x:String>
+                        <x:String>Assistance with registration as a student and accommodation.</x:String>
+                        <x:String>Engaged USM students in knowing more about USM and its community.</x:String>
+                        <x:String>Delivery of a continuous social and welfare supports for USM students.</x:String>
+                        <x:String>Increase knowledge, awareness, and accessibility of the various university.</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Frame
+                    Margin="25,0"
+                    HeightRequest="90"
+                    BorderColor="#393536"
+                    HorizontalOptions="FillAndExpand"
+                    Padding="0">
+                    <Editor
+                        Placeholder="Activity Description (optional)"
+                        FontSize="Small"
+                        HeightRequest="90"
+                        HorizontalOptions="FillAndExpand"
+                        TextColor="#393536"
+                        Text="{Binding BaseActivity.Description}"/>
+                </Frame>
+                <Label 
+                    Margin="25,15,25,5"
+                    FontSize="16"
+                    TextColor="#393536"
+                    Text="Date and Time:"/>
+                <StackLayout 
+                    Margin="20,0"
+                    Orientation="Horizontal">
+                    <DatePicker 
+                        x:Name="startDatePicker"
+                        Margin="0,0,-5,0"
+                        HorizontalOptions="FillAndExpand"
+                        Date="{Binding BaseActivity.StartDate}"
+                        HeightRequest="45"
+                        FontSize="Small"
+                        TextColor="#393536"/>
+                    <Label 
+                        VerticalTextAlignment="Center"
+                        HeightRequest="45"
+                        FontSize="Medium"
+                        Text=", "
+                        TextColor="#393536"/>
+                    <TimePicker 
+                        x:Name="startTimePicker"
+                        Margin="-5,0,0,0"
+                        HorizontalOptions="FillAndExpand"
+                        Time="{Binding BaseActivity.StartTime}"
+                        HeightRequest="45"
+                        FontSize="Small"
+                        TextColor="#393536"/>
+                    <Label 
+                        VerticalTextAlignment="Center"
+                        HeightRequest="45"
+                        FontSize="Small"
+                        Text=" to "
+                        TextColor="#393536"/>
+                    <DatePicker 
+                        x:Name="endDatePicker"
+                        Margin="0,0,-5,0"
+                        HorizontalOptions="FillAndExpand"
+                        Date="{Binding BaseActivity.EndDate}"
+                        HeightRequest="45"
+                        FontSize="Small"
+                        TextColor="#393536"/>
+                    <Label 
+                        VerticalTextAlignment="Center"
+                        HeightRequest="45"
+                        FontSize="Medium"
+                        Text=", "
+                        TextColor="#393536"/>
+                    <TimePicker 
+                        x:Name="endTimePicker"
+                        Margin="-5,0,0,0"
+                        HorizontalOptions="FillAndExpand"
+                        Time="{Binding BaseActivity.EndTime}"
+                        HeightRequest="45"
+                        FontSize="Small"
+                        TextColor="#393536"/>
+                </StackLayout>
+                <Label 
+                        Margin="25,15"
+                        VerticalTextAlignment="Center"
+                        FontSize="16"
+                        TextColor="#393536"
+                        Text="Students Involved:"/>
+                <StackLayout
+                    Orientation="Horizontal">
+                    <Grid
+                        HorizontalOptions="FillAndExpand">
+                        <Grid 
+                            IsVisible="{Binding IsListLoading, Converter={StaticResource InverseBool}}"
+                            Margin="25,0"
+                            HorizontalOptions="FillAndExpand">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding StudentsCommand}"/>
+                            </Grid.GestureRecognizers>
+                            <Frame
+                                HeightRequest="90"
+                                BorderColor="#393536"
+                                HorizontalOptions="FillAndExpand"
+                                Padding="0">
+                                <Editor
+                                    IsSpellCheckEnabled="False"
+                                    Placeholder="Click here to select."
+                                    FontSize="Small"
+                                    HeightRequest="90"
+                                    HorizontalOptions="FillAndExpand"
+                                    TextColor="#393536"
+                                    Text="{Binding ListOfStudentsString}"/>
+                            </Frame>
+                            <BoxView />
+                        </Grid>
+                        <ActivityIndicator 
+                            HorizontalOptions="Center"
+                            Margin="0,27.5"
+                            Color="#393536"
+                            HeightRequest="35"
+                            IsVisible="{Binding IsListLoading}"
+                            IsRunning="True"/>
+                    </Grid>
+                </StackLayout>
+                <Grid
+                    VerticalOptions="FillAndExpand" >
+                    <Button
+                        VerticalOptions="Center"
+                        Margin="105,0"
+                        CornerRadius="8"
+                        BorderWidth="1"
+                        BackgroundColor="White"
+                        BorderColor="#393536"
+                        Text="Submit"
+                        Command="{Binding AddActivities}"/>
+                </Grid>
+            </StackLayout>
+            <StackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                IsVisible="{Binding IsSubmitting}">
+                <ActivityIndicator
+                    Color="#393536"
+                    HeightRequest="45"
+                    IsRunning="True"/>
+                <Label 
+                    Margin="0,10"
+                    FontSize="16"
+                    TextColor="#393536"
+                    FontAttributes="Bold"
+                    Text="Submitting..."/>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

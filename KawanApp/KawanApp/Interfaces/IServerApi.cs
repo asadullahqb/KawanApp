@@ -77,6 +77,9 @@ namespace KawanApp.Interfaces
         #endregion
 
         #region Activities
+        [Get("/kawanapis/functions/fetchListOfStudents.php")]
+        Task<List<StudentForActivity>> FetchListOfStudents([Body] Session s); //Session is used because it is the smallest server key class available
+
         [Get("/kawanapis/functions/fetchAllActivities.php")]
         Task<List<Activity>> FetchAllActivities([Body] User u);
 

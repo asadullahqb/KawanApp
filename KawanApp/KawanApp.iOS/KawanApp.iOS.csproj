@@ -294,4 +294,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\edit.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\addActivity.png" />
+  </ItemGroup>
 </Project>
