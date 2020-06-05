@@ -297,4 +297,7 @@
   <ItemGroup>
     <BundleResource Include="Resources\addActivity.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\iconkawan.png" />
+  </ItemGroup>
 </Project>

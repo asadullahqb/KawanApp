@@ -1,15 +1,7 @@
-﻿using KawanApp.ViewModels;
-using KawanApp.Models;
-using Rg.Plugins.Popup.Services;
+﻿using KawanApp.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using System.Reflection;
 using KawanApp.Interfaces;
 using Refit;
 using KawanApp.Services;

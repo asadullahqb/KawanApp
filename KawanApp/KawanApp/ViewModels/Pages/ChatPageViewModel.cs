@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using KawanApp.Interfaces;
@@ -213,9 +211,9 @@ namespace KawanApp.ViewModels.Pages
 
             hubConnection.On<string, string, string>("ReceivePersonalMessage", (sendingUser, receivingUser, message) =>
             {
-                if (receivingUser == App.CurrentUser)
+                if (sendingUser == ReceivingUser && receivingUser == SendingUser)
                 {
-                    Messages.Insert(0, new ChatMessage() { SendingUser = sendingUser, Text = message});
+                    Messages.Insert(0, new ChatMessage() { SendingUser = ReceivingUser, ReceivingUser = SendingUser, Text = message});
                 }
             });
 
@@ -308,7 +306,7 @@ namespace KawanApp.ViewModels.Pages
                     if (App.NetworkStatus)
                     {
                         rm1 = await ServerApi.StoreMessage(cm);
-                        rm2 = await ServerApi.StoreNotification(new Notification() { ReceivingUser = ReceivingUser, SendingUser = App.CurrentUser, Title = "Message", Message = TextToSend, Timestamp = DateTime.Now });
+                        rm2 = await ServerApi.StoreNotification(new Notification() { ReceivingUser = ReceivingUser, SendingUser = App.CurrentUser, Title = "Message", Message = cm.Text, Timestamp = DateTime.Now });
                     }
                     else
                     {

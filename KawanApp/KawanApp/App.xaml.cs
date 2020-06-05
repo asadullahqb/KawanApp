@@ -1,16 +1,11 @@
 ﻿using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 using Xamarin.Essentials;
-using System.Collections.ObjectModel;
 using KawanApp.Models;
 using KawanApp.Views.Pages;
-using System.Runtime.CompilerServices;
 using KawanApp.Interfaces;
 using Refit;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using KawanApp.ViewModels;
 using Plugin.Toast;
 using Microsoft.AspNetCore.SignalR.Client;
 using KawanApp.ViewModels.Pages;
@@ -49,9 +44,9 @@ namespace KawanApp
             .Build();
         private static string CurrentSessionId { get; set; }
         public static string ServerKey => "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";
-        public static string Server => "http://192.168.0.197/";
+        public static string Server => "http://192.168.0.180/";
         //at Sunny Ville home: http://192.168.0.157/
-        //at KL home: http://192.168.0.197/
+        //at KL home: http://192.168.0.180/
         //live: https://imcc.usm.my/kawan/
         private IServerApi ServerApi => RestService.For<IServerApi>(Server);
         #endregion
@@ -112,7 +107,7 @@ namespace KawanApp
             {
                 if (notificationid == PreviousNotificationId)
                     return;
-                if (CurrentPage != "Notifications Page" && CurrentPage != "Satisfactory Forms Page")
+                if (CurrentPage != "Notifications Page")
                     NotificationManager.ScheduleActivityNotification(sendingUserFirstName);
                 MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
                 MessagingCenter.Send("App", "updateAllSatisfactoryForms"); //Send to satisfactory forms page view model
@@ -155,9 +150,10 @@ namespace KawanApp
 
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
-            
+
+            #region Messaging Center Navigation
             //Messaging center is used for view navigation so that the same app shell 
-            //(with its state conserved) is used. 
+            //(with its state conserved) is used. This is done to replace shell navigation.
             //
             //App.xaml.cs also manages some other operations.
             //
@@ -179,6 +175,7 @@ namespace KawanApp
            
             //Other
             MessagingCenter.Subscribe<LoginPage>(this, "navigateToSignUp", (sender) => { MainPage.Navigation.PushModalAsync(new SignUpPage()); });
+            MessagingCenter.Subscribe<NotificationsPage>(this, "navigateToSatisfactoryFormsPage", (sender) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new SatisfactoryFormsPage()); OriginPage = "App Shell"; CurrentPage = "Satisfactory Forms Page"; });
             MessagingCenter.Subscribe<NotificationsPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); OriginPage = "View All Profiles Page"; });
             MessagingCenter.Subscribe<ViewAllProfilesPage, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); OriginPage = "View All Profiles Page"; });
             MessagingCenter.Subscribe<ViewAllProfilesPageViewModel, KawanUser>(this, "navigateToViewAProfilePage", (sender, KawanUser) => { MainPage = new NavigationPage() { BarBackgroundColor = Color.White }; MainPage.Navigation.PushAsync(new ViewAProfilePage(KawanUser)); OriginPage = "View All Profiles Page"; }); //Navigation originated from notifications.
@@ -191,7 +188,7 @@ namespace KawanApp
 
             #region Navigate Back
             MessagingCenter.Subscribe<ActivitiesPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
-            MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
+            MessagingCenter.Subscribe<SatisfactoryFormsPage>(this, "navigateBack", (sender) => { MainPage = appshell; CurrentPage = null; });
             MessagingCenter.Subscribe<UpdateSatisfactoryFormPage>(this, "navigateBack", (sender) => { MainPage.Navigation.PopAsync(); OriginPage = null; });
             MessagingCenter.Subscribe<SettingsPage>(this, "navigateBack", (sender) => { MainPage = appshell; });
             MessagingCenter.Subscribe<ViewAProfilePage>(this, "navigateBack", (sender) => { if (OriginPage == "View All Profiles Page") MainPage = appshell; else if (OriginPage == "Activities" || OriginPage == "SatisfactoryForms") Current.MainPage.Navigation.PopAsync(); else MainPage = appshell; });
@@ -210,6 +207,7 @@ namespace KawanApp
             MessagingCenter.Subscribe<string>(this, "AppLoggedIn", async(sender) => { await LogInSession(); });
             #endregion
 
+            #endregion
         }
 
         #region App Lifecycle
@@ -221,7 +219,10 @@ namespace KawanApp
             if(!CheckingConnectivity && !NetworkStatus)
                 await CheckConnectivity();
             if (IsUserLoggedIn || StayLoggedIn)
-                 await LogInSession();
+            {
+                ShowSplashScreen(750);
+                await LogInSession();
+            }
 
             //await HubConnection.StartAsync();
             //MessagingCenter.Subscribe<AppShellViewModel>(this, "connect", async(sender) => await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentKawanUser.FirstName)); //Only connect once the current user details are done loading
@@ -246,6 +247,13 @@ namespace KawanApp
         #endregion
 
         #region Methods
+        static private async void ShowSplashScreen(int time) 
+        {
+            await Current.MainPage.Navigation.PushModalAsync(new SplashScreenPage());
+            await Task.Delay(time);
+            await Current.MainPage.Navigation.PopModalAsync();
+        }
+
         static public async Task CheckConnectivity()
         {
             CheckingConnectivity = true;
@@ -340,10 +348,9 @@ namespace KawanApp
                 CurrentSessionId += "0"; //Prevent this function from being executed again if the server is too slow
                 Session s = new Session() { StudentId = CurrentUser, StartOrEnd = DateTime.Now, Type = "Log" };
                 SessionReply sr;
-                if (NetworkStatus)
-                    sr = await ServerApi.StartSession(s);
-                else
-                    return;
+                while (!NetworkStatus)
+                    await Task.Delay(1);
+                sr = await ServerApi.StartSession(s);
                 if (sr.Status)
                     CurrentSessionId = sr.SessionId;
                 else
@@ -362,10 +369,9 @@ namespace KawanApp
                 }
                 Session s = new Session() { SessionId = CurrentSessionId, StartOrEnd = DateTime.Now };
                 ReplyMessage rm;
-                if (NetworkStatus)
-                    rm = await ServerApi.EndSession(s);
-                else
-                    return;
+                while (!NetworkStatus)
+                    await Task.Delay(1);
+                rm = await ServerApi.EndSession(s);
 
                 if (rm.Status)
                     CurrentSessionId = null;

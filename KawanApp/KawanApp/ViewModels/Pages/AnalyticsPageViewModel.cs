@@ -1,17 +1,13 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using OxyPlot;
-using OxyPlot.Annotations;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using Refit;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace KawanApp.ViewModels.Pages
 {

@@ -1,8 +1,5 @@
-﻿using KawanApp.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Text;
 using Xamarin.Forms;
 
 namespace KawanApp.Converters

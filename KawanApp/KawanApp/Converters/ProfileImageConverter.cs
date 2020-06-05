@@ -1,9 +1,5 @@
-﻿using KawanApp.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.IO;
-using System.Text;
 using Xamarin.Forms;
 
 namespace KawanApp.Converters
@@ -18,7 +14,6 @@ namespace KawanApp.Converters
                 Pic = (string)value;
             }
             if (!Pic.Equals("n/a"))
-                //return App.Server + Pic;
                 return App.Server + Pic;
             else
                 return Pic;

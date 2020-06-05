@@ -1,16 +1,9 @@
-﻿using KawanApp.ViewModels;
-using KawanApp.Views.Pages;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+﻿using System;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KawanApp
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell : Shell
     {
 
         public AppShell()
@@ -18,12 +11,6 @@ namespace KawanApp
             InitializeComponent();
             this.BindingContext = new AppShellViewModel();
         }
-        /*
-        private void Profile_Clicked(object sender, EventArgs e)
-        {
-            Shell.Current.FlyoutIsPresented = false;
-            MessagingCenter.Send(this, "navigateToViewAProfilePage"); // Send to App.xaml.cs
-        }*/
 
         private void ActivitiesSatisfactoryForms_Clicked(object sender, EventArgs e)
         {

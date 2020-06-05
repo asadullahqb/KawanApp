@@ -4,7 +4,6 @@
        xmlns:d="http://xamarin.com/schemas/2014/forms/design"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        mc:Ignorable="d"
-       
        xmlns:local="clr-namespace:KawanApp.Views.Pages"
        xmlns:converters="clr-namespace:KawanApp.Converters"
        xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
@@ -101,6 +100,7 @@
         Text="Analytics"
         Command="{Binding OnAnalyticsCommand}"/>
     <MenuItem 
+        x:Name="activitiesSatFormMenu"
         IconImageSource="{Binding CurrentUserType, Converter={StaticResource PageIcon}}"
         Text="{Binding CurrentUserType, Converter={StaticResource PageName}}"
         Clicked="ActivitiesSatisfactoryForms_Clicked"/>

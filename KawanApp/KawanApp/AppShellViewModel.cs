@@ -4,10 +4,6 @@ using KawanApp.ViewModels;
 using KawanApp.ViewModels.Pages;
 using KawanApp.Views.Pages;
 using Refit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -81,7 +77,8 @@ namespace KawanApp
 
             MessagingCenter.Subscribe<string>(this, "updateConnection", async(sender) => { await Task.Delay(1000); if (App.NetworkStatus) OnlineColor = Color.Green; else OnlineColor = Color.Red; });
             MessagingCenter.Subscribe<ProfileImagePage, string>(this, "updatePic", (sender, picture) => { KawanUser ku = KawanUser; ku.Pic = picture; KawanUser = ku; App.CurrentPic = picture; Preferences.Set("CurrentPic", picture); });
-            MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => { CurrentUserType = App.CurrentUserType; KawanUser ku = KawanUser; ku.FirstName = App.CurrentFirstName; KawanUser = ku; });
+            MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => { 
+                CurrentUserType = App.CurrentUserType; KawanUser ku = KawanUser; ku.FirstName = App.CurrentFirstName; KawanUser = ku; });
             MessagingCenter.Subscribe<LoginPageViewModel>(this, "loadUserData", (sender) => { CurrentUserType = App.CurrentUserType; FetchDataFromServer(); });
             //Set the title colour to the current page
             MessagingCenter.Subscribe<NewsFeedPage>(this, "currentPage", (sender) => { TitleColour = Color.FromHex("#f68712"); }); //Orange

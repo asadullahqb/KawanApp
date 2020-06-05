@@ -5,7 +5,6 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Support.V4.App;
-using KawanApp.Droid;
 using KawanApp.Interfaces;
 using Xamarin.Forms;
 using AndroidApp = Android.App.Application;

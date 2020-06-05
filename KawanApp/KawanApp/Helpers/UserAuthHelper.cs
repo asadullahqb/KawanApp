@@ -1,8 +1,5 @@
 ﻿using FluentValidation;
 using KawanApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace KawanApp.Helpers
 {

@@ -3,16 +3,11 @@ using KawanApp.Models;
 using KawanApp.ViewModels.Popups;
 using KawanApp.Views.Popups;
 using Microsoft.AspNetCore.SignalR.Client;
-using OxyPlot;
 using Refit;
 using Rg.Plugins.Popup.Services;
-using System;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;

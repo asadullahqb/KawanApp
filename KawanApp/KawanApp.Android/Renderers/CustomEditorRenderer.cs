@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using Android.Content;
-using Android.Content.Res;
 using Android.Graphics.Drawables;
 using KawanApp.Controls;
 using KawanApp.Droid.Renderers;

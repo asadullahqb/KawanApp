@@ -1,20 +1,11 @@
 ﻿using KawanApp.Models;
-using Rg.Plugins.Popup.Pages;
-using KawanApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using System.Windows.Input;
 using KawanApp.Interfaces;
 using Refit;
 using KawanApp.Services;
 using Microsoft.AspNetCore.SignalR.Client;
 using KawanApp.ViewModels.Pages;
+using System;
 
 namespace KawanApp.Views.Pages
 {

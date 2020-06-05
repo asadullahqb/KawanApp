@@ -3,11 +3,8 @@ using KawanApp.Models;
 using KawanApp.Views.Pages;
 using Refit;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -184,6 +181,7 @@ namespace KawanApp.ViewModels.Pages
                 await App.Current.MainPage.DisplayAlert("Success", "Satisfactory form updated successfully!", "Ok");
                 SatForm.IsFilled = true;
                 MessagingCenter.Send(this, "updateSatisfactoryForm", SatForm); //Send to SatisfactoryFormPageViewModel to update the filled satisfactory form on the all satisfactory form page
+                await App.Current.MainPage.Navigation.PopAsync();
             }
             else
                 await App.Current.MainPage.DisplayAlert("Error", rm.Message, "Ok");

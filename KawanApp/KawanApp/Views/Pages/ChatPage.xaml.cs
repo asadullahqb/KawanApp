@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using KawanApp.Models;
-using KawanApp.ViewModels;
 using KawanApp.ViewModels.Pages;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {

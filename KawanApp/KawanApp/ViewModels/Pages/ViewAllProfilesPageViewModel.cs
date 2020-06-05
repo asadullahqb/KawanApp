@@ -1,26 +1,16 @@
-﻿using FFImageLoading.Transformations;
-using FFImageLoading.Work;
-using FluentValidation.Results;
-using KawanApp.Helpers;
-using KawanApp.Interfaces;
+﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.Services;
 using KawanApp.ViewModels.Popups;
 using KawanApp.Views.Pages;
 using KawanApp.Views.Popups;
-using Plugin.Toast;
 using Refit;
 using Rg.Plugins.Popup.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace KawanApp.ViewModels.Pages

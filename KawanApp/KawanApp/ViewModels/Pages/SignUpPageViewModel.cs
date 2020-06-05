@@ -2,12 +2,6 @@
 using KawanApp.Models;
 using KawanApp.Services;
 using Refit;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -156,10 +150,15 @@ namespace KawanApp.ViewModels.Pages
                             await App.Current.MainPage.Navigation.PopModalAsync();
                         return;
                     }
-                    if (KawanUser.Type.Equals("Kawan"))
-                        await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! Please wait for the admin to approve your account so that it may be used to login.", "Ok");
-                    else if (KawanUser.Type.Equals("International Student"))
-                        await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! You may now proceed to login.", "Ok");
+                    else
+                    {
+                        if (KawanUser.Type.Equals("Kawan"))
+                            await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! Please wait for the admin to approve your account so that it may be used to login.", "Ok");
+                        else if (KawanUser.Type.Equals("International Student"))
+                            await App.Current.MainPage.DisplayAlert("Success", "You have been signed up! You may now proceed to login.", "Ok");
+
+                        await App.Current.MainPage.Navigation.PopModalAsync();
+                    }
 
                 }
                 else

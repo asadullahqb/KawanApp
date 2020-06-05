@@ -1,19 +1,11 @@
-﻿using KawanApp.Helpers;
-using KawanApp.Interfaces;
+﻿using KawanApp.Interfaces;
 using KawanApp.Models;
 using KawanApp.Services;
 using KawanApp.Views.Pages;
 using Refit;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace KawanApp.ViewModels.Pages
@@ -75,7 +67,7 @@ namespace KawanApp.ViewModels.Pages
             ProfileImageCommand = new Command(() => { MessagingCenter.Send(this, "navigateToProfileImagePage", new ProfileImageFields() { IsOwnProfile = true, Pic = KawanUser.Pic }); }); //Send to App.xaml.cs
             MessagingCenter.Subscribe<SignUpPageViewModel>(this, "updateAfterEdit", (sender) => {
                 KawanUser = new KawanUser();
-                KawanUser = DataService.KawanUser;
+                KawanUser = App.CurrentKawanUser;
                 AboutMeSource = new HtmlWebViewSource
                 {
                     Html = "<html>" +

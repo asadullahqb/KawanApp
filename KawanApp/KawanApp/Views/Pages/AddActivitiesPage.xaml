@@ -62,7 +62,7 @@
                         <x:String>Assistance with registration as a student and accommodation.</x:String>
                         <x:String>Engaged USM students in knowing more about USM and its community.</x:String>
                         <x:String>Delivery of a continuous social and welfare supports for USM students.</x:String>
-                        <x:String>Increase knowledge, awareness, and accessibility of the various university.</x:String>
+                        <x:String>Increase knowledge, awareness, and accessibility of the various university aspects.</x:String>
                     </Picker.Items>
                 </Picker>
                 <Frame

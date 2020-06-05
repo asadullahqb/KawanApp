@@ -1,10 +1,6 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using Plugin.CurrentActivity;
 using Android.Content;
@@ -13,9 +9,6 @@ using KawanApp.Interfaces;
 using KawanApp.Droid.Interfaces;
 using KawanApp.Droid.Services;
 using System.Timers;
-using System.Threading.Tasks;
-using Android.Util;
-using Plugin.Toast;
 
 namespace KawanApp.Droid
 {

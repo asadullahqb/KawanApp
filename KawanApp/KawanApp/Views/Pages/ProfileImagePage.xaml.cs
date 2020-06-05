@@ -1,18 +1,12 @@
 ﻿using KawanApp.Interfaces;
 using KawanApp.Models;
-using KawanApp.ViewModels;
 using KawanApp.ViewModels.Pages;
 using Plugin.Media;
 using Refit;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {

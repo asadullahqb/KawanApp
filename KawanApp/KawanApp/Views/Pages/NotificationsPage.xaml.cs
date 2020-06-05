@@ -1,14 +1,7 @@
 ﻿using KawanApp.Models;
-using KawanApp.Services;
 using KawanApp.ViewModels.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KawanApp.Views.Pages
 {
@@ -55,6 +48,9 @@ namespace KawanApp.Views.Pages
                     await Shell.Current.GoToAsync($"//corepages/allmessages/allmessages", true);
                     await Task.Delay(500); //Let the page construct first
                     MessagingCenter.Send(this, "initiateNavigateToChatPage", n.SendingUser); //Send to All Messages View Model
+                    break;
+                case "Activity Logged":
+                    MessagingCenter.Send(this, "navigateToSatisfactoryFormsPage"); //Send to App.xaml.cs
                     break;
             }
         }
