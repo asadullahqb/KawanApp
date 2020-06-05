@@ -158,13 +158,16 @@ namespace KawanApp.ViewModels.Pages
 
         private async void FetchData()
         {
+            while (!App.NetworkStatus)
+                await Task.Delay(1);
+
             if (!App.NetworkStatus)
             {
                 await App.Current.MainPage.DisplayAlert("Error", "Please turn on internet.", "Ok");
                 return;
             }
-            await FetchCountriesList();
-            await FetchAllUsers();
+            FetchCountriesList();
+            FetchAllUsers();
             App.CheckingConnectivity = false;
         }
 
@@ -174,9 +177,15 @@ namespace KawanApp.ViewModels.Pages
             User u;
 
             if (App.CurrentUserType == "International Student")
+            {
+                Title = "Kawan Members";
                 u = new User() { Type = "Kawan" };
+            }
             else if (App.CurrentUserType == "Kawan")
+            {
+                Title = "International Students";
                 u = new User() { Type = "International Student" };
+            }
             else
                 return;
 
@@ -204,7 +213,6 @@ namespace KawanApp.ViewModels.Pages
         {
             if (App.CurrentUserType == "International Student")
             {
-                Title = "Kawan Members";
                 List<KawanUser> AllKawanUsersFromDb;
                 User u = new User() { StudentId = App.CurrentUser };
 
@@ -223,7 +231,6 @@ namespace KawanApp.ViewModels.Pages
             }
             else if(App.CurrentUserType == "Kawan")
             {
-                Title = "International Students";
                 List<User> AllInternationalStudentUsersFromDb;
                 User u = new KawanUser() { StudentId = App.CurrentUser };
 
