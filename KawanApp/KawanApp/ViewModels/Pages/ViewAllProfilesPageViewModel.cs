@@ -158,6 +158,13 @@ namespace KawanApp.ViewModels.Pages
 
         private async void FetchData()
         {
+            if (App.CurrentUserType == "International Student")
+                Title = "Kawan Members";
+            else if (App.CurrentUserType == "Kawan")
+                Title = "International Students";
+            else
+                return;
+
             while (!App.NetworkStatus)
                 await Task.Delay(1);
 
@@ -177,15 +184,9 @@ namespace KawanApp.ViewModels.Pages
             User u;
 
             if (App.CurrentUserType == "International Student")
-            {
-                Title = "Kawan Members";
                 u = new User() { Type = "Kawan" };
-            }
             else if (App.CurrentUserType == "Kawan")
-            {
-                Title = "International Students";
                 u = new User() { Type = "International Student" };
-            }
             else
                 return;
 
