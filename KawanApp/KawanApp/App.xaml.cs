@@ -67,82 +67,8 @@ namespace KawanApp
             //For internet connection:
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
-            //For notifications:
-            NotificationManager = DependencyService.Get<INotificationManager>();
-            NotificationManager.NotificationReceived += (sender, eventArgs) =>
-            {
-                var evtData = (NotificationEventArgs)eventArgs;
-            };
-
-            #region Chat Hub
-            HubConnection.On<string, string, string>("ReceiveMessageNotification", (notificationid, sendingUser, message) =>
-            {
-                if (notificationid == PreviousNotificationId)
-                    return;
-                if(CurrentPage != "Chat Page" && CurrentPage != "All Messages Page" && CurrentPage != "Notifications Page")
-                    NotificationManager.ScheduleMessageNotification(sendingUser, message);
-                MessagingCenter.Send("App", "updateAllMessages"); //Send to all message page view model
-                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
-                PreviousNotificationId = notificationid;
-            });
-            HubConnection.On<string, string, string>("ReceiveFriendNotification", (notificationid, sendingUser, message) =>
-            {
-                if (notificationid == PreviousNotificationId)
-                    return;
-                if (message.Contains("unsent"))
-                {
-                    NotificationManager.RemoveNotification(1, sendingUser);
-                }
-                else if(message.Contains("rejected"))
-                {
-                    //Do nothing, just update the other pages
-                }
-                else if (CurrentPage != "Notifications Page")
-                    NotificationManager.ScheduleFriendNotification(sendingUser, message);
-                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
-                MessagingCenter.Send("App", "updateProfiles"); //Send to view all profiles page view model and view a profile page view model
-                PreviousNotificationId = notificationid;
-            });
-            HubConnection.On<string, string>("ReceiveActivityNotification", (notificationid, sendingUserFirstName) =>
-            {
-                if (notificationid == PreviousNotificationId)
-                    return;
-                if (CurrentPage != "Notifications Page")
-                    NotificationManager.ScheduleActivityNotification(sendingUserFirstName);
-                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
-                MessagingCenter.Send("App", "updateAllSatisfactoryForms"); //Send to satisfactory forms page view model
-                PreviousNotificationId = notificationid;
-            });
-            HubConnection.On<string>("ReceiveReply", async(message) =>
-            {
-                //This function is used as a handshake between server and app.
-                switch(message)
-                {
-                    case "Connect success!":
-                        NetworkStatus = true;
-                        MessagingCenter.Send("App", "updateConnection");
-                        break;
-                    case "Connect success but need to login.":
-                        NetworkStatus = true;
-                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
-                        await Task.Delay(1000);
-                        await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
-                        break;
-                    case "Connect failure!":
-                        ForceReconnectOnce = true; //Force the reconnecting
-                        NetworkStatus = false;
-                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
-                        await Task.Delay(1000);
-                        await CheckConnectivity();
-                        break;
-                    case "Join group success!":
-                        break;
-                    case "Join group failure!":
-                        MessagingCenter.Send("App", "connectToGroup"); //Retry connecting to the group
-                        break;
-                }
-            });
-            #endregion
+            InitializeNotificationManager();
+            InitializeChathub();
 
             var appshell = new AppShell(); //Reuse the same app shell once it's loaded
 
@@ -151,6 +77,7 @@ namespace KawanApp
             if (!IsUserLoggedIn || !StayLoggedIn)
                 MainPage.Navigation.PushModalAsync(new LoginPage());
 
+            //To do: Remove Messaging Center Navigation because it delays start up time and is generally hiraliously bad.
             #region Messaging Center Navigation
             //Messaging center is used for view navigation so that the same app shell 
             //(with its state conserved) is used. This is done to replace shell navigation.
@@ -247,6 +174,86 @@ namespace KawanApp
         #endregion
 
         #region Methods
+        static private async void InitializeNotificationManager()
+        {
+            NotificationManager = DependencyService.Get<INotificationManager>();
+            NotificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+            };
+        }
+
+        static private async void InitializeChathub()
+        {
+            HubConnection.On<string, string, string>("ReceiveMessageNotification", (notificationid, sendingUser, message) =>
+            {
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if (CurrentPage != "Chat Page" && CurrentPage != "All Messages Page" && CurrentPage != "Notifications Page")
+                    NotificationManager.ScheduleMessageNotification(sendingUser, message);
+                MessagingCenter.Send("App", "updateAllMessages"); //Send to all message page view model
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
+                PreviousNotificationId = notificationid;
+            });
+            HubConnection.On<string, string, string>("ReceiveFriendNotification", (notificationid, sendingUser, message) =>
+            {
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if (message.Contains("unsent"))
+                {
+                    NotificationManager.RemoveNotification(1, sendingUser);
+                }
+                else if (message.Contains("rejected"))
+                {
+                    //Do nothing, just update the other pages
+                }
+                else if (CurrentPage != "Notifications Page")
+                    NotificationManager.ScheduleFriendNotification(sendingUser, message);
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
+                MessagingCenter.Send("App", "updateProfiles"); //Send to view all profiles page view model and view a profile page view model
+                PreviousNotificationId = notificationid;
+            });
+            HubConnection.On<string, string>("ReceiveActivityNotification", (notificationid, sendingUserFirstName) =>
+            {
+                if (notificationid == PreviousNotificationId)
+                    return;
+                if (CurrentPage != "Notifications Page")
+                    NotificationManager.ScheduleActivityNotification(sendingUserFirstName);
+                MessagingCenter.Send("App", "updateAllNotifications"); //Send to notifications page view model
+                MessagingCenter.Send("App", "updateAllSatisfactoryForms"); //Send to satisfactory forms page view model
+                PreviousNotificationId = notificationid;
+            });
+            HubConnection.On<string>("ReceiveReply", async (message) =>
+            {
+                //This function is used as a handshake between server and app.
+                switch (message)
+                {
+                    case "Connect success!":
+                        NetworkStatus = true;
+                        MessagingCenter.Send("App", "updateConnection");
+                        break;
+                    case "Connect success but need to login.":
+                        NetworkStatus = true;
+                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
+                        await Task.Delay(1000);
+                        await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
+                        break;
+                    case "Connect failure!":
+                        ForceReconnectOnce = true; //Force the reconnecting
+                        NetworkStatus = false;
+                        MessagingCenter.Send("App", "updateConnection"); //Send to app shell view model
+                        await Task.Delay(1000);
+                        await CheckConnectivity();
+                        break;
+                    case "Join group success!":
+                        break;
+                    case "Join group failure!":
+                        MessagingCenter.Send("App", "connectToGroup"); //Retry connecting to the group
+                        break;
+                }
+            });
+        }
+
         static private async void ShowSplashScreen(int time) 
         {
             await Current.MainPage.Navigation.PushModalAsync(new SplashScreenPage());
@@ -306,24 +313,6 @@ namespace KawanApp
             var current = Connectivity.NetworkAccess;
             if (current == NetworkAccess.Internet)
             {
-                /*
-                var ping = new Ping();
-                var isconnected = await ping.SendPingAsync("google.com", 5000);
-                if (isconnected.Status == IPStatus.Success)
-                {
-                    NetworkStatus = true;
-                    if (IsUserLoggedIn || StayLoggedIn)
-                    {
-                        await HubConnection.StartAsync();
-                        await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
-                    }
-                }
-                else
-                {
-                    await HubConnection.StopAsync();
-                    NetworkStatus = false;
-                }*/
-                //NetworkStatus = true;
                 await HubConnection.StartAsync();
                 await HubConnection.InvokeAsync("OnConnected", CurrentUser, CurrentFirstName);
             }
