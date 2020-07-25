@@ -315,5 +315,16 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\iconkawan.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="DotfuscatorConfig.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+   <PropertyGroup>
+	   <DotfuscatorXamarinConfigFileName>DotfuscatorConfig.xml</DotfuscatorXamarinConfigFileName>
+	   <DotfuscatorXamarinCliPath>C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\Extensions\PreEmptiveSolutions\DotfuscatorCE\dotfuscatorCLI.exe</DotfuscatorXamarinCliPath>
+	   <DotfuscatorXamarinGenerateNewConfigFile>true</DotfuscatorXamarinGenerateNewConfigFile>
+	   <!-- Enable Dotfuscator for Release -->
+	   <DotfuscatorXamarinEnabled Condition="'$(Configuration)' == 'Release'">true</DotfuscatorXamarinEnabled>
+  </PropertyGroup>
+  <Import Project="../../PreEmptive.Dotfuscator.Xamarin/PreEmptive.Dotfuscator.Xamarin.targets"/>
 </Project>
