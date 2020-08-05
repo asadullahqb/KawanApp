@@ -10,7 +10,8 @@ namespace KawanApp.Models
     {
         public int Prod_id { get; set; }
         public string Prod_name { get; set; }
-        public Kawan Kawan { get; set; }
+        //public Kawan Kawan { get; set; }
+        public KawanUser Kawan { get; set; }
         public Category Category { get; set; }
         public string Prod_description { get; set; }
         public double Prod_price { get; set; }
