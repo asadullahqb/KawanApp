@@ -8,6 +8,6 @@ namespace KawanApp.Models
     {
         public int Report_id { get; set; }
         public string Report_content { get; set; }
-        public User User { get; set; }
+        public KawanUser KawanUser { get; set; }
     }
 }
