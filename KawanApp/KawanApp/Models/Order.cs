@@ -8,6 +8,6 @@ namespace KawanApp.Models
     {
         public int Order_id { get; set; }
         public Product Product { get; set; }
-        public International_students International_students { get; set; }
+        public KawanUser International_students { get; set; }
     }
 }
