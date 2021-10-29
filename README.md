@@ -1,6 +1,6 @@
 # KawanApp
 
-Kawan App is a mobile application built for IMCC USM. This app was never published due to difficulty in maintaining it by the stakeholders that do not have Xamarin developers.
+Kawan App is a mobile application built for IMCC USM. This app was never published due to difficulty in maintaining it by the stakeholders that do not have Xamarin developers. It is one of my early - learn as you go projects.
 This app is ready to use and some future work has been outlined for it.
 
 A video demo is available on <a href="https://youtu.be/39pa-ljV_nU"> YouTube </a>
